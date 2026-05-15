@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Login - SmartMediIoT
+    </title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/login.css') }}">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="background"></div>
+
+<div class="container">
+
+    <!-- PANEL IZQUIERDO -->
+
+    <div class="left-panel">
+
+        <div class="logo">
+
+            <i class="fa-solid fa-heart-pulse"></i>
+
+            <h1>
+                SmartMediIoT
+            </h1>
+
+        </div>
+
+        <h2>
+
+            Sistema Inteligente
+            de Recordatorio
+            de Medicamentos
+
+        </h2>
+
+        <p>
+
+            Plataforma médica moderna para el
+            monitoreo inteligente de pacientes,
+            tratamientos y recordatorios automáticos.
+
+        </p>
+
+        <div class="features">
+
+            <div class="feature">
+
+                <i class="fa-solid fa-user-doctor"></i>
+
+                <span>
+                    Gestión Médica
+                </span>
+
+            </div>
+
+            <div class="feature">
+
+                <i class="fa-solid fa-bell"></i>
+
+                <span>
+                    Alertas Inteligentes
+                </span>
+
+            </div>
+
+            <div class="feature">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                <span>
+                    Monitoreo Clínico
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- LOGIN -->
+
+    <div class="login-card">
+
+        <div class="login-header">
+
+            <div class="icon">
+
+                <i class="fa-solid fa-user-lock"></i>
+
+            </div>
+
+            <h2>
+
+                Iniciar Sesión
+
+            </h2>
+
+            <p>
+
+                Accede al sistema médico inteligente
+
+            </p>
+
+        </div>
+
+        <form action="/dashboard">
+
+            <!-- USUARIO -->
+
+            <div class="input-box">
+
+                <label>
+
+                    Usuario
+
+                </label>
+
+                <div class="input-container">
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <input type="text"
+                    placeholder="Ingrese usuario"
+                    required>
+
+                </div>
+
+            </div>
+
+            <!-- PASSWORD -->
+
+            <div class="input-box">
+
+                <label>
+
+                    Contraseña
+
+                </label>
+
+                <div class="input-container">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    <input type="password"
+                    placeholder="Ingrese contraseña"
+                    required>
+
+                </div>
+
+            </div>
+
+            <!-- RECORDAR -->
+
+            <div class="remember">
+
+                <label>
+
+                    <input type="checkbox">
+
+                    Recordarme
+
+                </label>
+
+            </div>
+
+            <!-- BOTON -->
+
+            <button type="submit"
+            class="btn-login">
+
+                <i class="fa-solid fa-right-to-bracket"></i>
+
+                Ingresar al Sistema
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

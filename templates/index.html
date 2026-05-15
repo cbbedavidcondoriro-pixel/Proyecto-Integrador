@@ -1,35 +1,277 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
     <meta charset="UTF-8">
-    <title>SmartMediIoT</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <title>
+        SmartMediIoT
+    </title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/index.css') }}">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 </head>
+
 <body>
 
-<div class="navbar">
-    <h1>🏥 SmartMediIoT</h1>
+<div class="background"></div>
 
-    <div class="menu">
-        <a href="/dashboard">Panel Médico</a>
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="logo">
+
+        <i class="fa-solid fa-heart-pulse"></i>
+
+        <span>
+
+            SmartMediIoT
+
+        </span>
+
     </div>
-</div>
 
-<div class="container">
+    <div class="nav-links">
 
-    <div class="card">
-        <h2>Sistema Inteligente Médico</h2>
+        <a href="#inicio">
+            Inicio
+        </a>
+
+        <a href="#modulos">
+            Módulos
+        </a>
+
+        <a href="#beneficios">
+            Beneficios
+        </a>
+
+    </div>
+
+</nav>
+
+<!-- HERO -->
+
+<section class="hero" id="inicio">
+
+    <div class="hero-text">
+
+        <h1>
+
+            Sistema Inteligente
+            de Recordatorio
+            de Medicamentos
+
+        </h1>
 
         <p>
-            Plataforma para monitoreo y control de tratamientos médicos.
+
+            Plataforma médica inteligente diseñada
+            para mejorar el control de tratamientos,
+            monitoreo de pacientes y automatización
+            de recordatorios médicos en tiempo real.
+
         </p>
 
-        <a href="/dashboard" class="btn">
-            Ingresar al Panel Médico
+        <a href="/login"
+        class="btn-main">
+
+            <i class="fa-solid fa-right-to-bracket"></i>
+
+            Ingresar al Sistema
+
         </a>
+
     </div>
 
-</div>
+    <!-- TARJETA -->
+
+    <div class="hero-card">
+
+        <div class="circle"></div>
+
+        <i class="fa-solid fa-laptop-medical"></i>
+
+        <h2>
+
+            Tecnología Médica Inteligente
+
+        </h2>
+
+        <p>
+
+            Integración de monitoreo,
+            tratamientos inteligentes,
+            control médico y automatización.
+
+        </p>
+
+    </div>
+
+</section>
+
+<!-- MODULOS -->
+
+<section class="modules"
+id="modulos">
+
+    <h2>
+
+        Módulos del Sistema
+
+    </h2>
+
+    <div class="module-grid">
+
+        <!-- MEDICO -->
+
+        <div class="module-card">
+
+            <i class="fa-solid fa-user-doctor"></i>
+
+            <h3>
+                Médico
+            </h3>
+
+            <p>
+
+                Registro de pacientes,
+                seguimiento clínico,
+                tratamientos y reportes.
+
+            </p>
+
+        </div>
+
+        <!-- PACIENTE -->
+
+        <div class="module-card">
+
+            <i class="fa-solid fa-bed-pulse"></i>
+
+            <h3>
+                Paciente
+            </h3>
+
+            <p>
+
+                Recepción de alertas,
+                control de medicación y
+                monitoreo inteligente.
+
+            </p>
+
+        </div>
+
+        <!-- FARMACIA -->
+
+        <div class="module-card">
+
+            <i class="fa-solid fa-prescription-bottle-medical"></i>
+
+            <h3>
+                Farmacia
+            </h3>
+
+            <p>
+
+                Gestión de medicamentos
+                y control automatizado
+                de stock.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- BENEFICIOS -->
+
+<section class="benefits"
+id="beneficios">
+
+    <h2>
+
+        Beneficios del Sistema
+
+    </h2>
+
+    <div class="benefit-grid">
+
+        <div class="benefit">
+
+            <i class="fa-solid fa-bell"></i>
+
+            <span>
+
+                Recordatorios automáticos
+
+            </span>
+
+        </div>
+
+        <div class="benefit">
+
+            <i class="fa-solid fa-heart-circle-check"></i>
+
+            <span>
+
+                Mejor adherencia al tratamiento
+
+            </span>
+
+        </div>
+
+        <div class="benefit">
+
+            <i class="fa-solid fa-chart-line"></i>
+
+            <span>
+
+                Monitoreo inteligente
+
+            </span>
+
+        </div>
+
+        <div class="benefit">
+
+            <i class="fa-solid fa-clock"></i>
+
+            <span>
+
+                Alertas en tiempo real
+
+            </span>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+
+    <p>
+
+        © 2026 SmartMediIoT
+        | Sistema Inteligente Médico
+
+    </p>
+
+</footer>
 
 </body>
 </html>

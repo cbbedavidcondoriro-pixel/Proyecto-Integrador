@@ -5,58 +5,378 @@
 
     <meta charset="UTF-8">
 
-    <title>Tratamientos</title>
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Configurar Tratamiento
+    </title>
 
     <link rel="stylesheet"
-    href="{{ url_for('static', filename='css/pacientes.css') }}">
+    href="{{ url_for('static', filename='css/tratamiento.css') }}">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 </head>
 
 <body>
 
+<div class="background"></div>
+
 <div class="container">
 
-    <div class="form-box">
+    <div class="treatment-card">
 
-        <h1>
-            💊 Configurar Tratamiento
-        </h1>
+        <!-- HEADER -->
+
+        <div class="header">
+
+            <div class="icon">
+
+                <i class="fa-solid fa-pills"></i>
+
+            </div>
+
+            <h1>
+
+                Configuración de Tratamiento
+
+            </h1>
+
+            <p>
+
+                Asignación inteligente de medicamentos
+                y seguimiento médico del paciente.
+
+            </p>
+
+        </div>
+
+        <!-- FORMULARIO -->
 
         <form>
 
-            <select>
+            <!-- DATOS PACIENTE -->
 
-                <option>
-                    Seleccionar Paciente
-                </option>
+            <div class="section-title">
 
-                {% for p in pacientes %}
+                <h2>
 
-                <option>
-                    {{ p.nombre }}
-                </option>
+                    Información del Paciente
 
-                {% endfor %}
+                </h2>
 
-            </select>
+            </div>
 
-            <input type="text"
-            placeholder="Medicamento">
+            <div class="grid">
 
-            <input type="text"
-            placeholder="Dosis">
+                <!-- PACIENTE -->
 
-            <input type="time">
+                <div class="input-box">
 
-            <input type="date">
+                    <label>
 
-            <input type="date">
+                        Paciente
 
-            <button>
+                    </label>
 
-                Guardar Tratamiento
+                    <select>
 
-            </button>
+                        <option>
+
+                            Seleccionar Paciente
+
+                        </option>
+
+                        {% for p in pacientes %}
+
+                        <option>
+
+                            {{ p.nombre }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <!-- DOCTOR -->
+
+                <div class="input-box">
+
+                    <label>
+
+                        Médico Responsable
+
+                    </label>
+
+                    <input type="text"
+                    placeholder="Dr. Responsable">
+
+                </div>
+
+            </div>
+
+            <!-- MEDICACION -->
+
+            <div class="section-title">
+
+                <h2>
+
+                    Medicación
+
+                </h2>
+
+            </div>
+
+            <div class="grid">
+
+                <!-- MEDICAMENTO -->
+
+                <div class="input-box">
+
+                    <label>
+
+                        Medicamento
+
+                    </label>
+
+                    <input type="text"
+                    placeholder="Nombre del medicamento">
+
+                </div>
+
+                <!-- DOSIS -->
+
+                <div class="input-box">
+
+                    <label>
+
+                        Dosis
+
+                    </label>
+
+                    <input type="text"
+                    placeholder="Ej. 500mg">
+
+                </div>
+
+                <!-- FRECUENCIA -->
+
+                <div class="input-box">
+
+                    <label>
+
+                        Frecuencia
+
+                    </label>
+
+                    <select>
+
+                        <option>
+                            Cada 4 horas
+                        </option>
+
+                        <option>
+                            Cada 6 horas
+                        </option>
+
+                        <option>
+                            Cada 8 horas
+                        </option>
+
+                        <option>
+                            Cada 12 horas
+                        </option>
+
+                        <option>
+                            Cada 24 horas
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <!-- VIA -->
+
+                <div class="input-box">
+
+                    <label>
+
+                        Vía de Administración
+
+                    </label>
+
+                    <select>
+
+                        <option>
+                            Oral
+                        </option>
+
+                        <option>
+                            Intravenosa
+                        </option>
+
+                        <option>
+                            Intramuscular
+                        </option>
+
+                        <option>
+                            Subcutánea
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <!-- HORA -->
+
+                <div class="input-box">
+
+                    <label>
+
+                        Hora de Inicio
+
+                    </label>
+
+                    <input type="time">
+
+                </div>
+
+                <!-- DURACION -->
+
+                <div class="input-box">
+
+                    <label>
+
+                        Duración del Tratamiento
+
+                    </label>
+
+                    <input type="text"
+                    placeholder="Ej. 7 días">
+
+                </div>
+
+                <!-- FECHA INICIO -->
+
+                <div class="input-box">
+
+                    <label>
+
+                        Fecha de Inicio
+
+                    </label>
+
+                    <input type="date">
+
+                </div>
+
+                <!-- FECHA FIN -->
+
+                <div class="input-box">
+
+                    <label>
+
+                        Fecha Final
+
+                    </label>
+
+                    <input type="date">
+
+                </div>
+
+            </div>
+
+            <!-- ALERTAS -->
+
+            <div class="section-title">
+
+                <h2>
+
+                    Configuración Inteligente
+
+                </h2>
+
+            </div>
+
+            <div class="checkbox-grid">
+
+                <label class="check-card">
+
+                    <input type="checkbox">
+
+                    Activar alertas automáticas
+
+                </label>
+
+                <label class="check-card">
+
+                    <input type="checkbox">
+
+                    Notificar incumplimiento
+
+                </label>
+
+                <label class="check-card">
+
+                    <input type="checkbox">
+
+                    Monitoreo en tiempo real
+
+                </label>
+
+                <label class="check-card">
+
+                    <input type="checkbox">
+
+                    Alertar familiar responsable
+
+                </label>
+
+            </div>
+
+            <!-- OBSERVACIONES -->
+
+            <div class="input-box">
+
+                <label>
+
+                    Observaciones Médicas
+
+                </label>
+
+                <textarea
+                placeholder="Observaciones del tratamiento..."></textarea>
+
+            </div>
+
+            <!-- BOTONES -->
+
+            <div class="buttons">
+
+                <button type="submit"
+                class="btn-save">
+
+                    <i class="fa-solid fa-floppy-disk"></i>
+
+                    Guardar Tratamiento
+
+                </button>
+
+                <button type="reset"
+                class="btn-clear">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    Limpiar
+
+                </button>
+
+            </div>
 
         </form>
 

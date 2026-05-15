@@ -8,103 +8,325 @@
     <meta name="viewport"
     content="width=device-width, initial-scale=1.0">
 
-    <title>Registrar Paciente</title>
+    <title>
+        Registro de Paciente
+    </title>
 
     <link rel="stylesheet"
-    href="{{ url_for('static', filename='css/pacientes.css') }}">
+    href="{{ url_for('static', filename='css/registro.css') }}">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 </head>
 
 <body>
 
+<div class="background"></div>
+
 <div class="container">
 
-    <div class="form-box">
+    <div class="form-card">
 
-        <h1>
-            👨‍⚕️ Registro de Paciente
-        </h1>
+        <!-- HEADER -->
 
-        <form method="POST">
+        <div class="header">
 
-            <div class="grid">
+            <div class="icon">
 
-                <input type="text"
-                name="nombre"
-                placeholder="Nombre Completo"
-                required>
-
-                <input type="text"
-                name="ci"
-                placeholder="Carnet de Identidad"
-                required>
-
-                <input type="number"
-                name="edad"
-                placeholder="Edad"
-                required>
-
-                <select name="sexo">
-
-                    <option>Masculino</option>
-                    <option>Femenino</option>
-
-                </select>
-
-                <input type="text"
-                name="telefono"
-                placeholder="Teléfono">
-
-                <input type="text"
-                name="direccion"
-                placeholder="Dirección">
+                <i class="fa-solid fa-user-doctor"></i>
 
             </div>
 
-            <textarea
-            name="diagnostico"
-            placeholder="Diagnóstico Médico"></textarea>
+            <h1>
+                Registro de Paciente
+            </h1>
 
-            <textarea
-            name="medicamento"
-            placeholder="Medicamentos"></textarea>
+            <p>
 
-            <input type="text"
-            name="dosis"
-            placeholder="Dosis">
+                Sistema Inteligente de Recordatorio
+                de Medicamentos
 
-            <label>
-                Horario del medicamento
+            </p>
+
+        </div>
+
+        <!-- FOTO -->
+
+        <div class="photo-section">
+
+            <label for="foto">
+
+                <div class="photo-box">
+
+                    <img id="preview">
+
+                    <i class="fa-solid fa-camera"
+                    id="cameraIcon"></i>
+
+                </div>
+
             </label>
 
-            <input type="time"
-            name="horario">
+            <input type="file"
+            id="foto"
+            name="foto"
+            accept="image/*"
+            hidden>
 
-            <label>
-                Fecha de inicio
-            </label>
+            <button type="button"
+            class="upload-btn">
 
-            <input type="date"
-            name="fecha_inicio">
+                <i class="fa-solid fa-upload"></i>
 
-            <label>
-                Fecha final
-            </label>
-
-            <input type="date"
-            name="fecha_fin">
-
-            <button type="submit">
-
-                Guardar Paciente
+                Subir Fotografía
 
             </button>
+
+        </div>
+
+        <!-- FORMULARIO -->
+
+        <form method="POST"
+        enctype="multipart/form-data">
+
+            <div class="section-title">
+
+                <h2>
+                    Datos Personales
+                </h2>
+
+            </div>
+
+            <div class="grid">
+
+                <!-- NOMBRE -->
+
+                <div class="input-box">
+
+                    <label>
+                        Nombre Completo
+                    </label>
+
+                    <input type="text"
+                    name="nombre"
+                    placeholder="Ingrese nombre completo"
+                    required>
+
+                </div>
+
+                <!-- CI -->
+
+                <div class="input-box">
+
+                    <label>
+                        Carnet de Identidad
+                    </label>
+
+                    <input type="text"
+                    name="ci"
+                    placeholder="Ingrese CI"
+                    required>
+
+                </div>
+
+                <!-- EDAD -->
+
+                <div class="input-box">
+
+                    <label>
+                        Edad
+                    </label>
+
+                    <input type="number"
+                    name="edad"
+                    placeholder="Edad"
+                    required>
+
+                </div>
+
+                <!-- SEXO -->
+
+                <div class="input-box">
+
+                    <label>
+                        Sexo
+                    </label>
+
+                    <select name="sexo">
+
+                        <option>
+                            Masculino
+                        </option>
+
+                        <option>
+                            Femenino
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <!-- FECHA -->
+
+                <div class="input-box">
+
+                    <label>
+                        Fecha de Nacimiento
+                    </label>
+
+                    <input type="date"
+                    name="fecha_nacimiento">
+
+                </div>
+
+                <!-- TELEFONO -->
+
+                <div class="input-box">
+
+                    <label>
+                        Teléfono
+                    </label>
+
+                    <input type="text"
+                    name="telefono"
+                    placeholder="Número telefónico">
+
+                </div>
+
+                <!-- CORREO -->
+
+                <div class="input-box">
+
+                    <label>
+                        Correo Electrónico
+                    </label>
+
+                    <input type="email"
+                    name="correo"
+                    placeholder="Correo electrónico">
+
+                </div>
+
+                <!-- DIRECCION -->
+
+                <div class="input-box">
+
+                    <label>
+                        Dirección
+                    </label>
+
+                    <input type="text"
+                    name="direccion"
+                    placeholder="Dirección">
+
+                </div>
+
+                <!-- EMERGENCIA -->
+
+                <div class="input-box">
+
+                    <label>
+                        Contacto de Emergencia
+                    </label>
+
+                    <input type="text"
+                    name="emergencia"
+                    placeholder="Nombre del contacto">
+
+                </div>
+
+                <!-- TELEFONO EMERGENCIA -->
+
+                <div class="input-box">
+
+                    <label>
+                        Teléfono Emergencia
+                    </label>
+
+                    <input type="text"
+                    name="telefono_emergencia"
+                    placeholder="Número de emergencia">
+
+                </div>
+
+            </div>
+
+            <!-- BOTONES -->
+
+            <div class="buttons">
+
+                <button type="submit"
+                class="btn-save">
+
+                    <i class="fa-solid fa-floppy-disk"></i>
+
+                    Guardar Paciente
+
+                </button>
+
+                <button type="reset"
+                class="btn-clear">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    Limpiar
+
+                </button>
+
+            </div>
 
         </form>
 
     </div>
 
 </div>
+
+<!-- SCRIPT FOTO -->
+
+<script>
+
+const foto =
+document.getElementById('foto')
+
+const preview =
+document.getElementById('preview')
+
+const cameraIcon =
+document.getElementById('cameraIcon')
+
+foto.addEventListener('change', function(){
+
+    const archivo = this.files[0]
+
+    if(archivo){
+
+        const reader = new FileReader()
+
+        reader.onload = function(e){
+
+            preview.src = e.target.result
+
+            preview.style.display = 'block'
+
+            cameraIcon.style.display = 'none'
+
+        }
+
+        reader.readAsDataURL(archivo)
+
+    }
+
+})
+
+document.querySelector('.upload-btn')
+.addEventListener('click', ()=>{
+
+    foto.click()
+
+})
+
+</script>
 
 </body>
 </html>
