@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Generar Receta</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/pacientes.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="form-box">
+
+        <h1>
+            🧾 Generar Receta Médica
+        </h1>
+
+        <form>
+
+            <select>
+
+                <option>
+                    Seleccionar Paciente
+                </option>
+
+                {% for p in pacientes %}
+
+                <option>
+                    {{ p.nombre }}
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+            <textarea
+            placeholder="Medicamentos"></textarea>
+
+            <textarea
+            placeholder="Indicaciones Médicas"></textarea>
+
+            <button>
+
+                Generar Receta
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

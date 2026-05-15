@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Tratamientos</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/pacientes.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="form-box">
+
+        <h1>
+            💊 Configurar Tratamiento
+        </h1>
+
+        <form>
+
+            <select>
+
+                <option>
+                    Seleccionar Paciente
+                </option>
+
+                {% for p in pacientes %}
+
+                <option>
+                    {{ p.nombre }}
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+            <input type="text"
+            placeholder="Medicamento">
+
+            <input type="text"
+            placeholder="Dosis">
+
+            <input type="time">
+
+            <input type="date">
+
+            <input type="date">
+
+            <button>
+
+                Guardar Tratamiento
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

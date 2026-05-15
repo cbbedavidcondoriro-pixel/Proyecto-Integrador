@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <title>Registrar Paciente</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/pacientes.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="form-box">
+
+        <h1>
+            👨‍⚕️ Registro de Paciente
+        </h1>
+
+        <form method="POST">
+
+            <div class="grid">
+
+                <input type="text"
+                name="nombre"
+                placeholder="Nombre Completo"
+                required>
+
+                <input type="text"
+                name="ci"
+                placeholder="Carnet de Identidad"
+                required>
+
+                <input type="number"
+                name="edad"
+                placeholder="Edad"
+                required>
+
+                <select name="sexo">
+
+                    <option>Masculino</option>
+                    <option>Femenino</option>
+
+                </select>
+
+                <input type="text"
+                name="telefono"
+                placeholder="Teléfono">
+
+                <input type="text"
+                name="direccion"
+                placeholder="Dirección">
+
+            </div>
+
+            <textarea
+            name="diagnostico"
+            placeholder="Diagnóstico Médico"></textarea>
+
+            <textarea
+            name="medicamento"
+            placeholder="Medicamentos"></textarea>
+
+            <input type="text"
+            name="dosis"
+            placeholder="Dosis">
+
+            <label>
+                Horario del medicamento
+            </label>
+
+            <input type="time"
+            name="horario">
+
+            <label>
+                Fecha de inicio
+            </label>
+
+            <input type="date"
+            name="fecha_inicio">
+
+            <label>
+                Fecha final
+            </label>
+
+            <input type="date"
+            name="fecha_fin">
+
+            <button type="submit">
+
+                Guardar Paciente
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

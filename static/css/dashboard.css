@@ -1,0 +1,122 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial;
+}
+
+body{
+    display:flex;
+    background:#0f172a;
+    color:white;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:260px;
+    height:100vh;
+    background:#020617;
+    padding:30px;
+    position:fixed;
+}
+
+.logo{
+    color:#22c55e;
+    margin-bottom:50px;
+}
+
+.sidebar ul{
+    list-style:none;
+}
+
+.sidebar ul li{
+    margin:25px 0;
+}
+
+.sidebar ul li a{
+
+    color:white;
+    text-decoration:none;
+    font-size:17px;
+    transition:0.3s;
+
+}
+
+.sidebar ul li a:hover{
+    color:#22c55e;
+}
+
+/* MAIN */
+
+.main-content{
+
+    margin-left:260px;
+    width:100%;
+    padding:40px;
+
+}
+
+.topbar{
+    margin-bottom:40px;
+}
+
+.topbar h1{
+    font-size:35px;
+}
+
+.topbar p{
+    color:#94a3b8;
+}
+
+/* CARDS */
+
+.cards{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+
+}
+
+.card{
+
+    background:#111827;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 0 20px rgba(0,0,0,0.4);
+
+}
+
+.card h3{
+    color:#22c55e;
+    margin-bottom:15px;
+}
+
+.card h2{
+    font-size:45px;
+}
+
+.green{
+    background:#14532d;
+}
+
+.dark{
+    background:#1e293b;
+}
+
+/* WELCOME */
+
+.welcome-box{
+
+    margin-top:40px;
+    background:#111827;
+    padding:40px;
+    border-radius:20px;
+
+}
+
+.welcome-box h2{
+    color:#22c55e;
+    margin-bottom:15px;
+}

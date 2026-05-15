@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <title>Consultar Pacientes</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/pacientes.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="table-box">
+
+        <h1>
+            📋 Lista de Pacientes
+        </h1>
+
+        <table>
+
+            <tr>
+
+                <th>Nombre</th>
+                <th>CI</th>
+                <th>Edad</th>
+                <th>Medicamento</th>
+                <th>Dosis</th>
+                <th>Horario</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Acciones</th>
+
+            </tr>
+
+            {% for p in pacientes %}
+
+            <tr>
+
+                <td>{{ p.nombre }}</td>
+                <td>{{ p.ci }}</td>
+                <td>{{ p.edad }}</td>
+                <td>{{ p.medicamento }}</td>
+                <td>{{ p.dosis }}</td>
+                <td>{{ p.horario }}</td>
+                <td>{{ p.fecha_inicio }}</td>
+                <td>{{ p.fecha_fin }}</td>
+
+                <td>
+
+                    <a href="/eliminar/{{ loop.index0 }}"
+                    class="btn-delete">
+
+                        Eliminar
+
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>
