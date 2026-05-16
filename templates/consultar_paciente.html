@@ -8,72 +8,449 @@
     <meta name="viewport"
     content="width=device-width, initial-scale=1.0">
 
-    <title>Consultar Pacientes</title>
+    <title>
+        Consulta Inteligente de Pacientes
+    </title>
 
     <link rel="stylesheet"
-    href="{{ url_for('static', filename='css/pacientes.css') }}">
+    href="{{ url_for('static', filename='css/consultar.css') }}">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 </head>
 
 <body>
 
+<div class="background"></div>
+
 <div class="container">
 
-    <div class="table-box">
+    <!-- SIDEBAR -->
 
-        <h1>
-            📋 Lista de Pacientes
-        </h1>
+    <aside class="sidebar">
 
-        <table>
+        <div class="logo">
 
-            <tr>
+            <i class="fa-solid fa-heart-pulse"></i>
 
-                <th>Nombre</th>
-                <th>CI</th>
-                <th>Edad</th>
-                <th>Medicamento</th>
-                <th>Dosis</th>
-                <th>Horario</th>
-                <th>Inicio</th>
-                <th>Fin</th>
-                <th>Acciones</th>
+            <h2>
+                SmartMediIoT
+            </h2>
 
-            </tr>
+        </div>
+
+        <nav>
+
+            <a href="/dashboard">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                Dashboard
+
+            </a>
+
+            <a href="/registrar">
+
+                <i class="fa-solid fa-user-plus"></i>
+
+                Registrar Paciente
+
+            </a>
+
+            <a href="/consultar"
+            class="active">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                Consultar Pacientes
+
+            </a>
+
+            <a href="/tratamiento">
+
+                <i class="fa-solid fa-pills"></i>
+
+                Tratamientos
+
+            </a>
+
+            <a href="/receta">
+
+                <i class="fa-solid fa-file-waveform"></i>
+
+                Reportes
+
+            </a>
+
+        </nav>
+
+    </aside>
+
+    <!-- MAIN -->
+
+    <main class="main-content">
+
+        <!-- HEADER -->
+
+        <div class="topbar">
+
+            <div>
+
+                <h1>
+
+                    Consulta Inteligente
+
+                </h1>
+
+                <p>
+
+                    Monitoreo médico y seguimiento clínico
+
+                </p>
+
+            </div>
+
+            <div class="doctor">
+
+                <i class="fa-solid fa-user-doctor"></i>
+
+                <span>
+                    Médico Activo
+                </span>
+
+            </div>
+
+        </div>
+
+        <!-- BUSCADOR -->
+
+        <div class="search-box">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input type="text"
+            id="buscador"
+            placeholder="Buscar por nombre o carnet de identidad...">
+
+        </div>
+
+        <!-- PACIENTES -->
+
+        <div class="patients-grid"
+        id="contenedorPacientes">
 
             {% for p in pacientes %}
 
-            <tr>
+            <div class="patient-card">
 
-                <td>{{ p.nombre }}</td>
-                <td>{{ p.ci }}</td>
-                <td>{{ p.edad }}</td>
-                <td>{{ p.medicamento }}</td>
-                <td>{{ p.dosis }}</td>
-                <td>{{ p.horario }}</td>
-                <td>{{ p.fecha_inicio }}</td>
-                <td>{{ p.fecha_fin }}</td>
+                <!-- FOTO -->
 
-                <td>
+                <div class="card-top">
+
+                    {% if p.foto %}
+
+                    <img src="{{ url_for('static',
+                    filename='uploads/' + p.foto) }}"
+                    class="patient-photo">
+
+                    {% else %}
+
+                    <div class="no-photo">
+
+                        <i class="fa-solid fa-user"></i>
+
+                    </div>
+
+                    {% endif %}
+
+                    <div>
+
+                        <h2>
+
+                            {{ p.nombre }}
+
+                        </h2>
+
+                        <p>
+
+                            CI:
+                            {{ p.ci }}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <!-- INFO -->
+
+                <div class="info-grid">
+
+                    <div class="info-box">
+
+                        <span>
+                            Edad
+                        </span>
+
+                        <strong>
+
+                            {{ p.edad }} años
+
+                        </strong>
+
+                    </div>
+
+                    <div class="info-box">
+
+                        <span>
+                            Sexo
+                        </span>
+
+                        <strong>
+
+                            {{ p.sexo }}
+
+                        </strong>
+
+                    </div>
+
+                    <div class="info-box">
+
+                        <span>
+                            Teléfono
+                        </span>
+
+                        <strong>
+
+                            {{ p.telefono }}
+
+                        </strong>
+
+                    </div>
+
+                    <div class="info-box">
+
+                        <span>
+                            Estado
+                        </span>
+
+                        <strong class="green">
+
+                            Estable
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+                <!-- TRATAMIENTO -->
+
+                <div class="section">
+
+                    <h3>
+
+                        💊 Tratamiento Actual
+
+                    </h3>
+
+                    <div class="treatment-box">
+
+                        <p>
+
+                            Medicamento:
+                            <span>
+
+                                Paracetamol
+
+                            </span>
+
+                        </p>
+
+                        <p>
+
+                            Dosis:
+                            <span>
+
+                                1 tableta
+
+                            </span>
+
+                        </p>
+
+                        <p>
+
+                            Horario:
+                            <span>
+
+                                08:00 AM
+
+                            </span>
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <!-- CUMPLIMIENTO -->
+
+                <div class="section">
+
+                    <h3>
+
+                        📈 Cumplimiento
+
+                    </h3>
+
+                    <div class="progress-container">
+
+                        <div class="progress-bar">
+
+                        </div>
+
+                    </div>
+
+                    <div class="stats">
+
+                        <div>
+
+                            <strong>
+
+                                92%
+
+                            </strong>
+
+                            <span>
+
+                                Cumplimiento
+
+                            </span>
+
+                        </div>
+
+                        <div>
+
+                            <strong>
+
+                                3
+
+                            </strong>
+
+                            <span>
+
+                                Faltas
+
+                            </span>
+
+                        </div>
+
+                        <div>
+
+                            <strong>
+
+                                12
+
+                            </strong>
+
+                            <span>
+
+                                Asistencias
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ALERTAS -->
+
+                <div class="alerts">
+
+                    <div class="alert success">
+
+                        <i class="fa-solid fa-circle-check"></i>
+
+                        Tratamiento estable
+
+                    </div>
+
+                </div>
+
+                <!-- BOTONES -->
+
+                <div class="buttons">
+
+                    <button class="view-btn">
+
+                        <i class="fa-solid fa-eye"></i>
+
+                        Ver Historial
+
+                    </button>
+
+                    <button class="edit-btn">
+
+                        <i class="fa-solid fa-pen"></i>
+
+                        Editar
+
+                    </button>
 
                     <a href="/eliminar/{{ loop.index0 }}"
-                    class="btn-delete">
+                    class="delete-btn">
+
+                        <i class="fa-solid fa-trash"></i>
 
                         Eliminar
 
                     </a>
 
-                </td>
+                </div>
 
-            </tr>
+            </div>
 
             {% endfor %}
 
-        </table>
+        </div>
 
-    </div>
+    </main>
 
 </div>
+
+<!-- SCRIPT BUSCADOR -->
+
+<script>
+
+const buscador =
+document.getElementById('buscador');
+
+buscador.addEventListener('keyup', () => {
+
+    const filtro =
+    buscador.value.toLowerCase();
+
+    const tarjetas =
+    document.querySelectorAll('.patient-card');
+
+    tarjetas.forEach(card => {
+
+        const texto =
+        card.innerText.toLowerCase();
+
+        card.style.display =
+        texto.includes(filtro)
+        ? 'block'
+        : 'none';
+
+    });
+
+});
+
+</script>
 
 </body>
 </html>

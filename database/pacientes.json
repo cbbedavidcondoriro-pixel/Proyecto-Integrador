@@ -1,1 +1,17 @@
-[]
+[
+    {
+        "nombre": "david",
+        "ci": "9878899",
+        "edad": "21",
+        "sexo": "Masculino",
+        "fecha_nacimiento": "2026-04-30",
+        "telefono": "3445555577",
+        "correo": "davidcondori439@gmail.com",
+        "direccion": "calle 6 de agosto",
+        "emergencia": "78866888",
+        "telefono_emergencia": "67886666778",
+        "foto": "",
+        "cumplimiento": "Excelente",
+        "asistencias": 0
+    }
+]

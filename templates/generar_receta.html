@@ -5,58 +5,499 @@
 
     <meta charset="UTF-8">
 
-    <title>Generar Receta</title>
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Reportes Inteligentes
+    </title>
 
     <link rel="stylesheet"
-    href="{{ url_for('static', filename='css/pacientes.css') }}">
+    href="{{ url_for('static',
+    filename='css/reportes.css') }}">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 </head>
 
 <body>
 
+<div class="background"></div>
+
 <div class="container">
 
-    <div class="form-box">
+    <!-- SIDEBAR -->
 
-        <h1>
-            🧾 Generar Receta Médica
-        </h1>
+    <aside class="sidebar">
 
-        <form>
+        <div class="logo">
 
-            <select>
+            <i class="fa-solid fa-heart-pulse"></i>
 
-                <option>
-                    Seleccionar Paciente
-                </option>
+            <h2>
+                SmartMediIoT
+            </h2>
 
-                {% for p in pacientes %}
+        </div>
 
-                <option>
-                    {{ p.nombre }}
-                </option>
+        <nav>
 
-                {% endfor %}
+            <a href="/dashboard">
 
-            </select>
+                <i class="fa-solid fa-chart-line"></i>
 
-            <textarea
-            placeholder="Medicamentos"></textarea>
+                Dashboard
 
-            <textarea
-            placeholder="Indicaciones Médicas"></textarea>
+            </a>
 
-            <button>
+            <a href="/registrar">
 
-                Generar Receta
+                <i class="fa-solid fa-user-plus"></i>
 
-            </button>
+                Registrar Paciente
 
-        </form>
+            </a>
 
-    </div>
+            <a href="/consultar">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                Consultar Pacientes
+
+            </a>
+
+            <a href="/tratamiento">
+
+                <i class="fa-solid fa-pills"></i>
+
+                Tratamientos
+
+            </a>
+
+            <a href="/receta"
+            class="active">
+
+                <i class="fa-solid fa-file-waveform"></i>
+
+                Reportes
+
+            </a>
+
+        </nav>
+
+    </aside>
+
+    <!-- MAIN -->
+
+    <main class="main-content">
+
+        <!-- HEADER -->
+
+        <div class="topbar">
+
+            <div>
+
+                <h1>
+
+                    Reportes Clínicos Inteligentes
+
+                </h1>
+
+                <p>
+
+                    Monitoreo médico y evolución clínica del paciente
+
+                </p>
+
+            </div>
+
+            <div class="doctor">
+
+                <i class="fa-solid fa-user-doctor"></i>
+
+                <span>
+                    Médico Responsable
+                </span>
+
+            </div>
+
+        </div>
+
+        <!-- BUSCADOR -->
+
+        <div class="search-box">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input type="text"
+            id="buscador"
+            placeholder="Buscar paciente por nombre o carnet...">
+
+        </div>
+
+        <!-- PACIENTES -->
+
+        <div class="patients-grid">
+
+            {% for p in pacientes %}
+
+            <div class="report-card">
+
+                <!-- HEADER -->
+
+                <div class="card-header">
+
+                    {% if p.foto %}
+
+                    <img src="{{ url_for('static',
+                    filename='uploads/' + p.foto) }}"
+                    class="patient-photo">
+
+                    {% else %}
+
+                    <div class="no-photo">
+
+                        <i class="fa-solid fa-user"></i>
+
+                    </div>
+
+                    {% endif %}
+
+                    <div>
+
+                        <h2>
+
+                            {{ p.nombre }}
+
+                        </h2>
+
+                        <p>
+
+                            CI:
+                            {{ p.ci }}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <!-- DATOS -->
+
+                <div class="info-grid">
+
+                    <div class="info-box">
+
+                        <span>
+                            Edad
+                        </span>
+
+                        <strong>
+
+                            {{ p.edad }}
+
+                        </strong>
+
+                    </div>
+
+                    <div class="info-box">
+
+                        <span>
+                            Sexo
+                        </span>
+
+                        <strong>
+
+                            {{ p.sexo }}
+
+                        </strong>
+
+                    </div>
+
+                    <div class="info-box">
+
+                        <span>
+                            Asistencias
+                        </span>
+
+                        <strong>
+
+                            12
+
+                        </strong>
+
+                    </div>
+
+                    <div class="info-box">
+
+                        <span>
+                            Estado
+                        </span>
+
+                        <strong class="green">
+
+                            Estable
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+                <!-- TRATAMIENTO -->
+
+                <div class="section">
+
+                    <h3>
+
+                        💊 Tratamiento Actual
+
+                    </h3>
+
+                    <div class="treatment">
+
+                        <p>
+
+                            Medicamento:
+                            <span>
+
+                                Paracetamol
+
+                            </span>
+
+                        </p>
+
+                        <p>
+
+                            Dosis:
+                            <span>
+
+                                1 Tableta
+
+                            </span>
+
+                        </p>
+
+                        <p>
+
+                            Horario:
+                            <span>
+
+                                08:00 AM
+
+                            </span>
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <!-- CUMPLIMIENTO -->
+
+                <div class="section">
+
+                    <h3>
+
+                        📈 Cumplimiento del Tratamiento
+
+                    </h3>
+
+                    <div class="progress-container">
+
+                        <div class="progress-bar">
+
+                        </div>
+
+                    </div>
+
+                    <div class="stats">
+
+                        <div>
+
+                            <strong>
+
+                                92%
+
+                            </strong>
+
+                            <span>
+
+                                Cumplimiento
+
+                            </span>
+
+                        </div>
+
+                        <div>
+
+                            <strong>
+
+                                3
+
+                            </strong>
+
+                            <span>
+
+                                Faltas
+
+                            </span>
+
+                        </div>
+
+                        <div>
+
+                            <strong>
+
+                                28
+
+                            </strong>
+
+                            <span>
+
+                                Dosis tomadas
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- HISTORIAL -->
+
+                <div class="section">
+
+                    <h3>
+
+                        📅 Historial Clínico
+
+                    </h3>
+
+                    <div class="history">
+
+                        <div class="history-item">
+
+                            <span>
+                                10/05/2026
+                            </span>
+
+                            <p>
+                                Consulta médica general
+                            </p>
+
+                        </div>
+
+                        <div class="history-item">
+
+                            <span>
+                                12/05/2026
+                            </span>
+
+                            <p>
+                                Cumplió correctamente el tratamiento
+                            </p>
+
+                        </div>
+
+                        <div class="history-item">
+
+                            <span>
+                                14/05/2026
+                            </span>
+
+                            <p>
+                                Presentó retraso en una dosis
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- OBSERVACIONES -->
+
+                <div class="section">
+
+                    <h3>
+
+                        🩺 Observaciones Médicas
+
+                    </h3>
+
+                    <textarea readonly>
+
+Paciente estable. Continúa respondiendo adecuadamente al tratamiento médico asignado.
+
+                    </textarea>
+
+                </div>
+
+                <!-- BOTONES -->
+
+                <div class="buttons">
+
+                    <button class="pdf-btn">
+
+                        <i class="fa-solid fa-file-pdf"></i>
+
+                        Generar PDF
+
+                    </button>
+
+                    <button class="print-btn">
+
+                        <i class="fa-solid fa-print"></i>
+
+                        Imprimir
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </main>
 
 </div>
+
+<!-- BUSCADOR -->
+
+<script>
+
+const buscador =
+document.getElementById('buscador');
+
+buscador.addEventListener('keyup', () => {
+
+    const filtro =
+    buscador.value.toLowerCase();
+
+    const cards =
+    document.querySelectorAll('.report-card');
+
+    cards.forEach(card => {
+
+        const texto =
+        card.innerText.toLowerCase();
+
+        card.style.display =
+        texto.includes(filtro)
+        ? 'block'
+        : 'none';
+
+    });
+
+});
+
+</script>
 
 </body>
 </html>

@@ -8,130 +8,534 @@
     <meta name="viewport"
     content="width=device-width, initial-scale=1.0">
 
-    <title>Panel Médico</title>
+    <title>
+        SmartMediIoT
+    </title>
 
     <link rel="stylesheet"
-    href="{{ url_for('static', filename='css/dashboard.css') }}">
+    href="{{ url_for('static',
+    filename='css/dashboard.css') }}">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 </head>
 
 <body>
 
-<div class="sidebar">
+<div class="background"></div>
 
-    <div>
+<div class="dashboard-container">
 
-        <h2 class="logo">
-            🏥 SmartMedi
-        </h2>
+    <!-- SIDEBAR -->
 
-        <ul>
-
-            <li>
-                <a href="/dashboard">
-                    📊 Dashboard
-                </a>
-            </li>
-
-            <li>
-                <a href="/registrar">
-                    👨‍⚕️ Registrar Paciente
-                </a>
-            </li>
-
-            <li>
-                <a href="/consultar">
-                    📋 Consultar Pacientes
-                </a>
-            </li>
-
-            <li>
-                <a href="/tratamiento">
-                    💊 Tratamientos
-                </a>
-            </li>
-
-            <li>
-                <a href="/receta">
-                    🧾 Generar Receta
-                </a>
-            </li>
-
-        </ul>
-
-    </div>
-
-</div>
-
-<div class="main-content">
-
-    <div class="topbar">
+    <aside class="sidebar">
 
         <div>
 
-            <h1>
-                Panel del Médico
-            </h1>
+            <div class="logo">
 
-            <p>
-                Sistema Inteligente de Medicamentos
-            </p>
+                <i class="fa-solid fa-heart-pulse"></i>
+
+                <h2>
+                    SmartMediIoT
+                </h2>
+
+            </div>
+
+            <nav>
+
+                <button onclick="mostrar('dashboard')">
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                    Dashboard
+
+                </button>
+
+                <button onclick="mostrar('registrar')">
+
+                    <i class="fa-solid fa-user-plus"></i>
+
+                    Registrar Paciente
+
+                </button>
+
+                <button onclick="mostrar('consultar')">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    Consultar Pacientes
+
+                </button>
+
+                <button onclick="mostrar('tratamiento')">
+
+                    <i class="fa-solid fa-pills"></i>
+
+                    Tratamientos
+
+                </button>
+
+                <button onclick="mostrar('reportes')">
+
+                    <i class="fa-solid fa-file-waveform"></i>
+
+                    Reportes
+
+                </button>
+
+            </nav>
 
         </div>
 
-    </div>
+        <div class="doctor-box">
 
-    <div class="cards">
+            <div class="doctor-avatar">
 
-        <div class="card">
+                <i class="fa-solid fa-user-doctor"></i>
 
-            <h3>Total Pacientes</h3>
+            </div>
 
-            <h2>
-                {{ total_pacientes }}
-            </h2>
+            <div>
 
-        </div>
+                <h3>
 
-        <div class="card green">
+                    Dr. SmartMedi
 
-            <h3>Tratamientos</h3>
+                </h3>
 
-            <h2>
-                {{ tratamientos }}
-            </h2>
+                <p>
 
-        </div>
+                    Médico Responsable
 
-        <div class="card dark">
+                </p>
 
-            <h3>Recordatorios</h3>
-
-            <h2>
-                {{ recordatorios }}
-            </h2>
+            </div>
 
         </div>
 
-    </div>
+    </aside>
 
-    <div class="welcome-box">
+    <!-- MAIN -->
 
-        <h2>
-            Bienvenido Doctor 👨‍⚕️
-        </h2>
+    <main class="main-content">
 
-        <p>
+        <!-- TOPBAR -->
 
-            Desde este panel podrá administrar pacientes,
-            tratamientos médicos, recetas y recordatorios
-            inteligentes de medicamentos.
+        <div class="topbar">
 
-        </p>
+            <div>
 
-    </div>
+                <h1>
+
+                    Panel Médico Inteligente
+
+                </h1>
+
+                <p>
+
+                    Sistema Inteligente de Medicamentos
+
+                </p>
+
+            </div>
+
+            <div class="status-box">
+
+                <span class="status-dot"></span>
+
+                Sistema Activo
+
+            </div>
+
+        </div>
+
+        <!-- DASHBOARD -->
+
+        <section id="dashboard"
+        class="section active">
+
+            <div class="cards">
+
+                <div class="card">
+
+                    <div class="card-icon">
+
+                        <i class="fa-solid fa-users"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Pacientes
+                        </h3>
+
+                        <h2>
+
+                            {{ total_pacientes }}
+
+                        </h2>
+
+                    </div>
+
+                </div>
+
+                <div class="card green">
+
+                    <div class="card-icon">
+
+                        <i class="fa-solid fa-pills"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Tratamientos
+                        </h3>
+
+                        <h2>
+
+                            {{ tratamientos }}
+
+                        </h2>
+
+                    </div>
+
+                </div>
+
+                <div class="card blue">
+
+                    <div class="card-icon">
+
+                        <i class="fa-solid fa-bell"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Recordatorios
+                        </h3>
+
+                        <h2>
+
+                            {{ recordatorios }}
+
+                        </h2>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="welcome-panel">
+
+                <div>
+
+                    <h2>
+
+                        Bienvenido Doctor 👨‍⚕️
+
+                    </h2>
+
+                    <p>
+
+                        Administre pacientes,
+                        tratamientos y reportes
+                        desde un sistema inteligente.
+
+                    </p>
+
+                </div>
+
+                <i class="fa-solid fa-heart-circle-check"></i>
+
+            </div>
+
+        </section>
+
+        <!-- REGISTRAR -->
+
+        <section id="registrar"
+        class="section">
+
+            <div class="module-box">
+
+                <h2>
+
+                    👨‍⚕️ Registrar Paciente
+
+                </h2>
+
+                <form
+                method="POST"
+                enctype="multipart/form-data"
+                action="/registrar">
+
+                    <div class="grid">
+
+                        <input type="text"
+                        name="nombre"
+                        placeholder="Nombre Completo"
+                        required>
+
+                        <input type="text"
+                        name="ci"
+                        placeholder="Carnet de Identidad"
+                        required>
+
+                        <input type="number"
+                        name="edad"
+                        placeholder="Edad">
+
+                        <select name="sexo">
+
+                            <option>
+                                Masculino
+                            </option>
+
+                            <option>
+                                Femenino
+                            </option>
+
+                        </select>
+
+                        <input type="date"
+                        name="fecha_nacimiento">
+
+                        <input type="text"
+                        name="telefono"
+                        placeholder="Teléfono">
+
+                        <input type="email"
+                        name="correo"
+                        placeholder="Correo">
+
+                        <input type="text"
+                        name="direccion"
+                        placeholder="Dirección">
+
+                        <input type="text"
+                        name="emergencia"
+                        placeholder="Contacto Emergencia">
+
+                        <input type="text"
+                        name="telefono_emergencia"
+                        placeholder="Teléfono Emergencia">
+
+                    </div>
+
+                    <div class="upload-box">
+
+                        <label>
+
+                            📷 Fotografía Paciente
+
+                        </label>
+
+                        <input type="file"
+                        name="foto">
+
+                    </div>
+
+                    <button type="submit">
+
+                        Guardar Paciente
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </section>
+
+        <!-- CONSULTAR -->
+
+        <section id="consultar"
+        class="section">
+
+            <div class="module-box">
+
+                <h2>
+
+                    📋 Consultar Pacientes
+
+                </h2>
+
+                <input type="text"
+                id="buscador"
+                placeholder="Buscar paciente...">
+
+                <div class="patients-list">
+
+                    {% for p in pacientes %}
+
+                    <div class="patient-card">
+
+                        <h3>
+
+                            {{ p.nombre }}
+
+                        </h3>
+
+                        <p>
+
+                            CI:
+                            {{ p.ci }}
+
+                        </p>
+
+                        <p>
+
+                            Cumplimiento:
+                            Excelente
+
+                        </p>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- TRATAMIENTO -->
+
+        <section id="tratamiento"
+        class="section">
+
+            <div class="module-box">
+
+                <h2>
+
+                    💊 Configurar Tratamiento
+
+                </h2>
+
+                <form>
+
+                    <select>
+
+                        {% for p in pacientes %}
+
+                        <option>
+
+                            {{ p.nombre }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                    <input type="text"
+                    placeholder="Medicamento">
+
+                    <input type="text"
+                    placeholder="Dosis">
+
+                    <input type="time">
+
+                    <input type="date">
+
+                    <input type="date">
+
+                    <textarea
+                    placeholder="Indicaciones Médicas"></textarea>
+
+                    <button>
+
+                        Guardar Tratamiento
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </section>
+
+        <!-- REPORTES -->
+
+        <section id="reportes"
+        class="section">
+
+            <div class="module-box">
+
+                <h2>
+
+                    📄 Reportes Médicos
+
+                </h2>
+
+                <div class="report-card">
+
+                    <h3>
+
+                        Juan Pérez
+
+                    </h3>
+
+                    <p>
+
+                        Cumplimiento:
+                        92%
+
+                    </p>
+
+                    <p>
+
+                        Tratamiento:
+                        Correcto
+
+                    </p>
+
+                    <button>
+
+                        Generar PDF
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
 
 </div>
+
+<!-- SCRIPT -->
+
+<script>
+
+function mostrar(id){
+
+    const sections =
+    document.querySelectorAll('.section');
+
+    sections.forEach(sec => {
+
+        sec.classList.remove('active');
+
+    });
+
+    document
+    .getElementById(id)
+    .classList.add('active');
+
+}
+
+</script>
 
 </body>
 </html>

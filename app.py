@@ -184,6 +184,16 @@ def eliminar(index):
         url_for('consultar')
     )
 
+@app.route('/receta')
+def receta():
+
+    pacientes = obtener_pacientes()
+
+    return render_template(
+        'generar_receta.html',
+        pacientes=pacientes
+    )
+
 
 if __name__ == '__main__':
 
