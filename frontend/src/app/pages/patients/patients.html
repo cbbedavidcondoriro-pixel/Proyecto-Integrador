@@ -1,0 +1,305 @@
+<div class="patients-container">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div>
+
+            <div class="logo">
+
+                🏥 SmartMediIoT
+
+            </div>
+
+            <ul class="menu">
+
+                <li routerLink="/dashboard">
+
+                    📊 Dashboard
+
+                </li>
+
+                <li class="active">
+
+                    👨‍⚕️ Pacientes
+
+                </li>
+
+                <li>
+
+                    💊 Tratamientos
+
+                </li>
+
+                <li>
+
+                    🧾 Reportes
+
+                </li>
+
+                <li>
+
+                    🔔 Recordatorios
+
+                </li>
+
+            </ul>
+
+        </div>
+
+    </aside>
+
+    <!-- MAIN -->
+
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+
+        <div class="topbar">
+
+            <div>
+
+                <h1>
+                    Gestión de Pacientes
+                </h1>
+
+                <p>
+                    Administración completa de pacientes registrados
+                </p>
+
+            </div>
+
+            <button class="btn-add">
+
+                + Nuevo Paciente
+
+            </button>
+
+        </div>
+
+        <!-- SEARCH -->
+
+        <div class="search-box">
+
+            <input
+                type="text"
+                placeholder="Buscar paciente por nombre o CI...">
+
+        </div>
+
+        <!-- FORM -->
+
+        <div class="form-card">
+
+            <h2>
+                Registrar Paciente
+            </h2>
+
+            <div class="grid">
+
+                <div class="input-group">
+
+                    <label>
+                        Nombre Completo
+                    </label>
+
+                    <input type="text">
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>
+                        Carnet de Identidad
+                    </label>
+
+                    <input type="text">
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>
+                        Edad
+                    </label>
+
+                    <input type="number">
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>
+                        Sexo
+                    </label>
+
+                    <select>
+
+                        <option>
+                            Masculino
+                        </option>
+
+                        <option>
+                            Femenino
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>
+                        Teléfono
+                    </label>
+
+                    <input type="text">
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>
+                        Correo
+                    </label>
+
+                    <input type="email">
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>
+                        Dirección
+                    </label>
+
+                    <input type="text">
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>
+                        Contacto Emergencia
+                    </label>
+
+                    <input type="text">
+
+                </div>
+
+                <div class="input-group full">
+
+                    <label>
+                        Subir Fotografía
+                    </label>
+
+                    <input type="file">
+
+                </div>
+
+            </div>
+
+            <button class="save-btn">
+
+                Guardar Paciente
+
+            </button>
+
+        </div>
+
+        <!-- TABLE -->
+
+        <div class="table-card">
+
+            <div class="table-header">
+
+                <h2>
+                    Pacientes Registrados
+                </h2>
+
+            </div>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Paciente</th>
+                        <th>CI</th>
+                        <th>Edad</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td>Juan Pérez</td>
+                        <td>1234567</td>
+                        <td>45</td>
+
+                        <td>
+
+                            <span class="status active">
+                                Activo
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <button class="action edit">
+                                Editar
+                            </button>
+
+                            <button class="action delete">
+                                Eliminar
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>María López</td>
+                        <td>998877</td>
+                        <td>36</td>
+
+                        <td>
+
+                            <span class="status pending">
+                                Seguimiento
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <button class="action edit">
+                                Editar
+                            </button>
+
+                            <button class="action delete">
+                                Eliminar
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+</div>

@@ -1,0 +1,283 @@
+<div class="register-container">
+
+    <div class="overlay"></div>
+
+    <div class="register-card">
+
+        <!-- LADO IZQUIERDO -->
+
+        <div class="left">
+
+            <h1>
+                🏥 SmartMediIoT
+            </h1>
+
+            <p>
+
+                Plataforma inteligente para clínicas,
+                médicos y farmacias enfocada en la
+                administración de pacientes,
+                tratamientos médicos y monitoreo
+                inteligente de medicamentos.
+
+            </p>
+
+            <div class="info-box">
+
+                <h3>
+                    Funciones del Sistema
+                </h3>
+
+                <ul>
+
+                    <li>
+                        ✔ Gestión de pacientes
+                    </li>
+
+                    <li>
+                        ✔ Tratamientos inteligentes
+                    </li>
+
+                    <li>
+                        ✔ Historial médico
+                    </li>
+
+                    <li>
+                        ✔ Reportes automáticos
+                    </li>
+
+                    <li>
+                        ✔ Recordatorios de medicamentos
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+        <!-- LADO DERECHO -->
+
+        <div class="right">
+
+            <h2>
+                Crear Cuenta
+            </h2>
+
+            <form (ngSubmit)="registrar()">
+
+                <div class="photo-section">
+
+                    <label>
+                        Fotografía de Perfil
+                    </label>
+
+                    <input
+                        type="file"
+                        (change)="seleccionarImagen($event)">
+
+                </div>
+
+                <div class="grid">
+
+                    <!-- NOMBRE -->
+
+                    <div class="input-group">
+
+                        <label>
+                            Nombre
+                        </label>
+
+                        <input
+                            type="text"
+                            name="nombre"
+                            [(ngModel)]="usuario.nombre"
+                            placeholder="Ingrese nombre">
+
+                    </div>
+
+                    <!-- APELLIDO -->
+
+                    <div class="input-group">
+
+                        <label>
+                            Apellido
+                        </label>
+
+                        <input
+                            type="text"
+                            name="apellido"
+                            [(ngModel)]="usuario.apellido"
+                            placeholder="Ingrese apellido">
+
+                    </div>
+
+                    <!-- USUARIO -->
+
+                    <div class="input-group">
+
+                        <label>
+                            Usuario
+                        </label>
+
+                        <input
+                            type="text"
+                            name="usuario"
+                            [(ngModel)]="usuario.usuario"
+                            placeholder="Ingrese usuario">
+
+                    </div>
+
+                    <!-- CORREO -->
+
+                    <div class="input-group">
+
+                        <label>
+                            Correo Electrónico
+                        </label>
+
+                        <input
+                            type="email"
+                            name="correo"
+                            [(ngModel)]="usuario.correo"
+                            placeholder="Ingrese correo">
+
+                    </div>
+
+                    <!-- PASSWORD -->
+
+                    <div class="input-group">
+
+                        <label>
+                            Contraseña
+                        </label>
+
+                        <input
+                            type="password"
+                            name="password"
+                            [(ngModel)]="usuario.password"
+                            placeholder="Ingrese contraseña">
+
+                    </div>
+
+                    <!-- TELEFONO -->
+
+                    <div class="input-group">
+
+                        <label>
+                            Teléfono
+                        </label>
+
+                        <input
+                            type="text"
+                            name="telefono"
+                            [(ngModel)]="usuario.telefono"
+                            placeholder="Ingrese teléfono">
+
+                    </div>
+
+                    <!-- CLINICA -->
+
+                    <div class="input-group">
+
+                        <label>
+                            Clínica / Consultorio
+                        </label>
+
+                        <input
+                            type="text"
+                            name="clinica"
+                            [(ngModel)]="usuario.clinica"
+                            placeholder="Nombre clínica">
+
+                    </div>
+
+                    <!-- ESPECIALIDAD -->
+
+                    <div class="input-group">
+
+                        <label>
+                            Especialidad
+                        </label>
+
+                        <input
+                            type="text"
+                            name="especialidad"
+                            [(ngModel)]="usuario.especialidad"
+                            placeholder="Ej: Dentista">
+
+                    </div>
+
+                    <!-- ROL -->
+
+                    <div class="input-group">
+
+                        <label>
+                            Tipo de Usuario
+                        </label>
+
+                        <select
+                            name="rol"
+                            [(ngModel)]="usuario.rol">
+
+                            <option value="">
+                                Seleccione
+                            </option>
+
+                            <option value="medico">
+                                Médico
+                            </option>
+
+                            <option value="farmaceutico">
+                                Farmacéutico
+                            </option>
+
+                            <option value="administrador">
+                                Administrador
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <!-- DIRECCION -->
+
+                    <div class="input-group">
+
+                        <label>
+                            Dirección
+                        </label>
+
+                        <input
+                            type="text"
+                            name="direccion"
+                            [(ngModel)]="usuario.direccion"
+                            placeholder="Ingrese dirección">
+
+                    </div>
+
+                </div>
+
+                <button type="submit">
+
+                    Crear Cuenta
+
+                </button>
+
+            </form>
+
+            <div class="login-link">
+
+                ¿Ya tienes cuenta?
+
+                <a routerLink="/login">
+                    Iniciar Sesión
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
