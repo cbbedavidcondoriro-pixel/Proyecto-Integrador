@@ -6,18 +6,19 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-CORS(app)
+# CONFIGURACIÓN DE CORS ÚNICA Y ROBUSTA (Para que Angular puerto 4200 no se bloquee)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 UPLOAD_FOLDER = 'uploads'
-
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-CORS(app)
+# Asegurar que la carpeta de subidas exista de forma física
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
 
 # =========================
 # CONEXIÓN MYSQL
 # =========================
-
 db = mysql.connector.connect(
     host="localhost",
     user="root",
@@ -25,252 +26,402 @@ db = mysql.connector.connect(
     database="smartmedi"
 )
 
-cursor = db.cursor(dictionary=True)
-
-@app.route('/login', methods=['POST'])
-
-def login():
-
-    data = request.json
-
-    sql = """
-
-        SELECT * FROM usuarios
-
-        WHERE usuario=%s
-        AND password=%s
-
-    """
-
-    valores = (
-
-        data['usuario'],
-        data['password']
-
-    )
-
-    cursor.execute(sql, valores)
-
-    usuario = cursor.fetchone()
-
-    if usuario:
-
-        return jsonify({
-
-            "success":True,
-            "usuario":usuario
-
-        })
-
-    else:
-
-        return jsonify({
-
-            "success":False,
-            "mensaje":"Credenciales incorrectas"
-
-        })
-
-@app.route('/register', methods=['POST'])
-
-def register():
-
-    foto = request.files['foto']
-
-    nombre_foto = ''
-
-    if foto:
-
-        nombre_foto = secure_filename(foto.filename)
-
-        ruta = os.path.join(
-
-            app.config['UPLOAD_FOLDER'],
-            nombre_foto
-
-        )
-
-        foto.save(ruta)
-
-    nombre = request.form['nombre']
-
-    apellido = request.form['apellido']
-
-    usuario = request.form['usuario']
-
-    correo = request.form['correo']
-
-    password = request.form['password']
-
-    telefono = request.form['telefono']
-
-    clinica = request.form['clinica']
-
-    especialidad = request.form['especialidad']
-
-    direccion = request.form['direccion']
-
-    rol = request.form['rol']
-
-    sql = """
-
-        INSERT INTO usuarios(
-
-            foto,
-            nombre,
-            apellido,
-            usuario,
-            correo,
-            password,
-            telefono,
-            clinica,
-            especialidad,
-            direccion,
-            rol
-
-        )
-
-        VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-
-    """
-
-    valores = (
-
-        nombre_foto,
-        nombre,
-        apellido,
-        usuario,
-        correo,
-        password,
-        telefono,
-        clinica,
-        especialidad,
-        direccion,
-        rol
-
-    )
-
-    cursor.execute(sql, valores)
-
-    db.commit()
-
-    return jsonify({
-
-        "mensaje":"Usuario registrado correctamente"
-
-    })
-    
-@app.route('/dashboard/<usuario_id>', methods=['GET'])
-def dashboard(usuario_id):
-
-    cursor = mysql.connection.cursor()
-
-    # total pacientes
-    cursor.execute("SELECT COUNT(*) FROM pacientes")
-    pacientes = cursor.fetchone()[0]
-
-    # total tratamientos
-    cursor.execute("SELECT COUNT(*) FROM tratamientos")
-    tratamientos = cursor.fetchone()[0]
-
-    # total recordatorios
-    cursor.execute("SELECT COUNT(*) FROM recordatorios")
-    recordatorios = cursor.fetchone()[0]
-
-    return jsonify({
-        "pacientes": pacientes,
-        "tratamientos": tratamientos,
-        "recordatorios": recordatorios
-    })
-
+# =========================
+# HOME DE CONTROL
+# =========================
 @app.route('/')
-
 def home():
-
     return jsonify({
         "mensaje": "API SmartMediIoT funcionando"
     })
 
 # =========================
-# REGISTRAR PACIENTE
+# LOGIN DE USUARIOS
 # =========================
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.json
+    # Creamos el cursor de forma local dentro de la función
+    cursor = db.cursor(dictionary=True)
+    
+    sql = """
+        SELECT * FROM usuarios
+        WHERE usuario=%s
+        AND password=%s
+    """
+    valores = (
+        data['usuario'],
+        data['password']
+    )
+    
+    try:
+        cursor.execute(sql, valores)
+        usuario = cursor.fetchone()
+        
+        if usuario:
+            return jsonify({
+                "success": True,
+                "usuario": usuario
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "mensaje": "Credenciales incorrectas"
+            })
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+    finally:
+        cursor.close() # Cerramos el cursor local de forma segura
+
+# =========================
+# REGISTRO DE MÉDICOS
+# =========================
+@app.route('/register', methods=['POST'])
+def register():
+    cursor = db.cursor()
+    
+    foto = request.files.get('foto')
+    nombre_foto = ''
+
+    if foto:
+        nombre_foto = secure_filename(foto.filename)
+        ruta = os.path.join(
+            app.config['UPLOAD_FOLDER'],
+            nombre_foto
+        )
+        foto.save(ruta)
+
+    nombre = request.form['nombre']
+    apellido = request.form['apellido']
+    usuario = request.form['usuario']
+    correo = request.form['correo']
+    password = request.form['password']
+    telefono = request.form['telefono']
+    clinica = request.form['clinica']
+    especialidad = request.form['especialidad']
+    direccion = request.form['direccion']
+    rol = request.form['rol']
+
+    sql = """
+        INSERT INTO usuarios(
+            foto, nombre, apellido, usuario, correo, 
+            password, telefono, clinica, especialidad, direccion, rol
+        )
+        VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+    """
+    valores = (
+        nombre_foto, nombre, apellido, usuario, correo,
+        password, telefono, clinica, especialidad, direccion, rol
+    )
+
+    try:
+        cursor.execute(sql, valores)
+        db.commit()
+        return jsonify({
+            "mensaje": "Usuario registrado correctamente"
+        })
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": str(e)}), 500
+    finally:
+        cursor.close()
+
+# =========================
+# DATA DEL DASHBOARD 
+# =========================
+@app.route('/dashboard/<int:usuario_id>', methods=['GET'])
+def dashboard(usuario_id):
+    cursor = db.cursor(dictionary=True)
+
+    try:
+        # Contar ÚNICAMENTE los pacientes que pertenecen de forma estricta a este médico
+        cursor.execute("SELECT COUNT(*) as total FROM pacientes WHERE medico_id = %s", (usuario_id,))
+        pacientes = cursor.fetchone()['total']
+
+        # Contar tratamientos activos generales
+        try:
+            cursor.execute("SELECT COUNT(*) as total FROM tratamientos")
+            tratamientos = cursor.fetchone()['total']
+        except Exception:
+            tratamientos = 0  
+
+        # Contar recordatorios emitidos generales
+        try:
+            cursor.execute("SELECT COUNT(*) as total FROM recordatorios")
+            recordatorios = cursor.fetchone()['total']
+        except Exception:
+            recordatorios = 0  
+
+        # Obtener la lista de los últimos 5 pacientes registrados por este médico específico
+        try:
+            cursor.execute("""
+                SELECT id, nombre, ci, edad 
+                FROM pacientes 
+                WHERE medico_id = %s 
+                ORDER BY id DESC 
+                LIMIT 5
+            """, (usuario_id,))
+            lista_pacientes = cursor.fetchall()
+        except Exception as e:
+            print("Error al obtener la lista de pacientes:", str(e))
+            lista_pacientes = []
+
+        # Métrica IoT proporcional a sus pacientes asignados
+        dispositivos_iot = pacientes 
+
+        return jsonify({
+            "pacientes": pacientes,
+            "tratamientos": tratamientos,
+            "recordatorios": recordatorios,
+            "dispositivos_iot": dispositivos_iot,
+            "lista_pacientes": lista_pacientes
+        })
+
+    except Exception as e:
+        print("Error en dashboard:", str(e))
+        return jsonify({
+            "pacientes": 0, "tratamientos": 0, "recordatorios": 0, "dispositivos_iot": 0,
+            "lista_pacientes": [], "error": str(e)
+        }), 500
+    finally:
+        cursor.close()
+
 
 @app.route('/pacientes', methods=['POST'])
 def registrar_paciente():
-
-    data = request.json
-
-    cursor = db.cursor()
-
-    # 🔐 1. CREAR USUARIO DEL PACIENTE (LOGIN)
-    cursor.execute("""
-        INSERT INTO usuarios(usuario, password, rol)
-        VALUES(%s,%s,'paciente')
-    """, (
-        data['usuario'],
-        data['password']
-    ))
-
-    usuario_id = cursor.lastrowid
-
-    # 🧑‍⚕️ 2. CREAR PACIENTE (FICHA MÉDICA)
-    sql = """
-        INSERT INTO pacientes(
-            usuario_id,
-            medico_id,
-            nombre,
-            ci,
-            edad,
-            sexo,
-            telefono,
-            correo,
-            direccion,
-            emergencia
-        )
-        VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-    """
-
-    valores = (
-        usuario_id,
-        data['medico_id'],
-        data['nombre'],
-        data['ci'],
-        data['edad'],
-        data['sexo'],
-        data['telefono'],
-        data['correo'],
-        data['direccion'],
-        data['emergencia']
-    )
-
-    cursor.execute(sql, valores)
-
-    db.commit()
-
-    return jsonify({
-        "success": True,
-        "mensaje": "Paciente registrado con acceso al sistema"
-    })
-# =========================
-# LISTAR PACIENTES
-# =========================
-
-@app.route('/pacientes/<int:medico_id>', methods=['GET'])
-def listar_pacientes(medico_id):
-
+    data = request.get_json() or request.json
     cursor = db.cursor(dictionary=True)
 
-    cursor.execute("""
-        SELECT * FROM pacientes
-        WHERE medico_id = %s
-    """, (medico_id,))
+    try:
+        # Generar un usuario y password por defecto usando su CI si Angular no los envía
+        ci_paciente = data.get('ci', '12345')
+        username = data.get('usuario', f"user_{ci_paciente}")
+        password = data.get('password', ci_paciente)
 
-    pacientes = cursor.fetchall()
+        # 🔐 Paso A: Crear de manera obligatoria su registro en la tabla de usuarios
+        cursor.execute("""
+            INSERT INTO usuarios (usuario, password, rol)
+            VALUES (%s, %s, 'paciente')
+        """, (username, password))
+        
+        usuario_id = cursor.lastrowid # Obtenemos el ID autogenerado para enlazarlo
 
-    return jsonify(pacientes)
+        # 🧑‍⚕️ Paso B: Capturar y validar el ID del médico logueado
+        medico_id = data.get('medico_id')
+        if medico_id is None or medico_id == 0 or medico_id == "":
+            medico_id = 1 # Por seguridad, si falla, se le asigna al Dr. Saúl (ID 1)
+
+        # 📋 Paso C: Insertar los datos del paciente en la tabla con sus relaciones correctas
+        sql = """
+            INSERT INTO pacientes (
+                usuario_id, medico_id, nombre, ci, edad, 
+                sexo, telefono, correo, direccion, emergencia, foto
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        valores = (
+            usuario_id,
+            medico_id,
+            data.get('nombre'),
+            data.get('ci'),
+            data.get('edad'),
+            data.get('sexo', 'Masculino'),
+            data.get('telefono', ''),
+            data.get('correo', ''),
+            data.get('direccion', ''),
+            data.get('emergencia', ''),
+            data.get('foto', '')
+        )
+
+        cursor.execute(sql, valores)
+        db.commit()
+        
+        return jsonify({
+            "success": True, 
+            "mensaje": "¡Paciente registrado con éxito!", 
+            "medico_id": medico_id,
+            "usuario_id": usuario_id
+        }), 201
+
+    except Exception as e:
+        db.rollback()
+        print("Error crítico al registrar paciente en el Backend:", str(e))
+        return jsonify({"success": False, "error": str(e)}), 500
+    finally:
+        cursor.close()
+
+
+# =====================================================================
+# 2. LISTAR PACIENTES EXCLUSIVOS DEL MÉDICO
+# =====================================================================
+@app.route('/pacientes/<int:medico_id>', methods=['GET'])
+def listar_pacientes(medico_id):
+    cursor = db.cursor(dictionary=True)
+    try:
+        # Trae de la base de datos únicamente los pacientes que pertenecen a este médico
+        cursor.execute("""
+            SELECT id, usuario_id, medico_id, nombre, ci, edad, sexo, telefono, correo, direccion, emergencia, foto 
+            FROM pacientes 
+            WHERE medico_id = %s
+        """, (medico_id,))
+        pacientes = cursor.fetchall()
+        return jsonify(pacientes), 200
+    except Exception as e:
+        print("Error al listar pacientes:", str(e))
+        return jsonify([]), 500
+    finally:
+        cursor.close()
+
+
+# =====================================================================
+# 3. 🔄 EDITAR PACIENTE
+# =====================================================================
+@app.route('/pacientes/<int:id>', methods=['PUT'])
+def editar_paciente(id):
+    data = request.get_json() or request.json
+    cursor = db.cursor()
+
+    sql = """
+        UPDATE pacientes 
+        SET nombre=%s, ci=%s, edad=%s, sexo=%s, telefono=%s, 
+            correo=%s, direccion=%s, emergencia=%s, foto=%s
+        WHERE id=%s
+    """
+    valores = (
+        data.get('nombre'), data.get('ci'), data.get('edad'), data.get('sexo'), data.get('telefono'),
+        data.get('correo'), data.get('direccion'), data.get('emergencia'), data.get('foto', ''), id
+    )
+
+    try:
+        cursor.execute(sql, valores)
+        db.commit()
+        return jsonify({"success": True, "mensaje": "Paciente actualizado correctamente"}), 200
+    except Exception as e:
+        db.rollback()
+        return jsonify({"success": False, "error": str(e)}), 500
+    finally:
+        cursor.close()
+
+
+# =====================================================================
+# 4. 🗑️ ELIMINAR PACIENTE Y SU USUARIO ASOCIADO
+# =====================================================================
+@app.route('/pacientes/<int:id>', methods=['DELETE'])
+def eliminar_paciente(id):
+    cursor = db.cursor()
+    try:
+        # Primero buscamos cuál es su usuario_id para no dejar datos huérfanos
+        cursor.execute("SELECT usuario_id FROM pacientes WHERE id = %s", (id,))
+        res = cursor.fetchone()
+        
+        # Eliminamos de la tabla pacientes
+        cursor.execute("DELETE FROM pacientes WHERE id = %s", (id,))
+        
+        # Si tenía un usuario asignado en el sistema, también lo borramos
+        if res and res[0]:
+            cursor.execute("DELETE FROM usuarios WHERE id = %s", (res[0],))
+
+        db.commit()
+        return jsonify({"success": True, "mensaje": "Paciente borrado del sistema por completo"}), 200
+    except Exception as e:
+        db.rollback()
+        return jsonify({"success": False, "error": str(e)}), 500
+    finally:
+        cursor.close()
+
+# =====================================================================
+# ENDPOINTS PARA LA GESTIÓN DE TRATAMIENTOS INTELIGENTES
+# =====================================================================
+
+@app.route('/tratamientos', methods=['POST'])
+def guardar_tratamiento():
+    try:
+        data = request.json
+        print("Datos de tratamiento recibidos:", data)
+        
+        # Extraer variables enviadas desde Angular
+        medico_id = data.get('medico_id')
+        paciente_id = data.get('paciente_id')
+        medicamento = data.get('medicamento')
+        dosis = data.get('dosis')
+        frecuencia = data.get('frecuencia')
+        via_administracion = data.get('via_administracion')
+        hora_inicio = data.get('hora_inicio') or None
+        duracion_dias = data.get('duracion_dias') or None
+        fecha_inicio = data.get('fecha_inicio') or None
+        fecha_final = data.get('fecha_final') or None
+        
+        # Checkboxes (vienen como True/False de Angular, los guardamos como 1 o 0 para MySQL)
+        activar_alertas = 1 if data.get('activar_alertas') else 0
+        notificar_incumplimiento = 1 if data.get('notificar_incumplimiento') else 0
+        monitoreo_tiempo_real = 1 if data.get('monitoreo_tiempo_real') else 0
+        alertar_familiar = 1 if data.get('alertar_familiar') else 0
+        observaciones = data.get('observaciones', '')
+
+        cur = mysql.connection.cursor()
+        
+        # Query para insertar el tratamiento médico en la base de datos
+        query = """
+            INSERT INTO tratamientos (
+                medico_id, paciente_id, medicamento, dosis, frecuencia, 
+                via_administracion, hora_inicio, duracion_dias, 
+                fecha_inicio, fecha_final, activar_alertas, 
+                notificar_incumplimiento, monitoreo_tiempo_real, 
+                alertar_familiar, observaciones
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        
+        valores = (
+            medico_id, paciente_id, medicamento, dosis, frecuencia,
+            via_administracion, hora_inicio, duracion_dias,
+            fecha_inicio, fecha_final, activar_alertas,
+            notificar_incumplimiento, monitoreo_tiempo_real,
+            alertar_familiar, observaciones
+        )
+        
+        cur.execute(query, valores)
+        mysql.connection.commit()
+        cur.close()
+        
+        return jsonify({"mensaje": "¡Tratamiento médico e IoT registrado de manera exitosa!"}), 201
+
+    except Exception as e:
+        print("Error crítico al guardar tratamiento:", str(e))
+        return jsonify({"error": "Error interno del servidor", "detalle": str(e)}), 500
+
+
+@app.route('/tratamientos/<int:medico_id>', methods=['GET'])
+def obtener_tratamientos_medico(medico_id):
+    try:
+        cur = mysql.connection.cursor()
+        
+        # Hacemos un INNER JOIN con la tabla pacientes para poder mostrar el NOMBRE del paciente en la tabla
+        query = """
+            SELECT 
+                t.id, 
+                t.medicamento, 
+                t.dosis, 
+                t.frecuencia, 
+                t.duracion_dias,
+                p.nombre AS paciente_nombre
+            FROM tratamientos t
+            INNER JOIN pacientes p ON t.paciente_id = p.id
+            WHERE t.medico_id = %s
+            ORDER BY t.id DESC
+        """
+        
+        cur.execute(query, (medico_id,))
+        columnas = [col[0] for col in cur.description]
+        resultados = [dict(zip(columnas, fila)) for fila in cur.fetchall()]
+        cur.close()
+        
+        return jsonify(resultados), 200
+
+    except Exception as e:
+        print("Error al consultar tratamientos de la BD:", str(e))
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-
     app.run(
         debug=True,
         port=5000

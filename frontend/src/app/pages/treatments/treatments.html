@@ -1,0 +1,166 @@
+<main class="main-content">
+
+    <div class="topbar">
+        <div>
+            <h1>Configuración de Tratamiento Inteligente</h1>
+            <p>Asignación precisa de medicamentos y sincronización con nodos IoT</p>
+        </div>
+
+        <div class="doctor-profile">
+            <div class="avatar">
+                {{ usuario?.nombre?.charAt(0) || 'U' }}
+            </div>
+            <div>
+                <h3>Dr. {{ usuario?.nombre || 'Médico' }}</h3>
+                <span>{{ usuario?.rol || 'Médico Responsable' }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-card">
+        <h2>Formulación Médica y Automatización</h2>
+
+        <form (submit)="$event.preventDefault()" autocomplete="off">
+            
+            <div class="section-title">👤 Información del Paciente</div>
+            <div class="grid">
+                <div class="input-group full">
+                    <label>Seleccionar Paciente de la Lista</label>
+                    <select [(ngModel)]="tratamiento.paciente_id" [ngModelOptions]="{standalone: true}">
+                        <option value="" disabled selected>-- Elige un paciente bajo tu cuidado --</option>
+                        <option *ngFor="let p of pacientes" [value]="p.id">
+                            🧑‍⚕️ {{ p.nombre }} (CI: {{ p.ci }})
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="section-title">💊 Medicación y Tiempos</div>
+            <div class="grid">
+                <div class="input-group">
+                    <label>Nombre del Medicamento</label>
+                    <input type="text" [(ngModel)]="tratamiento.medicamento" placeholder="Ej. Paracetamol, Amoxicilina" [ngModelOptions]="{standalone: true}">
+                </div>
+
+                <div class="input-group">
+                    <label>Dosis / Concentración</label>
+                    <input type="text" [(ngModel)]="tratamiento.dosis" placeholder="Ej. 500mg, 1 tableta, 5ml" [ngModelOptions]="{standalone: true}">
+                </div>
+
+                <div class="input-group">
+                    <label>Frecuencia de Toma</label>
+                    <select [(ngModel)]="tratamiento.frecuencia" [ngModelOptions]="{standalone: true}">
+                        <option value="Cada 4 horas">Cada 4 horas</option>
+                        <option value="Cada 6 horas">Cada 6 horas</option>
+                        <option value="Cada 8 horas">Cada 8 horas</option>
+                        <option value="Cada 12 horas">Cada 12 horas</option>
+                        <option value="Cada 24 horas (Una vez al día)">Cada 24 horas (Una vez al día)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Vía de Administración</label>
+                    <select [(ngModel)]="tratamiento.via_administracion" [ngModelOptions]="{standalone: true}">
+                        <option value="Oral">Oral</option>
+                        <option value="Intravenosa">Intravenosa</option>
+                        <option value="Intramuscular">Intramuscular</option>
+                        <option value="Cutánea">Cutánea</option>
+                        <option value="Oftálmica">Oftálmica</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Hora de Inicio Exacta</label>
+                    <input type="time" [(ngModel)]="tratamiento.hora_inicio" [ngModelOptions]="{standalone: true}">
+                </div>
+
+                <div class="input-group">
+                    <label>Duración del Tratamiento (Días)</label>
+                    <input type="number" [(ngModel)]="tratamiento.duracion_dias" placeholder="Ej. 7" [ngModelOptions]="{standalone: true}">
+                </div>
+
+                <div class="input-group">
+                    <label>Fecha de Inicio</label>
+                    <input type="date" [(ngModel)]="tratamiento.fecha_inicio" [ngModelOptions]="{standalone: true}">
+                </div>
+
+                <div class="input-group">
+                    <label>Fecha Finalización</label>
+                    <input type="date" [(ngModel)]="tratamiento.fecha_final" [ngModelOptions]="{standalone: true}">
+                </div>
+            </div>
+
+            <div class="section-title">⚙️ Configuración Inteligente y Alertas IoT</div>
+            <div class="checkbox-grid">
+                <label class="checkbox-container">
+                    <input type="checkbox" [(ngModel)]="tratamiento.activar_alertas" [ngModelOptions]="{standalone: true}">
+                    <span class="checkmark"></span>
+                    🚨 Activar alertas automáticas (Zumbador / LEDs)
+                </label>
+
+                <label class="checkbox-container">
+                    <input type="checkbox" [(ngModel)]="tratamiento.notificar_incumplimiento" [ngModelOptions]="{standalone: true}">
+                    <span class="checkmark"></span>
+                    ⚠️ Notificar incumplimiento al médico
+                </label>
+
+                <label class="checkbox-container">
+                    <input type="checkbox" [(ngModel)]="tratamiento.monitoreo_tiempo_real" [ngModelOptions]="{standalone: true}">
+                    <span class="checkmark"></span>
+                    📊 Monitoreo en tiempo real desde Web
+                </label>
+
+                <label class="checkbox-container">
+                    <input type="checkbox" [(ngModel)]="tratamiento.alertar_familiar" [ngModelOptions]="{standalone: true}">
+                    <span class="checkmark"></span>
+                    👥 Alertar a familiar o contacto de emergencia
+                </label>
+            </div>
+
+            <div class="input-group full" style="margin-top: 15px;">
+                <label>Observaciones Médicas Extra</label>
+                <textarea rows="3" [(ngModel)]="tratamiento.observaciones" placeholder="Indicaciones especiales (Ej. Tomar en ayunas)..." [ngModelOptions]="{standalone: true}"></textarea>
+            </div>
+
+            <div class="actions-form-buttons">
+                <button type="button" class="save-btn" (click)="guardarTratamiento()">💾 Guardar Tratamiento</button>
+                <button type="button" class="clean-btn" (click)="limpiarFormulario()">🧹 Limpiar Formulario</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-card">
+        <h2>Tratamientos Vigentes Asignados</h2>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Paciente</th>
+                        <th>Medicamento</th>
+                        <th>Frecuencia</th>
+                        <th>Duración</th>
+                        <th>Estado IoT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="tratamientos.length === 0">
+                        <td colspan="5" style="text-align: center; color: #9ca3af; padding: 30px 0;">
+                            No se han configurado tratamientos aún para tus pacientes.
+                        </td>
+                    </tr>
+                    
+                    <tr *ngFor="let t of tratamientos">
+                        <td><strong>{{ t.paciente_nombre }}</strong></td>
+                        <td><span class="med-tag">💊 {{ t.medicamento }} ({{ t.dosis }})</span></td>
+                        <td>{{ t.frecuencia }}</td>
+                        <td>{{ t.duracion_dias }} días</td>
+                        <td>
+                            <span class="status pulse-status">📡 Activo</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>

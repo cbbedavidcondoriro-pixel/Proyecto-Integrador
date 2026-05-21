@@ -1,305 +1,134 @@
-<div class="patients-container">
+<main class="main-content">
 
-    <!-- SIDEBAR -->
-
-    <aside class="sidebar">
-
+    <div class="topbar">
         <div>
-
-            <div class="logo">
-
-                🏥 SmartMediIoT
-
-            </div>
-
-            <ul class="menu">
-
-                <li routerLink="/dashboard">
-
-                    📊 Dashboard
-
-                </li>
-
-                <li class="active">
-
-                    👨‍⚕️ Pacientes
-
-                </li>
-
-                <li>
-
-                    💊 Tratamientos
-
-                </li>
-
-                <li>
-
-                    🧾 Reportes
-
-                </li>
-
-                <li>
-
-                    🔔 Recordatorios
-
-                </li>
-
-            </ul>
-
+            <h1>Gestión de Pacientes</h1>
+            <p>Administración completa de pacientes registrados en el sistema médico</p>
         </div>
 
-    </aside>
+        <button class="btn-add" (click)="limpiarFormulario()">
+            + Nuevo Paciente
+        </button>
+    </div>
 
-    <!-- MAIN -->
+    <div class="search-box">
+        <input
+            type="text"
+            [(ngModel)]="terminoBusqueda"
+            [ngModelOptions]="{standalone: true}"
+            (input)="buscarPaciente()"
+            placeholder="Buscar paciente por nombre o carnet de identidad...">
+    </div>
 
-    <main class="main-content">
+    <div class="form-card">
+        <h2>{{ editando ? 'Modificar Registro de Paciente' : 'Registrar Paciente' }}</h2>
 
-        <!-- TOPBAR -->
-
-        <div class="topbar">
-
-            <div>
-
-                <h1>
-                    Gestión de Pacientes
-                </h1>
-
-                <p>
-                    Administración completa de pacientes registrados
-                </p>
-
-            </div>
-
-            <button class="btn-add">
-
-                + Nuevo Paciente
-
-            </button>
-
-        </div>
-
-        <!-- SEARCH -->
-
-        <div class="search-box">
-
-            <input
-                type="text"
-                placeholder="Buscar paciente por nombre o CI...">
-
-        </div>
-
-        <!-- FORM -->
-
-        <div class="form-card">
-
-            <h2>
-                Registrar Paciente
-            </h2>
-
+        <form (submit)="$event.preventDefault()" autocomplete="off">
             <div class="grid">
-
                 <div class="input-group">
-
-                    <label>
-                        Nombre Completo
-                    </label>
-
-                    <input type="text">
-
+                    <label>Nombre Completo</label>
+                    <input type="text" [(ngModel)]="paciente.nombre" name="nombre" [ngModelOptions]="{standalone: true}">
                 </div>
 
                 <div class="input-group">
-
-                    <label>
-                        Carnet de Identidad
-                    </label>
-
-                    <input type="text">
-
+                    <label>Carnet de Identidad</label>
+                    <input type="text" [(ngModel)]="paciente.ci" name="ci" [ngModelOptions]="{standalone: true}">
                 </div>
 
                 <div class="input-group">
-
-                    <label>
-                        Edad
-                    </label>
-
-                    <input type="number">
-
+                    <label>Edad</label>
+                    <input type="number" [(ngModel)]="paciente.edad" name="edad" [ngModelOptions]="{standalone: true}">
                 </div>
 
                 <div class="input-group">
-
-                    <label>
-                        Sexo
-                    </label>
-
-                    <select>
-
-                        <option>
-                            Masculino
-                        </option>
-
-                        <option>
-                            Femenino
-                        </option>
-
+                    <label>Sexo</label>
+                    <select [(ngModel)]="paciente.sexo" name="sexo" [ngModelOptions]="{standalone: true}">
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
                     </select>
-
                 </div>
 
                 <div class="input-group">
-
-                    <label>
-                        Teléfono
-                    </label>
-
-                    <input type="text">
-
+                    <label>Teléfono</label>
+                    <input type="text" [(ngModel)]="paciente.telefono" name="telefono" [ngModelOptions]="{standalone: true}">
                 </div>
 
                 <div class="input-group">
-
-                    <label>
-                        Correo
-                    </label>
-
-                    <input type="email">
-
+                    <label>Correo</label>
+                    <input type="email" [(ngModel)]="paciente.correo" name="correo" [ngModelOptions]="{standalone: true}">
                 </div>
 
                 <div class="input-group">
-
-                    <label>
-                        Dirección
-                    </label>
-
-                    <input type="text">
-
+                    <label>Dirección</label>
+                    <input type="text" [(ngModel)]="paciente.direccion" name="direccion" [ngModelOptions]="{standalone: true}">
                 </div>
 
                 <div class="input-group">
-
-                    <label>
-                        Contacto Emergencia
-                    </label>
-
-                    <input type="text">
-
+                    <label>Contacto Emergencia</label>
+                    <input type="text" [(ngModel)]="paciente.emergencia" name="emergencia" [ngModelOptions]="{standalone: true}">
                 </div>
 
                 <div class="input-group full">
-
-                    <label>
-                        Subir Fotografía
-                    </label>
-
-                    <input type="file">
-
+                    <label>Subir Fotografía del Paciente</label>
+                    <input 
+                        id="inputFotoElement"
+                        type="file" 
+                        accept="image/*"
+                        (change)="cargarFotografia($event)">
                 </div>
-
             </div>
 
-            <button class="save-btn">
-
-                Guardar Paciente
-
+            <button type="button" class="save-btn" (click)="guardarPaciente()">
+                {{ editando ? '💾 Actualizar Datos del Paciente' : '💾 Guardar Paciente' }}
             </button>
+        </form>
+    </div>
 
+    <div class="table-card">
+        <div class="table-header">
+            <h2>Pacientes Registrados</h2>
         </div>
 
-        <!-- TABLE -->
-
-        <div class="table-card">
-
-            <div class="table-header">
-
-                <h2>
-                    Pacientes Registrados
-                </h2>
-
-            </div>
-
+        <div style="overflow-x: auto;">
             <table>
-
                 <thead>
-
                     <tr>
-
                         <th>Paciente</th>
-                        <th>CI</th>
+                        <th>CI / Documento</th>
                         <th>Edad</th>
                         <th>Estado</th>
                         <th>Acciones</th>
-
                     </tr>
-
                 </thead>
 
                 <tbody>
-
-                    <tr>
-
-                        <td>Juan Pérez</td>
-                        <td>1234567</td>
-                        <td>45</td>
-
-                        <td>
-
-                            <span class="status active">
-                                Activo
-                            </span>
-
+                    <tr *ngIf="pacientesFiltrados.length === 0">
+                        <td colspan="5" style="text-align: center; color: #9ca3af; padding: 30px 0;">
+                            No existen registros disponibles de pacientes.
                         </td>
-
-                        <td>
-
-                            <button class="action edit">
-                                Editar
-                            </button>
-
-                            <button class="action delete">
-                                Eliminar
-                            </button>
-
-                        </td>
-
                     </tr>
 
-                    <tr>
-
-                        <td>María López</td>
-                        <td>998877</td>
-                        <td>36</td>
-
+                    <tr *ngFor="let item of pacientesFiltrados">
                         <td>
-
-                            <span class="status pending">
-                                Seguimiento
-                            </span>
-
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <img *ngIf="item.foto" [src]="item.foto" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.1);">
+                                <div *ngIf="!item.foto" style="width: 40px; height: 40px; border-radius: 50%; background: #1f2937; display: flex; align-items: center; justify-content: center; font-size: 16px;">👤</div>
+                                <strong>{{ item.nombre }}</strong>
+                            </div>
                         </td>
-
+                        <td style="color: #9ca3af;">{{ item.ci }}</td>
+                        <td>{{ item.edad ? item.edad + ' años' : '-' }}</td>
                         <td>
-
-                            <button class="action edit">
-                                Editar
-                            </button>
-
-                            <button class="action delete">
-                                Eliminar
-                            </button>
-
+                            <span class="status active">Activo</span>
                         </td>
-
+                        <td>
+                            <button class="action edit" (click)="seleccionarParaEditar(item)">Editar</button>
+                            <button class="action delete" (click)="eliminarPaciente(item.id)">Eliminar</button>
+                        </td>
                     </tr>
-
                 </tbody>
-
             </table>
-
         </div>
+    </div>
 
-    </main>
-
-</div>
+</main>

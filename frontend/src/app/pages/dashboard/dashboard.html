@@ -1,197 +1,131 @@
-<div class="dashboard-container">
+<main class="main-content" style="padding: 40px; width: 100%; box-sizing: border-box;">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-
+    <div class="topbar" style="margin-bottom: 30px;">
         <div>
+            <h1>Panel Médico</h1>
+            <p>Sistema Inteligente de Recordatorio de Medicamentos</p>
+        </div>
 
-            <div class="logo">
-                🏥 SmartMediIoT
+        <div class="doctor-profile">
+            <div class="avatar">
+                {{ usuario?.nombre?.charAt(0) || 'U' }}
             </div>
-
-            <ul class="menu">
-
-                <li class="active">
-                    📊 Dashboard
-                </li>
-
-                <li routerLink="/patients">
-                    👨‍⚕️ Pacientes
-                </li>
-
-                <li>
-                    💊 Tratamientos
-                </li>
-
-                <li>
-                    🧾 Reportes
-                </li>
-
-                <li>
-                    🔔 Recordatorios
-                </li>
-
-                <li>
-                    ⚙️ Configuración
-                </li>
-
-            </ul>
-
-        </div>
-
-        <!-- LOGOUT -->
-        <div class="logout" (click)="logout()">
-            🚪 Cerrar Sesión
-        </div>
-
-    </aside>
-
-    <!-- MAIN -->
-    <main class="main-content">
-
-        <!-- TOPBAR -->
-        <div class="topbar">
-
             <div>
-
-                <h1>Panel Médico</h1>
-
-                <p>Sistema Inteligente de Recordatorio de Medicamentos</p>
-
+                <h3>
+                    Dr. {{ usuario?.nombre || 'Médico' }} {{ usuario?.apellido || '' }}
+                </h3>
+                <span style="text-transform: capitalize;">
+                    {{ usuario?.rol || 'medico' }}
+                </span>
             </div>
+        </div>
+    </div>
 
-            <div class="doctor-profile">
-
-                <div class="avatar">
-                    {{ usuario?.nombre?.charAt(0) || 'U' }}
-                </div>
-
-                <div>
-
-                    <h3>
-                        Dr. {{ usuario?.nombre }} {{ usuario?.apellido }}
-                    </h3>
-
-                    <span>
-                        {{ usuario?.rol }}
-                    </span>
-
-                </div>
-
+    <div class="cards">
+        <div class="card">
+            <div>
+                <h3>Pacientes</h3>
+                <h2>{{ data.pacientes }}</h2>
             </div>
-
+            <span>👨‍⚕️</span>
         </div>
 
-        <!-- CARDS DINÁMICAS -->
-        <div class="cards">
-
-            <div class="card">
-
-                <div>
-                    <h3>Pacientes</h3>
-                    <h2>{{ data.pacientes }}</h2>
-                </div>
-
-                <span>👨‍⚕️</span>
-
+        <div class="card green">
+            <div>
+                <h3>Tratamientos</h3>
+                <h2>{{ data.tratamientos }}</h2>
             </div>
-
-            <div class="card green">
-
-                <div>
-                    <h3>Tratamientos</h3>
-                    <h2>{{ data.tratamientos }}</h2>
-                </div>
-
-                <span>💊</span>
-
-            </div>
-
-            <div class="card dark">
-
-                <div>
-                    <h3>Recordatorios</h3>
-                    <h2>{{ data.recordatorios }}</h2>
-                </div>
-
-                <span>🔔</span>
-
-            </div>
-
+            <span>💊</span>
         </div>
 
-        <!-- GRID -->
-        <div class="content-grid">
-
-            <!-- TABLA -->
-            <div class="patients-table">
-
-                <div class="section-header">
-                    <h2>Pacientes Recientes</h2>
-                    <button>Ver Todos</button>
-                </div>
-
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>Paciente</th>
-                            <th>Edad</th>
-                            <th>Tratamiento</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        <tr>
-                            <td>Sin datos</td>
-                            <td>0</td>
-                            <td>-</td>
-                            <td>
-                                <span class="status pending">
-                                    Vacío
-                                </span>
-                            </td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
+        <div class="card dark">
+            <div>
+                <h3>Recordatorios</h3>
+                <h2>{{ data.recordatorios }}</h2>
             </div>
-
-            <!-- ACTIVIDAD -->
-            <div class="activity">
-
-                <h2>Actividad Reciente</h2>
-
-                <div class="activity-item">
-
-                    <div class="dot blue-dot"></div>
-
-                    <div>
-                        <h4>Sistema iniciado</h4>
-                        <p>Ahora</p>
-                    </div>
-
-                </div>
-
-                <div class="activity-item">
-
-                    <div class="dot green-dot"></div>
-
-                    <div>
-                        <h4>Conexión a MySQL activa</h4>
-                        <p>OK</p>
-                    </div>
-
-                </div>
-
-            </div>
-
+            <span>🔔</span>
         </div>
 
-    </main>
+        <div class="card blue">
+            <div>
+                <h3>Nodos IoT</h3>
+                <h2>{{ data.dispositivos_iot }}</h2>
+            </div>
+            <span>⚡</span>
+        </div>
+    </div>
 
-</div>
+    <div class="content-grid">
+
+        <div class="patients-table">
+            <div class="section-header">
+                <h2>Pacientes Recientes</h2>
+                <button routerLink="/patients">Ver Todos</button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Paciente</th>
+                        <th>CI / Documento</th>
+                        <th>Edad</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="data.lista_pacientes.length === 0">
+                        <td colspan="4" style="text-align: center; color: #9ca3af; padding: 30px 0;">
+                            No hay pacientes recientes registrados para este médico.
+                        </td>
+                    </tr>
+
+                    <tr *ngFor="let item of data.lista_pacientes">
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 8px; height: 8px; background: #00ff9d; border-radius: 50%;"></div>
+                                <strong>{{ item.nombre }}</strong>
+                            </div>
+                        </td>
+                        <td style="color: #9ca3af;">{{ item.ci }}</td>
+                        <td>{{ item.edad }} años</td>
+                        <td>
+                            <span class="status active">
+                                Monitoreado
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="activity">
+            <h2>Actividad Reciente</h2>
+
+            <div class="activity-item" *ngIf="data.lista_pacientes.length > 0">
+                <div class="dot blue-dot"></div>
+                <div>
+                    <h4>Ingreso: {{ data.lista_pacientes[0].nombre }}</h4>
+                    <p>Paciente sincronizado correctamente</p>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="dot green-dot"></div>
+                <div>
+                    <h4>Conexión a MySQL activa</h4>
+                    <p>Base de datos: smartmedi (Online)</p>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="dot red-dot"></div>
+                <div>
+                    <h4>Servidor REST Flask</h4>
+                    <p>Escuchando en el puerto 5000</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</main>

@@ -1,94 +1,52 @@
 <div class="login-container">
-
     <div class="overlay"></div>
 
     <div class="login-card">
-
-        <!-- LEFT -->
         <div class="left">
-
-            <h1>
-                🏥 SmartMediIoT
-            </h1>
-
+            <h1> SmartMediIoT</h1>
             <p>
-                Plataforma inteligente para
-                administración médica,
-                monitoreo de pacientes y
-                tratamientos automatizados.
+                Plataforma inteligente para administración médica,
+                monitoreo de pacientes y tratamientos automatizados.
             </p>
-
         </div>
 
-        <!-- RIGHT -->
         <div class="right">
-
             <h2>Iniciar Sesión</h2>
 
             <form (ngSubmit)="login()">
-
-                <!-- USUARIO -->
                 <div class="input-group">
-
                     <label>Usuario</label>
-
                     <input
                         type="text"
                         name="usuario"
                         [(ngModel)]="usuario.usuario"
                         placeholder="Ingrese su usuario"
                         required>
-
                 </div>
 
-                <!-- CONTRASEÑA -->
                 <div class="input-group">
-
                     <label>Contraseña</label>
-
                     <input
                         type="password"
                         name="password"
                         [(ngModel)]="usuario.password"
                         placeholder="Ingrese su contraseña"
                         required>
-
                 </div>
 
-                <!-- OPCIONES -->
                 <div class="remember">
-
                     <label>
-                        <input type="checkbox">
-                        Recordarme
+                        <input type="checkbox"> Recordarme
                     </label>
-
-                    <a href="#">
-                        ¿Olvidó su contraseña?
-                    </a>
-
+                    <a href="#">¿Olvidó su contraseña?</a>
                 </div>
 
-                <!-- BOTÓN -->
-                <button type="submit">
-                    Ingresar al Sistema
-                </button>
-
+                <button type="submit">Ingresar al Sistema</button>
             </form>
 
-            <!-- REGISTER -->
             <div class="register-link">
-
-                ¿No tienes cuenta?
-
-                <a routerLink="/register">
-                    Registrarse
-                </a>
-
+                ¿No tienes cuenta? <a routerLink="/register">Registrarse</a>
             </div>
-
         </div>
-
     </div>
-
 </div>

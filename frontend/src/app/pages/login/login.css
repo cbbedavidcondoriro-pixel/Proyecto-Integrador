@@ -1,233 +1,241 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
+/* ==========================================================================
+   1. FIX ANGULAR CONTENEDOR SECTOR SELECCIÓN (Crucial para centrar)
+   ========================================================================== */
+:host {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9999;
 }
 
-.login-container{
-
-    width:100%;
-    height:100vh;
-
-    background:url('https://images.unsplash.com/photo-1584982751601-97dcc096659c?q=80&w=2070');
-
-    background-size:cover;
-    background-position:center;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    position:relative;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
 }
 
-.overlay{
-
-    position:absolute;
-
-    width:100%;
-    height:100%;
-
-    background:rgba(0,0,0,0.75);
+/* ==========================================================================
+   2. CONTENEDOR DE LA PÁGINA (Fondo con Imagen y Centrado Absoluto)
+   ========================================================================== */
+.login-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: url('https://images.unsplash.com/photo-1584982751601-97dcc096659c?q=80&w=2070') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    justify-content: center; /* Centrado horizontal real */
+    align-items: center;     /* Centrado vertical real */
+    box-sizing: border-box;
+    padding: 20px;
 }
 
-.login-card{
-
-    width:1000px;
-
-    min-height:600px;
-
-    background:rgba(17,24,39,0.85);
-
-    backdrop-filter:blur(12px);
-
-    border-radius:25px;
-
-    overflow:hidden;
-
-    display:grid;
-
-    grid-template-columns:1fr 1fr;
-
-    position:relative;
-
-    z-index:2;
-
-    border:1px solid rgba(255,255,255,0.08);
-
-    box-shadow:0 0 40px rgba(0,0,0,0.4);
+/* CAPA OSCURA PREMIUM DE FONDO */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(11, 15, 25, 0.8) 0%, rgba(11, 15, 25, 0.95) 100%);
+    z-index: 1;
 }
 
-.left{
-
-    background:linear-gradient(
-        rgba(0,255,157,0.15),
-        rgba(0,0,0,0.3)
-    );
-
-    padding:70px;
-
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
+/* ==========================================================================
+   3. TARJETA DE INGRESO (LOGIN CARD)
+   ========================================================================== */
+.login-card {
+    width: 1050px;
+    max-width: 95%;
+    min-height: 620px;
+    background: rgba(17, 24, 39, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 28px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    position: relative;
+    z-index: 2;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
 }
 
-.left h1{
-
-    color:#00ff9d;
-
-    font-size:50px;
-
-    margin-bottom:30px;
+/* PANEL IZQUIERDO (Identidad SmartMediIoT) */
+.left {
+    background: linear-gradient(135, rgba(16, 185, 129, 0.12), rgba(0, 0, 0, 0.4));
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-right: 1px solid rgba(255, 255, 255, 0.03);
 }
 
-.left p{
-
-    color:#d1d5db;
-
-    font-size:22px;
-
-    line-height:1.8;
+.left h1 {
+    color: #10b981; /* Verde esmeralda médico unificado */
+    font-size: 46px;
+    margin-bottom: 24px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
 }
 
-.right{
-
-    padding:70px;
-
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
+.left p {
+    color: #9ca3af;
+    font-size: 19px;
+    line-height: 1.7;
+    font-weight: 400;
 }
 
-.right h2{
-
-    color:white;
-
-    font-size:40px;
-
-    margin-bottom:40px;
+/* PANEL DERECHO (Formulario de Accesos) */
+.right {
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: rgba(15, 23, 42, 0.4);
 }
 
-.input-group{
-
-    margin-bottom:25px;
+.right h2 {
+    color: #ffffff;
+    font-size: 34px;
+    margin-bottom: 35px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
 }
 
-.input-group label{
-
-    color:#d1d5db;
-
-    display:block;
-
-    margin-bottom:10px;
+/* inputs Y CONTENEDORES DE TEXTO */
+.input-group {
+    margin-bottom: 22px;
 }
 
-.input-group input{
-
-    width:100%;
-
-    padding:16px;
-
-    border:none;
-
-    outline:none;
-
-    border-radius:12px;
-
-    background:#1f2937;
-
-    color:white;
-
-    font-size:16px;
+.input-group label {
+    color: #9ca3af;
+    display: block;
+    margin-bottom: 9px;
+    font-size: 14px;
+    font-weight: 500;
 }
 
-.input-group input:focus{
-
-    border:1px solid #00ff9d;
+.input-group input {
+    width: 100%;
+    padding: 15px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    outline: none;
+    border-radius: 12px;
+    background: #111827;
+    color: #ffffff;
+    font-size: 15px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.remember{
-
-    display:flex;
-    justify-content:space-between;
-
-    margin-bottom:30px;
-
-    color:#d1d5db;
-
-    font-size:14px;
+.input-group input:focus {
+    border-color: #10b981;
+    background-color: #1f2937;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
 }
 
-.remember a{
-
-    color:#00ff9d;
-
-    text-decoration:none;
+/* CHECKBOX Y OPCIONES SECUNDARIAS */
+.remember {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+    color: #9ca3af;
+    font-size: 14px;
 }
 
-button{
-
-    width:100%;
-
-    padding:18px;
-
-    background:#00ff9d;
-
-    color:black;
-
-    border:none;
-
-    border-radius:12px;
-
-    font-size:18px;
-
-    font-weight:bold;
-
-    cursor:pointer;
-
-    transition:0.3s;
+.remember label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
 }
 
-button:hover{
-
-    transform:scale(1.03);
+.remember input[type="checkbox"] {
+    accent-color: #10b981;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
 }
 
-.register-link{
-
-    margin-top:30px;
-
-    text-align:center;
-
-    color:#d1d5db;
+.remember a {
+    color: #10b981;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
 }
 
-.register-link a{
-
-    color:#00ff9d;
-
-    text-decoration:none;
-
-    font-weight:bold;
+.remember a:hover {
+    color: #34d399;
+    text-decoration: underline;
 }
 
-@media(max-width:900px){
+/* BOTÓN DE ENTRADA PRINCIPAL */
+button {
+    width: 100%;
+    padding: 16px;
+    background: #10b981;
+    color: #042f1a;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
 
-    .login-card{
+button:hover {
+    background: #34d399;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+}
 
-        width:95%;
+button:active {
+    transform: translateY(1px);
+}
 
-        grid-template-columns:1fr;
+/* ENLACE DE REGISTRO INFERIOR */
+.register-link {
+    margin-top: 35px;
+    text-align: center;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.register-link a {
+    color: #10b981;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 4px;
+    transition: color 0.2s;
+}
+
+.register-link a:hover {
+    color: #34d399;
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   4. DISEÑO RESPONSIVO (MÓVILES Y TABLETS)
+   ========================================================================== */
+@media (max-width: 900px) {
+    .login-card {
+        grid-template-columns: 1fr;
+        min-height: auto;
     }
 
-    .left{
-
-        display:none;
+    .left {
+        display: none; /* Esconde info médica en pantallas chicas */
     }
 
-    .right{
-
-        padding:40px;
+    .right {
+        padding: 45px 25px;
     }
 }

@@ -1,1 +1,52 @@
-<router-outlet></router-outlet>
+<div class="app-container" style="display: flex; min-height: 100vh; background-color: #0b0f19; color: #ffffff; font-family: 'Segoe UI', Roboto, sans-serif; overflow-x: hidden;">
+    
+    <aside *ngIf="isLoggedIn" class="sidebar" style="width: 260px; background-color: #111827; display: flex; flex-direction: column; justify-content: space-between; padding: 24px; box-sizing: border-box; border-right: 1px solid rgba(255, 255, 255, 0.05); position: fixed; height: 100vh; top: 0; left: 0; z-index: 999;">
+        <div>
+            <div class="logo" style="font-size: 22px; font-weight: bold; color: #10b981; margin-bottom: 40px; display: flex; align-items: center; gap: 10px;">
+                🏥 SmartMediIoT
+            </div>
+
+            <ul class="menu" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
+                <li>
+                    <a routerLink="/dashboard" routerLinkActive="active-link" style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; color: #9ca3af; text-decoration: none; border-radius: 8px; font-weight: 500; transition: all 0.2s ease;">
+                        📊 Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="/patients" routerLinkActive="active-link" style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; color: #9ca3af; text-decoration: none; border-radius: 8px; font-weight: 500; transition: all 0.2s ease;">
+                        👨‍⚕️ Pacientes
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="/treatments" routerLinkActive="active-link" style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; color: #9ca3af; text-decoration: none; border-radius: 8px; font-weight: 500; transition: all 0.2s ease;">
+                        💊 Tratamientos
+                    </a>
+                </li>
+                <li>
+                    <a style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; color: #9ca3af; text-decoration: none; border-radius: 8px; font-weight: 500; cursor: pointer;">
+                        🧾 Reportes
+                    </a>
+                </li>
+                <li>
+                    <a style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; color: #9ca3af; text-decoration: none; border-radius: 8px; font-weight: 500; cursor: pointer;">
+                        🔔 Recordatorios
+                    </a>
+                </li>
+                <li>
+                    <a style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; color: #9ca3af; text-decoration: none; border-radius: 8px; font-weight: 500; cursor: pointer;">
+                        ⚙️ Configuración
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="logout-box" (click)="logout()" style="display: flex; align-items: center; gap: 12px; padding: 14px 16px; color: #ef4444; background: rgba(239, 68, 68, 0.1); border-radius: 8px; cursor: pointer; font-weight: 500; text-align: center; justify-content: center; transition: background 0.2s;">
+            🚪 Cerrar Sesión
+        </div>
+    </aside>
+
+    <div class="content-wrapper" [style.margin-left]="isLoggedIn ? '260px' : '0px'" style="flex-grow: 1; min-height: 100vh; background-color: #0b0f19; box-sizing: border-box; display: flex;">
+        <router-outlet></router-outlet>
+    </div>
+
+</div>
