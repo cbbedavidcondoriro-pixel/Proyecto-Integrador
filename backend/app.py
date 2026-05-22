@@ -421,6 +421,39 @@ def obtener_tratamientos_medico(medico_id):
         print("Error al consultar tratamientos de la BD:", str(e))
         return jsonify({"error": str(e)}), 500
 
+@app.route('/api/reportes/paciente/<int:id_paciente>', methods=['GET'])
+def obtener_reportes_por_paciente(id_paciente):
+    id_medico = request.args.get('id_medico')
+    
+    if not id_medico:
+        return jsonify({'error': 'El ID del médico es requerido para filtrar'}), 400
+    
+    try:
+        # Reemplaza con tu función o lógica de conexión actual
+        conexion = mysql.connector.connect(
+            host="localhost", user="root", password="", database="tu_base_datos"
+        )
+        cursor = conexion.cursor(dictionary=True)
+        
+        # Consulta SQL estricta: Mismo paciente Y mismo médico
+        query = """
+            SELECT r.*, p.nombre AS nombre_paciente 
+            FROM reportes r
+            JOIN pacientes p ON r.id_paciente = p.id
+            WHERE r.id_paciente = %s AND r.id_medico = %s
+            ORDER BY r.fecha_generado DESC
+        """
+        cursor.execute(query, (id_paciente, id_medico))
+        reportes = cursor.fetchall()
+        
+        cursor.close()
+        conexion.close()
+        
+        return jsonify(reportes), 200
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 if __name__ == '__main__':
     app.run(
         debug=True,
