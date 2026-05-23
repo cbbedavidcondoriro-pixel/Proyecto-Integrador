@@ -1,13 +1,13 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router'; // 👈 Limpiamos RouterLink de aquí
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-treatments',
   standalone: true,
-  imports: [RouterLink, FormsModule, CommonModule, HttpClientModule],
+  imports: [FormsModule, CommonModule, HttpClientModule], // 👈 Quitamos RouterLink para eliminar el WARNING NG8113
   templateUrl: './treatments.html',
   styleUrl: './treatments.css'
 })
@@ -92,7 +92,7 @@ export class Treatments implements OnInit {
       ...this.tratamiento
     };
 
-    this.http.post(`${this.API}/tratamientos`, dataToSend)
+  this.http.post(`${this.API}/tratamientos`, dataToSend)
       .subscribe({
         next: (res: any) => {
           alert(res.mensaje || '¡Tratamiento inteligente guardado con éxito!');

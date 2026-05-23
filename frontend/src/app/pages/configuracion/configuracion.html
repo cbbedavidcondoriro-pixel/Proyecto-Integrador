@@ -1,0 +1,83 @@
+<div class="config-container" *ngIf="medico">
+  
+  <div class="config-header">
+    <h1>⚙️ Configuración del Perfil Profesional</h1>
+    <p>Administre sus credenciales clínicas, información de contacto y personalice su entorno de trabajo.</p>
+  </div>
+
+  <div class="config-grid">
+    
+    <div class="card card-profile">
+      <div class="avatar-wrapper">
+        <img [src]="vistaPreviaFoto || 'https://ui-avatars.com/api/?name=' + medico.nombre + '+' + medico.apellido + '&background=10b981&color=fff&size=150'" alt="Foto de perfil" class="profile-img">
+        
+        <div class="file-upload-btn" *ngIf="modoEdicion">
+          <label for="file-input">📸 Cambiar Foto</label>
+          <input id="file-input" type="file" (change)="onFotoSelected($event)" accept="image/*">
+        </div>
+      </div>
+
+      <h2 class="profile-name">{{ medico.nombre }} {{ medico.apellido }}</h2>
+      <span class="profile-badge">{{ medico.especialidad || 'Médico General' }}</span>
+      <p class="profile-meta">🏛️ {{ medico.clinica || 'Clínica No Asignada' }}</p>
+      <p class="profile-role">🔐 Rol del Sistema: <strong>{{ medico.rol | uppercase }}</strong></p>
+    </div>
+
+    <div class="card card-form">
+      <div class="form-header">
+        <h3>{{ modoEdicion ? '📝 Modificar Datos Personales' : '📋 Información de la Cuenta' }}</h3>
+        <button class="btn btn-edit" *ngIf="!modoEdicion" (click)="activarEdicion()">✏️ Editar Perfil</button>
+      </div>
+
+      <hr class="divider">
+
+      <div class="profile-form">
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nombre(s)</label>
+            <input type="text" [(ngModel)]="medicoEditado.nombre" [disabled]="!modoEdicion" class="custom-input">
+          </div>
+          <div class="form-group">
+            <label>Apellido(s)</label>
+            <input type="text" [(ngModel)]="medicoEditado.apellido" [disabled]="!modoEdicion" class="custom-input">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Correo Electrónico</label>
+            <input type="email" [(ngModel)]="medicoEditado.correo" [disabled]="!modoEdicion" class="custom-input">
+          </div>
+          <div class="form-group">
+            <label>Teléfono de Contacto</label>
+            <input type="text" [(ngModel)]="medicoEditado.telefono" [disabled]="!modoEdicion" class="custom-input">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Especialidad Médica</label>
+            <input type="text" [(ngModel)]="medicoEditado.especialidad" [disabled]="!modoEdicion" class="custom-input" placeholder="Ej. Cardiología, Pediatría">
+          </div>
+          <div class="form-group">
+            <label>Centro Médico / Clínica</label>
+            <input type="text" [(ngModel)]="medicoEditado.clinica" [disabled]="!modoEdicion" class="custom-input" placeholder="Ej. Hospital Central">
+          </div>
+        </div>
+
+        <div class="form-group full-width">
+          <label>Dirección del Consultorio</label>
+          <textarea rows="3" [(ngModel)]="medicoEditado.direccion" [disabled]="!modoEdicion" class="custom-input custom-textarea"></textarea>
+        </div>
+
+        <div class="form-actions" *ngIf="modoEdicion">
+          <button class="btn btn-cancel" (click)="cancelarEdicion()">❌ Cancelar</button>
+          <button class="btn btn-save" (click)="guardarCambios()">💾 Guardar Cambios</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

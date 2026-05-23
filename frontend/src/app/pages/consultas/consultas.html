@@ -1,0 +1,57 @@
+<div class="consultas-container" style="padding: 20px; color: white; font-family: Arial, sans-serif;">
+    
+    <div class="header-consultas" style="margin-bottom: 20px;">
+        <h1 style="font-size: 28px; font-weight: bold; margin-bottom: 5px;">🔍 Consultas Clínicas de Pacientes</h1>
+        <p style="color: #9ca3af; margin: 0;">Revise expedientes personales y verifique el estado de los tratamientos asignados.</p>
+    </div>
+
+    <div class="selector-box" style="display: flex; gap: 15px; align-items: flex-end; background: #111827; padding: 20px; border-radius: 12px; margin: 25px 0; border: 1px solid rgba(255,255,255,0.05);">
+        <div style="flex-grow: 1;">
+            <label style="display: block; color: #9ca3af; margin-bottom: 8px; font-size: 14px;">Pacientes del Médico</label>
+            <select [(ngModel)]="idPacienteSeleccionado" style="width: 100%; padding: 12px; background: #1f2937; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; font-size: 15px; outline: none; cursor: pointer;">
+                <option value="0" disabled selected>-- Seleccione un paciente de su lista --</option>
+                <option *ngFor="let pac of listaPacientes" [value]="pac.id">{{ pac.nombre }} (CI: {{ pac.ci }})</option>
+            </select>
+        </div>
+        <button (click)="realizarConsulta()" style="background: #10b981; color: white; border: none; padding: 13px 26px; font-size: 15px; font-weight: 600; border-radius: 8px; cursor: pointer; transition: background 0.2s;">
+            Consultar Ficha
+        </button>
+    </div>
+
+    <div *ngIf="datosConsulta" style="margin-top: 25px;">
+        
+        <div class="perfil-card" style="background: #111827; padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
+            <h3 style="color: #10b981; margin-top: 0; margin-bottom: 15px; font-size: 18px;">👤 Información General del Paciente</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; color: #e5e7eb;">
+                <p style="margin: 5px 0;"><strong>Nombre Completo:</strong> {{ datosConsulta.paciente.nombre }}</p>
+                <p style="margin: 5px 0;"><strong>Documento (CI):</strong> {{ datosConsulta.paciente.ci }}</p>
+                <p style="margin: 5px 0;"><strong>Edad:</strong> {{ datosConsulta.paciente.edad || 'No registrada' }} años</p>
+                <p style="margin: 5px 0;"><strong>Género/Sexo:</strong> {{ datosConsulta.paciente.sexo || 'No especificado' }}</p>
+                <p style="margin: 5px 0;"><strong>Teléfono:</strong> {{ datosConsulta.paciente.telefono || 'Sin número' }}</p>
+                <p style="margin: 5px 0;"><strong>Email:</strong> {{ datosConsulta.paciente.correo || 'Sin correo' }}</p>
+            </div>
+        </div>
+
+        <div *ngIf="!datosConsulta.tiene_tratamiento" style="background: rgba(245, 158, 11, 0.08); border: 1px solid #f59e0b; padding: 20px; border-radius: 12px; margin-top: 15px;">
+            <h4 style="color: #f59e0b; margin: 0 0 6px 0; font-size: 16px; font-weight: bold;">⚠️ Sin tratamiento asignado</h4>
+            <p style="color: #9ca3af; margin: 0; font-size: 14px;">El paciente se encuentra registrado de manera correcta, pero <strong>actualmente no cuenta con ninguna receta o tratamiento activo</strong> en la plataforma SmartMedIoT.</p>
+        </div>
+
+        <div *ngIf="datosConsulta.tiene_tratamiento" style="background: #111827; padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
+            <h3 style="color: #3b82f6; margin-top: 0; margin-bottom: 15px; font-size: 18px;">💊 Información del Tratamiento</h3>
+            <div style="background: #1f2937; padding: 20px; border-radius: 10px; color: #e5e7eb;">
+                <h4 style="color: #10b981; margin: 0 0 10px 0; font-size: 18px; font-weight: bold;">{{ datosConsulta.tratamiento.medicamento }}</h4>
+                <p style="margin: 6px 0;"><strong>Dosis:</strong> {{ datosConsulta.tratamiento.dosis }}</p>
+                <p style="margin: 6px 0;"><strong>Frecuencia:</strong> {{ datosConsulta.tratamiento.frecuencia }}</p>
+                <p style="margin: 6px 0;"><strong>Vía de Administración:</strong> {{ datosConsulta.tratamiento.via_administracion }}</p>
+                <p style="margin: 6px 0;"><strong>Periodo Clínico:</strong> Desde el {{ datosConsulta.tratamiento.fecha_inicio }} al {{ datosConsulta.tratamiento.fecha_final }}</p>
+                
+                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+                    <p style="margin-bottom: 4px;"><strong>Indicaciones / Observaciones:</strong></p>
+                    <p style="font-style: italic; color: #9ca3af; margin: 0;">" {{ datosConsulta.tratamiento.observaciones || 'Sin anotaciones adicionales.' }} "</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

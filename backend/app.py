@@ -454,6 +454,178 @@ def obtener_reportes_por_paciente(id_paciente):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/pacientes', methods=['GET'])
+def obtener_pacientes_del_medico():
+    # Detectamos qué médico está pidiendo su lista de pacientes
+    id_medico = request.args.get('id_medico')
+    
+    try:
+        conexion = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="smartmedi" # Nombre de tu base de datos actual
+        )
+        cursor = conexion.cursor(dictionary=True)
+        
+        # 💡 Si pasamos un id_medico, filtramos estrictamente sus pacientes asignados.
+        # Ajusta los nombres de las columnas si en tu tabla se llaman diferente.
+        if id_medico:
+            query = "SELECT id, nombre, ci FROM pacientes WHERE id_medico = %s"
+            cursor.execute(query, (id_medico,))
+        else:
+            query = "SELECT id, nombre, ci FROM pacientes"
+            cursor.execute(query)
+            
+        pacientes = cursor.fetchall()
+        cursor.close()
+        conexion.close()
+        
+        return jsonify(pacientes), 200
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/consultas/paciente/<int:id_paciente>', methods=['GET'])
+def consultar_ficha_paciente(id_paciente):
+    id_medico = request.args.get('id_medico')
+    if not id_medico:
+        return jsonify({'error': 'ID del médico requerido'}), 400
+
+    try:
+        # 🌟 Usamos directamente tu conexión global 'db'
+        cursor = db.cursor(dictionary=True)
+
+        # 1. Obtener los datos del paciente (Verificando médico_id como en tu tabla)
+        query_paciente = """
+            SELECT id, nombre, ci, edad, telefono, sexo, correo, direccion 
+            FROM pacientes 
+            WHERE id = %s AND medico_id = %s
+        """
+        cursor.execute(query_paciente, (id_paciente, id_medico))
+        paciente = cursor.fetchone()
+
+        if not paciente:
+            cursor.close()
+            return jsonify({'error': 'Paciente no encontrado o no asignado a este médico'}), 404
+
+        # 2. Buscar el último tratamiento registrado para este paciente
+        query_tratamiento = """
+            SELECT id, medicamento, dosis, frecuencia, via_administracion, fecha_inicio, fecha_final, observaciones 
+            FROM tratamientos 
+            WHERE paciente_id = %s 
+            ORDER BY id DESC 
+            LIMIT 1
+        """
+        cursor.execute(query_tratamiento, (id_paciente,))
+        tratamiento_actual = cursor.fetchone()
+
+        cursor.close()
+
+        # Enviamos la respuesta estructurada limpia que espera tu Angular
+        return jsonify({
+            'paciente': paciente,
+            'tiene_tratamiento': tratamiento_actual is not None,
+            'tratamiento': tratamiento_actual
+        }), 200
+
+    except Exception as e:
+        print("❌ ERROR REAL EN MYSQL:", str(e)) # Revisa tu terminal de VS Code para ver este mensaje si falla
+        return jsonify({'error': str(e)}), 500
+
+
+
+@app.route('/api/medico/<int:id_medico>', methods=['GET'])
+def obtener_perfil_medico(id_medico):
+    try:
+        cursor = db.cursor(dictionary=True)
+        # Consultamos todos los campos del médico de la tabla usuarios
+        cursor.execute("""
+            SELECT id, foto, nombre, apellido, usuario, correo, telefono, clinica, especialidad, direccion, rol 
+            FROM usuarios 
+            WHERE id = %s
+        """, (id_medico,))
+        medico = cursor.fetchone()
+        cursor.close()
+
+        if not medico:
+            return jsonify({'error': 'Médico no encontrado'}), 404
+
+        return jsonify(medico), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/medico/actualizar/<int:id_medico>', methods=['POST'])
+def actualizar_perfil_medico(id_medico):
+    try:
+        # Recogemos los campos de texto enviados desde el formulario de Angular
+        nombre = request.form.get('nombre')
+        apellido = request.form.get('apellido')
+        correo = request.form.get('correo')
+        telefono = request.form.get('telefono')
+        clinica = request.form.get('clinica')
+        especialidad = request.form.get('especialidad')
+        direccion = request.form.get('direccion')
+
+        cursor = db.cursor(dictionary=True)
+
+        # Verificar si mandó una foto nueva en la petición
+        foto_url = None
+        if 'foto' in request.files:
+            file = request.files['foto']
+            if file.filename != '':
+                filename = secure_filename(f"medico_{id_medico}_{file.filename}")
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(filepath)
+                # Guardamos la ruta relativa para acceder desde el servidor
+                foto_url = f"http://localhost:5000/uploads/{filename}"
+
+        # Si subió foto nueva, la incluimos en el UPDATE. Si no, dejamos la que ya tenía.
+        if foto_url:
+            query = """
+                UPDATE usuarios 
+                SET nombre=%s, apellido=%s, correo=%s, telefono=%s, clinica=%s, especialidad=%s, direccion=%s, foto=%s
+                WHERE id=%s
+            """
+            valores = (nombre, apellido, correo, telefono, clinica, especialidad, direccion, foto_url, id_medico)
+        else:
+            query = """
+                UPDATE usuarios 
+                SET nombre=%s, apellido=%s, correo=%s, telefono=%s, clinica=%s, especialidad=%s, direccion=%s
+                WHERE id=%s
+            """
+            valores = (nombre, apellido, correo, telefono, clinica, especialidad, direccion, id_medico)
+
+        cursor.execute(query, valores)
+        db.commit()
+
+        # Volvemos a consultar el usuario actualizado para enviárselo de vuelta a Angular
+        cursor.execute("SELECT id, foto, nombre, apellido, usuario, correo, telefono, clinica, especialidad, direccion, rol FROM usuarios WHERE id = %s", (id_medico,))
+        usuario_actualizado = cursor.fetchone()
+        cursor.close()
+
+        return jsonify({
+            'mensaje': '¡Perfil actualizado con éxito!',
+            'usuario': usuario_actualizado
+        }), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+# 💡 EXTRA: Ruta estática para que Angular pueda renderizar las imágenes guardadas en /uploads
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    from flask import send_from_directory
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+
+
+
+
+
+
 if __name__ == '__main__':
     app.run(
         debug=True,

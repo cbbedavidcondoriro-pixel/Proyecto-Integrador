@@ -1,0 +1,137 @@
+:host {
+    display: block;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #0b0f19;
+    box-sizing: border-box;
+}
+
+.consultas-container {
+    padding: 40px;
+    color: #ffffff;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header-consultas h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.header-consultas p {
+    color: #9ca3af;
+    font-size: 15px;
+}
+
+.selector-box {
+    background: #111827;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
+    margin: 30px 0;
+}
+
+.selector-box label {
+    display: block;
+    color: #9ca3af;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.selector-box select {
+    width: 100%;
+    padding: 12px;
+    background: #1f2937;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: white;
+    font-size: 15px;
+    outline: none;
+}
+
+/* Fichas e Información */
+.perfil-paciente-card, .tratamiento-activo-card, .historial-section {
+    background: #111827;
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.05);
+    margin-bottom: 24px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    color: #e5e7eb;
+}
+
+/* Alertas de sin tratamiento */
+.alert-no-treatment {
+    background: rgba(245, 158, 11, 0.06);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.alert-icon { font-size: 30px; }
+.alert-text h4 { color: #f59e0b; margin: 0 0 4px 0; }
+.alert-text p { color: #9ca3af; margin: 0; font-size: 14px; }
+
+/* Tratamiento Activo y Progreso */
+.detalle-tratamiento {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+@media (max-width: 768px) {
+    .detalle-tratamiento { grid-template-columns: 1fr; }
+}
+
+.med-name {
+    font-size: 22px;
+    color: #10b981;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+}
+
+.progress-bar-container {
+    background: #1f2937;
+    height: 12px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.progress-bar-fill {
+    background: #10b981;
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+.porcentaje-txt { color: #9ca3af; font-size: 13px; }
+
+/* Historial */
+.historial-item {
+    background: #1f2937;
+    padding: 16px;
+    border-radius: 10px;
+    margin-bottom: 14px;
+}
+
+.hist-header {
+    display: flex;
+    justify-content: space-between;
+    color: #3b82f6;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+}
+
+.hist-date { color: #6b7280; font-size: 13px; }
+.notas-txt { font-style: italic; color: #9ca3af; }

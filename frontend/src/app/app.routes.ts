@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { Routes } from '@angular/router'; // 👈 ¡Corregido aquí! Ahora apunta a @angular/router
 
 // Importaciones existentes del proyecto
 import { Home } from './pages/home/home';
@@ -7,6 +7,8 @@ import { Register } from './pages/register/register';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { Patients } from './pages/patients/patients';
 import { Treatments } from './pages/treatments/treatments'; 
+import { ConsultasComponent } from './pages/consultas/consultas';
+import { ConfiguracionComponent } from './pages/configuracion/configuracion';
 
 // Nueva importación del módulo de Reportes Clínicos
 import { ReportesComponent } from './pages/reportes/reportes';
@@ -37,19 +39,16 @@ export const routes: Routes = [
         component: Treatments
     },
     {
-        path: 'reportes', // 👈 Ruta oficial para el Centro de Reportes Médicos
+        path: 'reportes', 
         component: ReportesComponent
     },
-    /* 💡 NOTA: Si en el futuro creas los componentes para Recordatorios y Configuración, 
-    solo cambias el componente acá abajo como hicimos con Reportes. Por ahora los redirigimos al dashboard.
-    */
-    {
-        path: 'recordatorios',
-        redirectTo: 'dashboard'
+    { 
+        path: 'consultas', 
+        component: ConsultasComponent 
     },
-    {
-        path: 'configuracion',
-        redirectTo: 'dashboard'
+    { 
+        path: 'configuracion', 
+        component: ConfiguracionComponent 
     },
     {
         path: '**',
