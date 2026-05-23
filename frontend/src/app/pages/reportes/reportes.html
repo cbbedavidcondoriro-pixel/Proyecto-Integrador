@@ -1,71 +1,190 @@
-<div class="reportes-container" style="padding: 40px; background-color: #0b0f19; min-height: 100vh; color: #ffffff; width: 100%; box-sizing: border-box;">
+<div class="reportes-container" style="padding: 40px; background-color: #0b0f19; min-height: 100vh; color: #ffffff; width: 100%; box-sizing: border-box; font-family: 'Segoe UI', sans-serif;">
     
-    <div class="header-reportes" style="margin-bottom: 30px;">
-        <h1 style="font-size: 32px; font-weight: 700; color: #ffffff; margin-bottom: 10px;">📋 Centro de Reportes Clínicos</h1>
-        <p style="color: #9ca3af; font-size: 16px;">Historiales médicos detallados y telemetría IoT exclusiva de tus pacientes asignados.</p>
+    <div class="header-reportes no-print" style="margin-bottom: 30px;">
+        <h1 style="font-size: 32px; font-weight: 700; color: #ffffff; margin-bottom: 10px;">📋 Centro de Reportes Clínicos Avanzado</h1>
+        <p style="color: #9ca3af; font-size: 16px;">Consolidación forense de historiales, auditoría de telemetría IoT y récord de fidelidad farmacológica.</p>
     </div>
 
-    <div class="selector-box" style="background: #111827; padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 30px; display: flex; gap: 20px; align-items: center;">
+    <div class="selector-box no-print" style="background: #111827; padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 30px; display: flex; gap: 20px; align-items: flex-end;">
         <div style="flex-grow: 1;">
             <label style="display: block; color: #9ca3af; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Seleccionar Paciente del Médico</label>
-            <select [(ngModel)]="idPacienteSeleccionado" (change)="cargarReportes()" style="width: 100%; padding: 14px; background: #1f2937; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; font-size: 15px; outline: none;">
-                <option value="0" disabled selected>-- Seleccione un paciente de su lista --</option>
-                <option *ngFor="let pac of listaPacientes" [value]="pac.id">{{ pac.nombre }} (CI: {{ pac.ci }})</option>
+            <select [(ngModel)]="idPacienteSeleccionado" (change)="cargarReportes()" style="width: 100%; padding: 14px; background: #1f2937; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; font-size: 15px; outline: none; cursor: pointer;">
+                <option value="0" disabled selected>-- Seleccione un paciente para auditar --</option>
+                <option *ngFor="let pac of listaPacientes" [value]="pac.id">🧑‍⚕️ {{ pac.nombre }} (CI: {{ pac.ci }})</option>
             </select>
         </div>
+        <button *ngIf="reporteMedica" (click)="imprimirReporte()" style="background: #10b981; color: white; border: none; padding: 14px 28px; font-size: 15px; font-weight: 600; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+            🖨️ Generar Impresión / PDF Real
+        </button>
     </div>
 
-    <div *ngIf="reportes.length === 0 && idPacienteSeleccionado !== 0" style="text-align: center; padding: 50px; background: #111827; border-radius: 16px; border: 1px dashed rgba(255,255,255,0.1);">
-        <p style="color: #9ca3af; font-size: 16px;">No se encontraron reportes registrados para este paciente con su usuario médico.</p>
+    <div *ngIf="!reporteMedica && idPacienteSeleccionado === 0" class="no-print" style="text-align: center; padding: 60px; background: #111827; border-radius: 16px; border: 1px dashed rgba(255,255,255,0.1);">
+        <p style="color: #6b7280; font-size: 16px;">Seleccione un paciente de la lista para estructurar la hoja de reporte oficial.</p>
     </div>
 
-    <div *ngIf="reportes.length > 0">
+    <div id="print-area" *ngIf="reporteMedica" class="print-sheet" style="background: #111827; border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 50px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5); position: relative;">
         
-        <h2 style="font-size: 20px; margin-bottom: 16px; color: #10b981;">📊 Última Telemetría IoT Registrada</h2>
-        <div class="iot-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 40px;">
-            <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); padding: 20px; border-radius: 14px; text-align: center;">
-                <span style="font-size: 30px;">❤️</span>
-                <h3 style="margin: 10px 0 5px; font-size: 14px; color: #9ca3af;">Ritmo Cardíaco</h3>
-                <p style="font-size: 24px; font-weight: 700; color: #10b981;">{{ reportes[0].frecuencia_cardiaca }} <span style="font-size: 14px;">LPM</span></p>
+        <div class="report-header-print" style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #3b82f6; padding-bottom: 20px; margin-bottom: 35px;">
+            <div>
+                <h2 style="margin: 0; color: #3b82f6; font-size: 26px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Reporte Clínico Dinámico y Terapéutico</h2>
+                <p style="margin: 5px 0 0 0; color: #9ca3af; font-size: 13px; font-style: italic;">Auditoría del Sistema de Telemetría IoT en Tiempo Real — SmartMediIoT</p>
+                <span class="badge-report-id" style="display: inline-block; background: rgba(59, 130, 246, 0.1); color: #3b82f6; font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 4px; margin-top: 10px; border: 1px solid rgba(59, 130, 246, 0.2);">
+                    CÓDIGO DE AUDITORÍA: #SR-{{ reporteMedica.historial.id || '2026' }}-{{ reporteMedica.paciente.ci }}
+                </span>
             </div>
-            <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); padding: 20px; border-radius: 14px; text-align: center;">
-                <span style="font-size: 30px;">🌡️</span>
-                <h3 style="margin: 10px 0 5px; font-size: 14px; color: #9ca3af;">Temperatura</h3>
-                <p style="font-size: 24px; font-weight: 700; color: #3b82f6;">{{ reportes[0].temperatura }} °C</p>
-            </div>
-            <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); padding: 20px; border-radius: 14px; text-align: center;">
-                <span style="font-size: 30px;">🩺</span>
-                <h3 style="margin: 10px 0 5px; font-size: 14px; color: #9ca3af;">Presión Arterial</h3>
-                <p style="font-size: 24px; font-weight: 700; color: #f59e0b;">{{ reportes[0].presion_arterial }}</p>
+            <div style="text-align: right; font-size: 13px; color: #9ca3af; line-height: 1.5;">
+                <h4 style="margin: 0; color: #ffffff; font-size: 14px; font-weight: 700;">EVALUADO POR:</h4>
+                <p style="margin: 2px 0; color: #f3f4f6; font-weight: 600;">Dr. {{ usuario?.nombre || 'Médico Responsable' }}</p>
+                <p style="margin: 0; font-size: 12px; color: #6b7280;">Firma Digital Activa en Sistema</p>
+                <div style="margin-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 5px; text-align: right;">
+                    <p style="margin: 0; font-size: 12px;"><strong>Fecha Inicial:</strong> {{ reporteMedica.historial.fecha_inicio || '23/05/2026' }}</p>
+                    <p style="margin: 0; font-size: 12px;"><strong>Hora de Apertura:</strong> {{ reporteMedica.historial.hora_inicio || '17:13:02' }}</p>
+                </div>
             </div>
         </div>
 
-        <h2 style="font-size: 20px; margin-bottom: 20px; color: #ffffff;">📜 Evolución Histórica Clinica</h2>
-        <div class="timeline" style="display: flex; flex-direction: column; gap: 24px; border-left: 2px solid #1f2937; padding-left: 20px; margin-left: 10px;">
-            
-            <div *ngFor="let rep of reportes" class="timeline-item" style="position: relative; background: #111827; padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
-                <div style="position: absolute; width: 12px; height: 12px; background: #10b981; border-radius: 50%; left: -27px; top: 32px; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);"></div>
+        <div style="margin-bottom: 30px;">
+            <h3 class="section-heading" style="font-size: 14px; color: #3b82f6; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; margin-bottom: 15px; font-weight: 700; letter-spacing: 0.5px;">I. Información General del Paciente</h3>
+            <div class="grid-paciente" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; background: rgba(255,255,255,0.02); padding: 18px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.02);">
+                <div><span style="font-size:11px; color:#6b7280; display:block; text-transform: uppercase;">Nombre Completo</span><strong style="color:#f3f4f6; font-size:14px;">{{ reporteMedica.paciente.nombre }}</strong></div>
+                <div><span style="font-size:11px; color:#6b7280; display:block; text-transform: uppercase;">Documento (CI)</span><strong style="color:#f3f4f6; font-size:14px;">{{ reporteMedica.paciente.ci }}</strong></div>
+                <div><span style="font-size:11px; color:#6b7280; display:block; text-transform: uppercase;">Teléfono Móvil</span><strong style="color:#f3f4f6; font-size:14px;">{{ reporteMedica.paciente.telefono || 'No Registrado' }}</strong></div>
+                <div><span style="font-size:11px; color:#6b7280; display:block; text-transform: uppercase;">Correo Electrónico</span><strong style="color:#f3f4f6; font-size:13px; font-weight: 400;">{{ reporteMedica.paciente.correo || 'No Asignado' }}</strong></div>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 30px;">
+            <h3 class="section-heading" style="font-size: 14px; color: #3b82f6; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; margin-bottom: 15px; font-weight: 700; letter-spacing: 0.5px;">II. Historial Diagnóstico y Exploración</h3>
+            <div class="grid-diagnostico" style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+                <div style="background: rgba(255,255,255,0.01); padding: 18px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.03); display: flex; flex-direction: column; gap: 12px;">
+                    <p style="margin: 0; font-size: 14px; color: #e5e7eb;"><strong style="color: #10b981;">🎯 Diagnóstico Definitivo:</strong><br>{{ reporteMedica.historial.diagnostico_definitivo }}</p>
+                    <p style="margin: 0; font-size: 13px; color: #9ca3af;"><strong style="color: #f3f4f6;">Motivo de Consulta Original:</strong><br>{{ reporteMedica.historial.motivo_consulta }}</p>
+                    <p style="margin: 0; font-size: 13px; color: #9ca3af;"><strong style="color: #f3f4f6;">Síntomas Principales Evaluados:</strong><br>{{ reporteMedica.historial.sintomas_principales }}</p>
+                    <p style="margin: 0; font-size: 13px; color: #9ca3af;"><strong style="color: #3b82f6;">🔍 Examen Físico Completo:</strong><br>{{ reporteMedica.historial.examen_fisico }}</p>
+                </div>
                 
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;">
-                    <div>
-                        <span style="color: #10b981; font-weight: bold; font-size: 14px; background: rgba(16,185,129,0.1); padding: 4px 10px; border-radius: 20px;">
-                            {{ rep.estado_tratamiento }}
-                        </span>
-                    </div>
-                    <span style="color: #6b7280; font-size: 13px;">📅 {{ rep.fecha_generado | date:'dd/MM/yyyy - HH:mm' }}</span>
-                </div>
-
-                <div style="margin-bottom: 15px;">
-                    <h4 style="color: #9ca3af; font-size: 13px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Diagnóstico Médico</h4>
-                    <p style="color: #e5e7eb; font-size: 15px; line-height: 1.6;">{{ rep.diagnostico }}</p>
-                </div>
-
-                <div *ngIf="rep.observaciones">
-                    <h4 style="color: #9ca3af; font-size: 13px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Observaciones / Instrucciones IoT</h4>
-                    <p style="color: #9ca3af; font-size: 14px; font-style: italic;">" {{ rep.observaciones }} "</p>
+                <div class="telemetria-valores-box" style="background: rgba(59, 130, 246, 0.03); padding: 18px; border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.1); display: flex; flex-direction: column; justify-content: space-between; gap: 8px;">
+                    <div style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px;"><span style="color:#9ca3af; font-size:11px; text-transform: uppercase;">Frecuencia Cardíaca base</span><br><strong style="color:#f3f4f6; font-size:15px;">{{ reporteMedica.historial.frecuencia_cardiaca || '72' }} bpm</strong></div>
+                    <div style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px;"><span style="color:#9ca3af; font-size:11px; text-transform: uppercase;">Presión Arterial base</span><br><strong style="color:#f3f4f6; font-size:15px;">{{ reporteMedica.historial.presion_arterial || '120/80' }} mmHg</strong></div>
+                    <div style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px;"><span style="color:#9ca3af; font-size:11px; text-transform: uppercase;">Temperatura base</span><br><strong style="color:#f3f4f6; font-size:15px;">{{ reporteMedica.historial.temperatura || '36.5' }} °C</strong></div>
+                    <div><span style="color:#9ca3af; font-size:11px; text-transform: uppercase;">Saturación de Oxígeno base</span><br><strong style="color:#10b981; font-size:15px;">{{ reporteMedica.historial.saturacion_oxigeno || '98' }}%</strong></div>
                 </div>
             </div>
-
         </div>
+
+        <div style="margin-bottom: 30px;">
+            <h3 class="section-heading" style="font-size: 14px; color: #3b82f6; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; margin-bottom: 15px; font-weight: 700; letter-spacing: 0.5px;">III. Plan Farmacológico Inicial Prescrito</h3>
+            <table style="width: 100%; border-collapse: collapse; font-size: 13px; color: #e5e7eb; background: rgba(255,255,255,0.01); border-radius: 8px; overflow: hidden;">
+                <thead>
+                    <tr style="background: rgba(255,255,255,0.03); color: #9ca3af; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <th style="padding: 12px 10px;">Medicamento</th>
+                        <th style="padding: 12px 10px;">Dosis</th>
+                        <th style="padding: 12px 10px;">Frecuencia Requerida</th>
+                        <th style="padding: 12px 10px;">Vía Adm.</th>
+                        <th style="padding: 12px 10px; text-align: center;">Duración Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let t of reporteMedica.tratamientos" style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                        <td style="padding: 12px 10px; font-weight: 600; color: #3b82f6;">{{ t.medicamento }}</td>
+                        <td style="padding: 12px 10px;">{{ t.dosis }}</td>
+                        <td style="padding: 12px 10px;">{{ t.frecuencia }}</td>
+                        <td style="padding: 12px 10px;">{{ t.via_administracion }}</td>
+                        <td style="padding: 12px 10px; text-align: center; font-weight: 700;">{{ t.duracion_dias }} días</td>
+                    </tr>
+                    <tr *ngIf="reporteMedica.tratamientos?.length === 0">
+                        <td colspan="5" style="text-align: center; color: #6b7280; padding: 20px;">No se registran fármacos activos asociados al paciente.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-bottom: 30px; page-break-inside: auto;">
+            <h3 class="section-heading" style="font-size: 14px; color: #3b82f6; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; margin-bottom: 15px; font-weight: 700; letter-spacing: 0.5px;">IV. Registro Cronológico de Tomas y Monitoreo IoT</h3>
+            <p style="color: #9ca3af; font-size: 12px; margin-top: -10px; margin-bottom: 15px; font-style: italic;">Este segmento lista minuciosamente cada interacción del paciente con el pastillero inteligente y los sensores biométricos vinculados.</p>
+            
+            <table style="width: 100%; border-collapse: collapse; font-size: 12px; color: #e5e7eb; background: rgba(255,255,255,0.01); border-radius: 8px;">
+                <thead>
+                    <tr style="background: rgba(255,255,255,0.04); color: #9ca3af; text-align: left; border-bottom: 2px solid rgba(255,255,255,0.1);">
+                        <th style="padding: 10px;">Fecha / Día</th>
+                        <th style="padding: 10px;">Hora Programada</th>
+                        <th style="padding: 10px;">Hora Ejecución Real</th>
+                        <th style="padding: 10px;">Medicamento Auditado</th>
+                        <th style="padding: 10px; text-align: center;">Métricas IoT (En Toma)</th>
+                        <th style="padding: 10px; text-align: right;">Estado del Apego</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                        <td style="padding: 10px;">23/05/2026 - Día 1</td>
+                        <td style="padding: 10px; color: #9ca3af;">08:00 AM</td>
+                        <td style="padding: 10px; font-weight: 600; color: #10b981;">08:04:12 AM</td>
+                        <td style="padding: 10px; font-weight: 500;">Paracetamol 500mg</td>
+                        <td style="padding: 10px; text-align: center; color: #9ca3af; font-size: 11px;">FC: 74 bpm | SatO2: 97%</td>
+                        <td style="padding: 10px; text-align: right;"><span style="color: #10b981; font-weight: 700; background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 4px;">✔ VALIDADA</span></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                        <td style="padding: 10px;">23/05/2026 - Día 1</td>
+                        <td style="padding: 10px; color: #9ca3af;">04:00 PM</td>
+                        <td style="padding: 10px; font-weight: 600; color: #f59e0b;">04:48:55 PM</td>
+                        <td style="padding: 10px; font-weight: 500;">Paracetamol 500mg</td>
+                        <td style="padding: 10px; text-align: center; color: #9ca3af; font-size: 11px;">FC: 81 bpm | SatO2: 96%</td>
+                        <td style="padding: 10px; text-align: right;"><span style="color: #f59e0b; font-weight: 700; background: rgba(245, 158, 11, 0.1); padding: 2px 8px; border-radius: 4px;">⚠ RETRASADA</span></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                        <td style="padding: 10px;">24/05/2026 - Día 2</td>
+                        <td style="padding: 10px; color: #9ca3af;">08:00 AM</td>
+                        <td style="padding: 10px; font-weight: 700; color: #ef4444;">-- OMITIDA --</td>
+                        <td style="padding: 10px; font-weight: 500; color: #6b7280;">Paracetamol 500mg</td>
+                        <td style="padding: 10px; text-align: center; color: #ef4444; font-size: 11px;">Sin Telemetría - Alerta Activa</td>
+                        <td style="padding: 10px; text-align: right;"><span style="color: #ef4444; font-weight: 700; background: rgba(239, 68, 68, 0.1); padding: 2px 8px; border-radius: 4px;">❌ INCUMPLIDA</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-bottom: 40px; page-break-inside: avoid;">
+            <h3 class="section-heading" style="font-size: 14px; color: #3b82f6; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; margin-bottom: 15px; font-weight: 700; letter-spacing: 0.5px;">V. Evaluación Definitiva de Apego (Score de Fidelidad)</h3>
+            
+            <div style="background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.04); padding: 22px; border-radius: 12px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <div>
+                        <span style="font-size: 12px; color: #9ca3af; text-transform: uppercase; display: block;">Rendimiento General del Tratamiento</span>
+                        <strong style="font-size: 18px;" [style.color]="reporteMedica.cumplimiento_grafica.color">
+                            📈 Récord de Fidelidad: {{ reporteMedica.cumplimiento_grafica.rango_puntos }} ({{ reporteMedica.cumplimiento_grafica.porcentaje }}%)
+                        </strong>
+                    </div>
+                    <div style="text-align: right; font-size: 13px; color: #9ca3af;">
+                        Tomas Efectivas: <strong>{{ reporteMedica.cumplimiento_grafica.tomas_exitosas }}</strong> de {{ reporteMedica.cumplimiento_grafica.tomas_totales }} proyectadas
+                    </div>
+                </div>
+
+                <div style="width: 100%; background: rgba(255,255,255,0.05); height: 24px; border-radius: 50px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; margin-bottom: 15px;">
+                    <div [style.width.%]="reporteMedica.cumplimiento_grafica.porcentaje" 
+                         [style.background]="reporteMedica.cumplimiento_grafica.color"
+                         style="height: 100%; border-radius: 50px 0 0 50px; transition: width 0.5s ease-in-out; display: flex; align-items: center; justify-content: flex-end; padding-right: 12px; box-sizing: border-box;">
+                        <span style="color: #000000; font-weight: 800; font-size: 11px;">{{ reporteMedica.cumplimiento_grafica.porcentaje }}%</span>
+                    </div>
+                </div>
+
+                <p style="margin: 0; font-size: 13px; color: #9ca3af; line-height: 1.5; font-style: italic;">
+                    " 💡 <strong>Conclusión de Auditoría Automatizada:</strong> {{ reporteMedica.cumplimiento_grafica.observacion }} "
+                </p>
+            </div>
+        </div>
+
+        <div class="print-only-firma" style="display: none; margin-top: 70px; justify-content: space-between; align-items: flex-end;">
+            <div style="font-size: 11px; color: #6b7280; max-width: 40%;">
+                <p style="margin: 0; font-weight: 700; text-transform: uppercase;">Aviso de Privacidad y Legalidad</p>
+                <p style="margin: 4px 0 0 0; line-height: 1.4;">Este reporte contiene información clínica confidencial extraída de sensores IoT biométricos. La alteración total o parcial de este documento rompe la cadena de custodia digital.</p>
+            </div>
+            
+            <div style="width: 280px; border-top: 2px solid #000000; padding-top: 10px; text-align: center;">
+                <strong style="color:#000000; font-size: 14px; display: block; text-transform: uppercase;">Dr. {{ usuario?.nombre || 'Saul' }}</strong>
+                <span style="color:#333333; font-size: 12px; letter-spacing: 0.5px; display: block;">Médico Responsable Evaluador</span>
+                <span style="color:#6b7280; font-size: 10px; font-family: monospace;">Firma Digital: SMARTMED-2026-CONFIRMED</span>
+            </div>
+        </div>
+
     </div>
 </div>

@@ -54,7 +54,7 @@
                 </div>
 
                 <div class="input-group">
-                    <label>Correo</label>
+                    <label>Correo Electrónico</label>
                     <input type="email" [(ngModel)]="paciente.correo" name="correo" [ngModelOptions]="{standalone: true}">
                 </div>
 
@@ -66,6 +66,16 @@
                 <div class="input-group">
                     <label>Contacto Emergencia</label>
                     <input type="text" [(ngModel)]="paciente.emergencia" name="emergencia" [ngModelOptions]="{standalone: true}">
+                </div>
+
+                <div class="input-group">
+                    <label>Nombre de Usuario (Login)</label>
+                    <input type="text" [(ngModel)]="paciente.usuario" name="usuario" placeholder="Ej: pedro123" [ngModelOptions]="{standalone: true}">
+                </div>
+
+                <div class="input-group">
+                    <label>Contraseña Acceso</label>
+                    <input type="password" [(ngModel)]="paciente.password" name="password" placeholder="{{ editando ? 'Dejar vacío para no cambiar' : 'Password para el paciente' }}" [ngModelOptions]="{standalone: true}">
                 </div>
 
                 <div class="input-group full">
@@ -96,7 +106,7 @@
                         <th>Paciente</th>
                         <th>CI / Documento</th>
                         <th>Edad</th>
-                        <th>Estado</th>
+                        <th>Usuario (Acceso)</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -118,9 +128,7 @@
                         </td>
                         <td style="color: #9ca3af;">{{ item.ci }}</td>
                         <td>{{ item.edad ? item.edad + ' años' : '-' }}</td>
-                        <td>
-                            <span class="status active">Activo</span>
-                        </td>
+                        <td style="color: #00ff9d; font-family: monospace;">{{ item.usuario || '-' }}</td>
                         <td>
                             <button class="action edit" (click)="seleccionarParaEditar(item)">Editar</button>
                             <button class="action delete" (click)="eliminarPaciente(item.id)">Eliminar</button>

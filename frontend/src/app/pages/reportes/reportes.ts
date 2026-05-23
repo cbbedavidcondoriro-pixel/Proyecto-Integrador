@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -10,48 +10,61 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   templateUrl: './reportes.html'
 })
 export class ReportesComponent implements OnInit {
-  idPacienteSeleccionado: number = 0;
-  idMedicoLogueado: number = 1; // Por defecto 1 (Se sobreescribe con la sesión)
   
+  API = 'http://127.0.0.1:5000';
+  idPacienteSeleccionado: number = 0;
+  idMedicoLogueado: number = 1;
+  
+  usuario: any = null;
   listaPacientes: any[] = [];
-  reportes: any[] = [];
+  
+  // Objeto contenedor maestro del reporte consolidado
+  reporteMedica: any = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    // 1. Obtener la sesión real del médico desde el localStorage
     const usuarioSesion = localStorage.getItem('usuario');
     if (usuarioSesion) {
-      const userObj = JSON.parse(usuarioSesion);
-      this.idMedicoLogueado = userObj.id || 1; 
+      this.usuario = JSON.parse(usuarioSesion);
+      this.idMedicoLogueado = this.usuario.id || this.usuario.id_usuario || this.usuario.id_medico || 1; 
     }
-
     this.cargarPacientesDelMedico();
   }
 
-  // Carga la lista inicial para el selector desplegable
   cargarPacientesDelMedico() {
-    // Reemplaza esta URL con tu endpoint actual de visualización de pacientes
-    this.http.get<any[]>(`http://localhost:5000/api/pacientes?id_medico=${this.idMedicoLogueado}`)
+    this.http.get<any[]>(`${this.API}/api/pacientes/selector/${this.idMedicoLogueado}`)
       .subscribe({
-        next: (data) => { this.listaPacientes = data; },
-        error: (err) => { console.error('Error cargando pacientes', err); }
+        next: (data) => { 
+          this.listaPacientes = data || []; 
+          this.cdr.detectChanges();
+        },
+        error: (err) => console.error('❌ Error cargando select de pacientes:', err)
       });
   }
 
-  // Carga la telemetría e historial clínico exclusivo al cambiar de paciente
   cargarReportes() {
-    if (this.idPacienteSeleccionado === 0) return;
+    if (Number(this.idPacienteSeleccionado) === 0) {
+      this.reporteMedica = null;
+      return;
+    }
 
-    this.http.get<any[]>(`http://localhost:5000/api/reportes/paciente/${this.idPacienteSeleccionado}?id_medico=${this.idMedicoLogueado}`)
+    this.http.get<any>(`${this.API}/api/reportes/consolidado/${this.idPacienteSeleccionado}`)
       .subscribe({
         next: (data) => { 
-          this.reportes = data; 
+          console.log("📊 Reporte clínico integrado recibido:", data);
+          this.reporteMedica = data; 
+          this.cdr.detectChanges();
         },
         error: (err) => { 
-          console.error('Error al obtener reportes', err); 
-          this.reportes = [];
+          console.error('❌ Error consolidando la ficha:', err); 
+          this.reporteMedica = null;
         }
       });
+  }
+
+  // Método de impresión nativo con sanitización de interfaz
+  imprimirReporte() {
+    window.print();
   }
 }

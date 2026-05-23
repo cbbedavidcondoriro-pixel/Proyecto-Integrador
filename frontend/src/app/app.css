@@ -4,74 +4,113 @@
     min-height: 100vh;
     background-color: #0b0f19;
     color: #f3f4f6;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* Diseño de la barra lateral fija */
+/* Diseño de la barra lateral fija y compacta */
 .sidebar {
     width: 260px;
     background-color: #111827;
-    padding: 24px;
+    padding: 1.5rem 1.2rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border-right: 1px solid #1f2937;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
     position: fixed;
     height: 100vh;
     box-sizing: border-box;
-    z-index: 100;
+    z-index: 999;
 }
 
+/* Encabezado del Menú */
 .logo {
-    font-size: 22px;
-    font-weight: bold;
-    color: #00ff9d;
-    margin-bottom: 40px;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #10b981;
+    margin-bottom: 2rem;
+    padding-left: 0.5rem;
+    display: flex;
+    align-items: center;
     letter-spacing: 0.5px;
 }
 
+/* Lista de navegación unificada */
 .menu {
     list-style: none;
     padding: 0;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem; /* Separación simétrica profesional entre botones */
 }
 
+/* Botones del menú con tamaño controlado */
 .menu li {
-    padding: 12px 16px;
-    border-radius: 12px;
-    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
     color: #9ca3af;
-    transition: all 0.3s;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Clase automática de Angular para el botón de la página activa */
+.menu-icon {
+    font-size: 1.1rem;
+    margin-right: 0.75rem;
+    display: inline-block;
+    text-align: center;
+    width: 1.5rem;
+}
+
+/* 🌟 ESTADO ACTIVO: Sofisticado efecto Esmeralda Neón */
 .menu li.active {
-    background-color: #00ff9d !important;
-    color: #0b0f19 !important;
-    font-weight: bold;
+    background-color: rgba(16, 185, 129, 0.15) !important;
+    color: #34d399 !important;
+    font-weight: 600;
+    border-left: 4px solid #10b981;
+    border-radius: 4px 10px 10px 4px;
+    box-shadow: inset 10px 0 20px rgba(16, 185, 129, 0.05);
 }
 
+/* Efecto hover suave para ítems no activos */
 .menu li:not(.active):hover {
     background-color: #1f2937;
     color: #ffffff;
+    transform: translateX(3px); /* Pequeña transición lateral elegante */
 }
 
+/* Caja de salida compacta e industrial */
 .logout-box {
-    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
     color: #ef4444;
-    border-radius: 12px;
-    font-weight: bold;
-    transition: background 0.3s;
+    background-color: rgba(239, 68, 68, 0.05);
+    border: 1px solid rgba(239, 68, 68, 0.1);
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
 }
 
 .logout-box:hover {
-    background-color: rgba(239, 68, 68, 0.1);
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.1);
 }
 
-/* Espacio reservado en la derecha para que el contenido no se tape con la barra */
+/* Área de contenido fluida */
 .main-content-layout {
-    margin-left: 260px;
-    flex: 1;
-    width: calc(100% - 260px);
+    flex-grow: 1;
+    min-height: 100vh;
+    background-color: #0b0f19;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
 }

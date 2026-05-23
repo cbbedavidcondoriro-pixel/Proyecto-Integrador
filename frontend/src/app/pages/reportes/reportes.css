@@ -289,3 +289,96 @@
         font-size: 12px;
     }
 }
+
+@media print {
+    /* 1. Destruye la barra lateral que está fuera de este componente */
+    :host ::ng-deep .sidebar, 
+    :host ::ng-deep aside, 
+    :host ::ng-deep .logout-box {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        width: 0 !important;
+        position: absolute !important;
+    }
+
+    /* 2. Resetea el contenedor maestro del sistema */
+    :host ::ng-deep .app-layout-container {
+        display: block !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+        min-height: auto !important;
+    }
+
+    /* 3. Elimina el margen izquierdo de 260px que te dejaba la hoja empujada */
+    :host ::ng-deep main, 
+    :host ::ng-deep .main-content-layout {
+        margin-left: 0 !important;
+        margin-top: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        position: relative !important;
+        background: #ffffff !important;
+    }
+
+    /* 4. Limpieza drástica del componente actual */
+    body, html, .reportes-container {
+        background: #ffffff !important;
+        color: #000000 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+    }
+
+    /* Ocultar selectores */
+    .no-print {
+        display: none !important;
+    }
+
+    /* Adaptación de la hoja a Blanco (Impresora) */
+    .print-sheet {
+        background: #ffffff !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 10px 0 !important;
+        color: #000000 !important;
+        width: 100% !important;
+    }
+
+    h2, h3, h4, strong, td, th, span, p {
+        color: #000000 !important;
+    }
+
+    .section-heading {
+        color: #000000 !important;
+        border-bottom: 2px solid #000000 !important;
+    }
+
+    table {
+        background: #ffffff !important;
+        border: 1px solid #000000 !important;
+        width: 100% !important;
+    }
+
+    th {
+        background: #f3f4f6 !important;
+        color: #000000 !important;
+        border-bottom: 2px solid #000000 !important;
+        padding: 8px !important;
+    }
+
+    td {
+        border-bottom: 1px solid #000000 !important;
+        color: #000000 !important;
+    }
+
+    .print-only-firma {
+        display: flex !important;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}

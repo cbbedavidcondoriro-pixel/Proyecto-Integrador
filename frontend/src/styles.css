@@ -1,1 +1,97 @@
-/* You can add global styles to this file, and also import other style files */
+/* ==========================================================================
+   💥 SOLUCIÓN DEFINITIVA DE IMPRESIÓN COMPLETA (SmartMediIoT)
+   ========================================================================== */
+@media print {
+    /* 1. Ocultar por completo la barra lateral y elementos no deseados */
+    .sidebar, 
+    aside, 
+    .logout-box, 
+    .no-print {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        width: 0 !important;
+        height: 0 !important;
+        position: absolute !important;
+    }
+
+    /* 2. Resetear el contenedor principal del Layout */
+    .app-layout-container {
+        display: block !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+        min-height: auto !important;
+    }
+
+    /* 3. Forzar al <main> a ignorar los estilos inline de Angular y usar el 100% */
+    main.main-content-layout {
+        margin-left: 0 !important;
+        margin-top: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        position: relative !important;
+        background: #ffffff !important;
+    }
+
+    /* 4. Adaptar el contenedor de reportes a la hoja blanca */
+    body, html, .reportes-container {
+        background: #ffffff !important;
+        color: #000000 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+    }
+
+    /* 5. Estilos limpios para la hoja imprimible */
+    .print-sheet {
+        background: #ffffff !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0px !important;
+        margin: 0 !important;
+        color: #000000 !important;
+        width: 100% !important;
+    }
+
+    /* Forzar textos legibles en negro */
+    h2, h3, h4, strong, td, th, span, p, div {
+        color: #000000 !important;
+    }
+
+    .section-heading {
+        color: #000000 !important;
+        border-bottom: 2px solid #000000 !important;
+    }
+
+    /* Tablas legibles para la impresora */
+    table {
+        background: #ffffff !important;
+        border: 1px solid #000000 !important;
+        width: 100% !important;
+    }
+
+    th {
+        background: #f3f4f6 !important;
+        color: #000000 !important;
+        border-bottom: 2px solid #000000 !important;
+        padding: 8px !important;
+    }
+
+    td {
+        border-bottom: 1px solid #000000 !important;
+        color: #000000 !important;
+        padding: 8px !important;
+    }
+
+    /* Mostrar la firma del médico */
+    .print-only-firma {
+        display: flex !important;
+    }
+
+    /* Forzar al navegador a mantener los colores de fondo ligeros */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}

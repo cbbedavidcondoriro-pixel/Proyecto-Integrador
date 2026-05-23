@@ -3,7 +3,7 @@
     <div class="topbar">
         <div>
             <h1>Configuración de Tratamiento Inteligente</h1>
-            <p>Asignación precisa de medicamentos y sincronización con nodos IoT</p>
+            <p>Asignación directa de medicamentos sincronizados con la base de datos</p>
         </div>
 
         <div class="doctor-profile">
@@ -17,16 +17,61 @@
         </div>
     </div>
 
+    <div *ngIf="ultimoHistorial" style="background: #1e293b; border-left: 5px solid #3b82f6; padding: 22px; border-radius: 12px; margin-bottom: 25px; font-family: 'Segoe UI', sans-serif; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px;">
+            <h4 style="margin: 0; color: #3b82f6; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                📋 Historial Clínico Encontrado (Última Evaluación Médica)
+            </h4>
+            <span style="font-size: 12px; color: #9ca3af; background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 20px;">
+                📅 Estado: {{ ultimoHistorial.fecha_evaluacion }}
+            </span>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1.1fr 1.1fr 1.1fr 0.9fr; gap: 15px;">
+            
+            <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.03);">
+                <p style="margin: 0 0 8px 0; font-size: 13px; color: #9ca3af;"><strong style="color: #f3f4f6;">Motivo de Consulta:</strong><br>{{ ultimoHistorial.motivo_consulta }}</p>
+                <p style="margin: 0; font-size: 13px; color: #9ca3af;"><strong style="color: #f3f4f6;">Síntomas Principales:</strong><br>{{ ultimoHistorial.sintomas_principales }}</p>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.03);">
+                <p style="margin: 0 0 8px 0; font-size: 13px; color: #9ca3af;"><strong style="color: #3b82f6;">🔍 Examen Físico / Revisión:</strong><br>{{ ultimoHistorial.examen_fisico || 'Sin registro detallado' }}</p>
+                <p style="margin: 0; font-size: 13px; color: #9ca3af;"><strong style="color: #f3f4f6;">⚠️ Antecedentes / Alergias:</strong><br>{{ ultimoHistorial.antecedentes_medicos || 'Ninguno reportado' }}</p>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.03);">
+                <p style="margin: 0 0 8px 0; font-size: 13px; color: #10b981;"><strong style="color: #10b981;">🎯 Diagnóstico Definitivo:</strong><br>{{ ultimoHistorial.diagnostico_definitivo }}</p>
+                <p style="margin: 0; font-size: 13px; color: #9ca3af;"><strong style="color: #f3f4f6;">⚡ Indicaciones Inmediatas:</strong><br>{{ ultimoHistorial.indicaciones_inmediatas || 'Ninguna indicación previa' }}</p>
+            </div>
+
+            <div style="background: rgba(59, 130, 246, 0.04); padding: 12px; border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.12); display: flex; flex-direction: column; justify-content: center; gap: 6px;">
+                <div style="font-size: 12px; color: #9ca3af; display: flex; justify-content: space-between;">
+                    <span>❤️ F. Cardíaca:</span> <strong style="color: #f3f4f6;">{{ ultimoHistorial.frecuencia_cardiaca }} bpm</strong>
+                </div>
+                <div style="font-size: 12px; color: #9ca3af; display: flex; justify-content: space-between;">
+                    <span>🩺 P. Arterial:</span> <strong style="color: #f3f4f6;">{{ ultimoHistorial.presion_arterial }} mmHg</strong>
+                </div>
+                <div style="font-size: 12px; color: #9ca3af; display: flex; justify-content: space-between;">
+                    <span>🌡️ Temp:</span> <strong style="color: #f3f4f6;">{{ ultimoHistorial.temperatura }} °C</strong>
+                </div>
+                <div style="font-size: 12px; color: #9ca3af; display: flex; justify-content: space-between;">
+                    <span>🩸 Sat. O2:</span> <strong style="color: #10b981;">{{ ultimoHistorial.saturacion_oxigeno }}%</strong>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     <div class="form-card">
-        <h2>Formulación Médica y Automatización</h2>
+        <h2>Formulación Médica</h2>
 
         <form (submit)="$event.preventDefault()" autocomplete="off">
             
             <div class="section-title">👤 Información del Paciente</div>
             <div class="grid">
                 <div class="input-group full">
-                    <label>Seleccionar Paciente de la Lista</label>
-                    <select [(ngModel)]="tratamiento.paciente_id" [ngModelOptions]="{standalone: true}">
+                    <label>Seleccionar Paciente</label>
+                    <select [(ngModel)]="tratamiento.paciente_id" (change)="onPacienteChange()" [ngModelOptions]="{standalone: true}">
                         <option value="" disabled selected>-- Elige un paciente bajo tu cuidado --</option>
                         <option *ngFor="let p of pacientes" [value]="p.id">
                             🧑‍⚕️ {{ p.nombre }} (CI: {{ p.ci }})
@@ -35,132 +80,127 @@
                 </div>
             </div>
 
-            <div class="section-title">💊 Medicación y Tiempos</div>
-            <div class="grid">
-                <div class="input-group">
-                    <label>Nombre del Medicamento</label>
-                    <input type="text" [(ngModel)]="tratamiento.medicamento" placeholder="Ej. Paracetamol, Amoxicilina" [ngModelOptions]="{standalone: true}">
+            <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 25px; margin-top: 15px;">
+                
+                <div style="background: rgba(255,255,255,0.02); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                    <div class="section-title" style="margin-top: 0;">📋 Añadir Fármaco</div>
+                    
+                    <div class="input-group full" style="margin-bottom: 12px;">
+                        <label>Nombre del Medicamento</label>
+                        <input type="text" [(ngModel)]="tempMedicamento.medicamento" placeholder="Ej. Paracetamol" [ngModelOptions]="{standalone: true}">
+                    </div>
+
+                    <div class="input-group full" style="margin-bottom: 12px;">
+                        <label>Dosis / Concentración</label>
+                        <input type="text" [(ngModel)]="tempMedicamento.dosis" placeholder="Ej. 500mg" [ngModelOptions]="{standalone: true}">
+                    </div>
+
+                    <div class="input-group full" style="margin-bottom: 12px;">
+                        <label>Frecuencia de Toma</label>
+                        <select [(ngModel)]="tempMedicamento.frecuencia" [ngModelOptions]="{standalone: true}">
+                            <option value="Cada 4 horas">Cada 4 horas</option>
+                            <option value="Cada 6 horas">Cada 6 horas</option>
+                            <option value="Cada 8 horas">Cada 8 horas</option>
+                            <option value="Cada 12 horas">Cada 12 horas</option>
+                            <option value="Cada 24 horas (Una vez al día)">Cada 24 horas (Una vez al día)</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group full" style="margin-bottom: 12px;">
+                        <label>Vía de Administración</label>
+                        <select [(ngModel)]="tempMedicamento.via_administracion" [ngModelOptions]="{standalone: true}">
+                            <option value="Oral">Oral</option>
+                            <option value="Intravenosa">Intravenosa</option>
+                            <option value="Intramuscular">Intramuscular</option>
+                            <option value="Cutánea">Cutánea</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group full" style="margin-bottom: 12px;">
+                        <label>Hora de Inicio Exacta</label>
+                        <input type="time" [(ngModel)]="tempMedicamento.hora_inicio" [ngModelOptions]="{standalone: true}">
+                    </div>
+
+                    <div class="input-group full" style="margin-bottom: 12px;">
+                        <label>Duración (Días)</label>
+                        <input type="number" [(ngModel)]="tempMedicamento.duracion_dias" placeholder="Ej. 7" [ngModelOptions]="{standalone: true}">
+                    </div>
+
+                    <div class="input-group full" style="margin-bottom: 12px;">
+                        <label>Fecha de Inicio</label>
+                        <input type="date" [(ngModel)]="tempMedicamento.fecha_inicio" [ngModelOptions]="{standalone: true}">
+                    </div>
+
+                    <div class="input-group full" style="margin-bottom: 15px;">
+                        <label>Fecha Finalización</label>
+                        <input type="date" [(ngModel)]="tempMedicamento.fecha_final" [ngModelOptions]="{standalone: true}">
+                    </div>
+
+                    <div class="section-title">⚙️ Opciones IoT</div>
+                    <div class="checkbox-grid" style="grid-template-columns: 1fr; gap: 8px; margin-bottom: 15px;">
+                        <label class="checkbox-container">
+                            <input type="checkbox" [(ngModel)]="tempMedicamento.activar_alertas" [ngModelOptions]="{standalone: true}"> Activar alertas automáticas (Hardware)
+                        </label>
+                        <label class="checkbox-container">
+                            <input type="checkbox" [(ngModel)]="tempMedicamento.notificar_incumplimiento" [ngModelOptions]="{standalone: true}"> Notificar incumplimiento
+                        </label>
+                        <label class="checkbox-container">
+                            <input type="checkbox" [(ngModel)]="tempMedicamento.monitoreo_tiempo_real" [ngModelOptions]="{standalone: true}"> Monitoreo en tiempo real
+                        </label>
+                        <label class="checkbox-container">
+                            <input type="checkbox" [(ngModel)]="tempMedicamento.alertar_familiar" [ngModelOptions]="{standalone: true}"> Alertar a familiar
+                        </label>
+                    </div>
+
+                    <button type="button" (click)="agregarMedicamentoALaReceta()" style="width: 100%; background: #3b82f6; color: white; border: none; padding: 12px; font-weight: 600; border-radius: 6px; cursor: pointer;">
+                        ➕ Agregar Medicamento a la Receta
+                    </button>
                 </div>
 
-                <div class="input-group">
-                    <label>Dosis / Concentración</label>
-                    <input type="text" [(ngModel)]="tratamiento.dosis" placeholder="Ej. 500mg, 1 tableta, 5ml" [ngModelOptions]="{standalone: true}">
-                </div>
+                <div style="background: rgba(255,255,255,0.01); padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.03); display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div class="section-title" style="margin-top: 0; color: #3b82f6;">💊 Fármacos en la Receta Actual</div>
+                        
+                        <div *ngIf="listaMedicamentos.length === 0" style="color: #6b7280; padding: 30px 10px; text-align: center; border: 2px dashed rgba(255,255,255,0.05); border-radius: 8px; font-size: 14px;">
+                            No ha añadido medicamentos todavía. Use el panel izquierdo.
+                        </div>
 
-                <div class="input-group">
-                    <label>Frecuencia de Toma</label>
-                    <select [(ngModel)]="tratamiento.frecuencia" [ngModelOptions]="{standalone: true}">
-                        <option value="Cada 4 horas">Cada 4 horas</option>
-                        <option value="Cada 6 horas">Cada 6 horas</option>
-                        <option value="Cada 8 horas">Cada 8 horas</option>
-                        <option value="Cada 12 horas">Cada 12 horas</option>
-                        <option value="Cada 24 horas (Una vez al día)">Cada 24 horas (Una vez al día)</option>
-                    </select>
-                </div>
+                        <table *ngIf="listaMedicamentos.length > 0" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; color: #f3f4f6;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); color: #9ca3af;">
+                                    <th style="padding: 8px 4px;">Fármaco</th>
+                                    <th style="padding: 8px 4px;">Dosis</th>
+                                    <th style="padding: 8px 4px;">Horario</th>
+                                    <th style="padding: 8px 4px; text-align: center;">Quitar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let med of listaMedicamentos; let i = index" style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                    <td style="padding: 10px 4px; color: #10b981; font-weight: 600;">{{ med.medicamento }}</td>
+                                    <td style="padding: 10px 4px;">{{ med.dosis }}</td>
+                                    <td style="padding: 10px 4px;">{{ med.frecuencia }}</td>
+                                    <td style="padding: 10px 4px; text-align: center;">
+                                        <button type="button" (click)="eliminarMedicamentoDeReceta(i)" style="background: transparent; border: none; color: #ef4444; cursor: pointer;">❌</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
-                <div class="input-group">
-                    <label>Vía de Administración</label>
-                    <select [(ngModel)]="tratamiento.via_administracion" [ngModelOptions]="{standalone: true}">
-                        <option value="Oral">Oral</option>
-                        <option value="Intravenosa">Intravenosa</option>
-                        <option value="Intramuscular">Intramuscular</option>
-                        <option value="Cutánea">Cutánea</option>
-                        <option value="Oftálmica">Oftálmica</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label>Hora de Inicio Exacta</label>
-                    <input type="time" [(ngModel)]="tratamiento.hora_inicio" [ngModelOptions]="{standalone: true}">
-                </div>
-
-                <div class="input-group">
-                    <label>Duración del Tratamiento (Días)</label>
-                    <input type="number" [(ngModel)]="tratamiento.duracion_dias" placeholder="Ej. 7" [ngModelOptions]="{standalone: true}">
-                </div>
-
-                <div class="input-group">
-                    <label>Fecha de Inicio</label>
-                    <input type="date" [(ngModel)]="tratamiento.fecha_inicio" [ngModelOptions]="{standalone: true}">
-                </div>
-
-                <div class="input-group">
-                    <label>Fecha Finalización</label>
-                    <input type="date" [(ngModel)]="tratamiento.fecha_final" [ngModelOptions]="{standalone: true}">
+                    <div style="margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+                        <div class="input-group full">
+                            <label>Observaciones Médicas Generales</label>
+                            <textarea rows="3" [(ngModel)]="tratamiento.observaciones" placeholder="Indicaciones globales del tratamiento..." [ngModelOptions]="{standalone: true}"></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="section-title">⚙️ Configuración Inteligente y Alertas IoT</div>
-            <div class="checkbox-grid">
-                <label class="checkbox-container">
-                    <input type="checkbox" [(ngModel)]="tratamiento.activar_alertas" [ngModelOptions]="{standalone: true}">
-                    <span class="checkmark"></span>
-                    🚨 Activar alertas automáticas (Zumbador / LEDs)
-                </label>
-
-                <label class="checkbox-container">
-                    <input type="checkbox" [(ngModel)]="tratamiento.notificar_incumplimiento" [ngModelOptions]="{standalone: true}">
-                    <span class="checkmark"></span>
-                    ⚠️ Notificar incumplimiento al médico
-                </label>
-
-                <label class="checkbox-container">
-                    <input type="checkbox" [(ngModel)]="tratamiento.monitoreo_tiempo_real" [ngModelOptions]="{standalone: true}">
-                    <span class="checkmark"></span>
-                    📊 Monitoreo en tiempo real desde Web
-                </label>
-
-                <label class="checkbox-container">
-                    <input type="checkbox" [(ngModel)]="tratamiento.alertar_familiar" [ngModelOptions]="{standalone: true}">
-                    <span class="checkmark"></span>
-                    👥 Alertar a familiar o contacto de emergencia
-                </label>
-            </div>
-
-            <div class="input-group full" style="margin-top: 15px;">
-                <label>Observaciones Médicas Extra</label>
-                <textarea rows="3" [(ngModel)]="tratamiento.observaciones" placeholder="Indicaciones especiales (Ej. Tomar en ayunas)..." [ngModelOptions]="{standalone: true}"></textarea>
-            </div>
-
-            <div class="actions-form-buttons">
-                <button type="button" class="save-btn" (click)="guardarTratamiento()">💾 Guardar Tratamiento</button>
-                <button type="button" class="clean-btn" (click)="limpiarFormulario()">🧹 Limpiar Formulario</button>
+            <div class="actions-form-buttons" style="margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 20px;">
+                <button type="button" class="save-btn" (click)="guardarTratamiento()">🚀 Guardar Tratamiento Completo</button>
+                <button type="button" class="clean-btn" (click)="limpiarFormulario()">🧹 Limpiar Todo</button>
             </div>
         </form>
-    </div>
-
-    <div class="table-card">
-        <h2>Tratamientos Vigentes Asignados</h2>
-        <div style="overflow-x: auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Paciente</th>
-                        <th>Medicamento</th>
-                        <th>Frecuencia</th>
-                        <th>Duración</th>
-                        <th>Estado IoT</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngIf="tratamientos.length === 0">
-                        <td colspan="5" style="text-align: center; color: #9ca3af; padding: 30px 0;">
-                            No se han configurado tratamientos aún para tus pacientes.
-                        </td>
-                    </tr>
-                    
-                    <tr *ngFor="let t of tratamientos">
-                        <td><strong>{{ t.paciente_nombre }}</strong></td>
-                        <td><span class="med-tag">💊 {{ t.medicamento }} ({{ t.dosis }})</span></td>
-                        <td>{{ t.frecuencia }}</td>
-                        <td>{{ t.duracion_dias }} días</td>
-                        <td>
-                            <span class="status pulse-status">📡 Activo</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
     </div>
 
 </main>

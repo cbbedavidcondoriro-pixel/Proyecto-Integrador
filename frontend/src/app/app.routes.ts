@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router'; // 👈 ¡Corregido aquí! Ahora apunta a @angular/router
+import { Routes } from '@angular/router';
 
 // Importaciones existentes del proyecto
 import { Home } from './pages/home/home';
@@ -10,7 +10,8 @@ import { Treatments } from './pages/treatments/treatments';
 import { ConsultasComponent } from './pages/consultas/consultas';
 import { ConfiguracionComponent } from './pages/configuracion/configuracion';
 
-// Nueva importación del módulo de Reportes Clínicos
+// Nueva importación del módulo de Historial Clínico y Reportes
+import { HistorialClinicoComponent } from './pages/historial-clinico/historial-clinico';
 import { ReportesComponent } from './pages/reportes/reportes';
 
 export const routes: Routes = [
@@ -33,6 +34,10 @@ export const routes: Routes = [
     {
         path: 'patients',
         component: Patients
+    },
+    {
+        path: 'historial-clinico', // 👈 Ruta oficial mapeada para las observaciones médicas
+        component: HistorialClinicoComponent
     },
     {
         path: 'treatments',

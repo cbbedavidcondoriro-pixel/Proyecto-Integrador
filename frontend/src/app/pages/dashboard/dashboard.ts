@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // 👈 Agregamos ChangeDetectorRef
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; 
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -26,14 +26,14 @@ export class Dashboard implements OnInit {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private cdr: ChangeDetectorRef // 👈 Inyectamos el detector de cambios
+    private cdr: ChangeDetectorRef 
   ) {}
 
   ngOnInit() {
-    // ⏳ Le damos 50ms al enrutador de Angular para inicializar la vista antes de leer la sesión
+    // ⏳ Le damos 100ms al enrutador de Angular para inicializar la vista antes de leer la sesión
     setTimeout(() => {
       this.verificarYRefrescar();
-    }, 50);
+    }, 100);
   }
 
   verificarYRefrescar() {
@@ -45,18 +45,18 @@ export class Dashboard implements OnInit {
     }
 
     this.usuario = JSON.parse(user);
-    console.log('Dashboard revisando sesión activa:', this.usuario);
+    console.log('👤 [DEBUG Dashboard] Sesión activa:', this.usuario);
 
-    // Extraer ID del médico de forma segura
-    let medicoId = this.usuario.id || this.usuario.id_usuario;
+    // Extraer ID del médico usando todas las propiedades posibles de manera limpia sin forzar a ID 1
+    let medicoId = this.usuario.id || this.usuario.id_usuario || this.usuario.id_medico || this.usuario.usuario_id;
 
-    // Control de seguridad si los roles se cruzan en las rutas
-    if (this.usuario.rol === 'paciente' || !medicoId) {
-      console.warn('Sesión cruzada detectada. Forzando datos del Dr. Saúl.');
-      medicoId = 1;
+    console.log('🆔 [DEBUG Dashboard] Consultando métricas para Médico ID:', medicoId);
+
+    if (!medicoId) {
+      console.error('❌ No se encontró un ID de médico válido en la sesión actual.');
+      return;
     }
 
-    console.log('Consultando métricas reales para Médico ID:', medicoId);
     this.cargarDatosServidor(medicoId);
   }
 
@@ -64,22 +64,22 @@ export class Dashboard implements OnInit {
     this.http.get(`${this.API}/dashboard/${id}`)
       .subscribe({
         next: (res: any) => {
-          console.log('Métricas recibidas de Flask:', res);
+          console.log('📥 [DEBUG Dashboard] Métricas recibidas:', res);
           
           // Asignamos las variables de forma segura
           this.data = {
             pacientes: res.pacientes !== undefined ? res.pacientes : 0,
             tratamientos: res.tratamientos !== undefined ? res.tratamientos : 0,
             recordatorios: res.recordatorios !== undefined ? res.recordatorios : 0,
-            dispositivos_iot: res.pacientes !== undefined ? res.pacientes : 0, 
+            dispositivos_iot: res.dispositivos_iot !== undefined ? res.dispositivos_iot : 0, 
             lista_pacientes: res.lista_pacientes || []
           };
 
-          // 🚀 ¡La magia! Forzamos a Angular a pintar los datos en la pantalla DE INMEDIATO
+          // Forzamos el repintado en la interfaz de usuario
           this.cdr.detectChanges(); 
         },
         error: (err) => {
-          console.error('Error de comunicación con Flask /dashboard:', err);
+          console.error('❌ Error de comunicación con Flask /dashboard:', err);
         }
       });
   }

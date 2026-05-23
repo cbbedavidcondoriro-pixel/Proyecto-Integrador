@@ -11,15 +11,14 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   styleUrls: ['./consultas.css']
 })
 export class ConsultasComponent implements OnInit {
-  // 🌟 Estandarizamos la URL base eliminando el '/api' estorboso de las rutas fijas
+  // URL Base del servidor backend de Flask
   API = 'http://localhost:5000';
   
-  // Usamos tipo 'any' para evitar conflictos si el HTML inyecta un String desde el <select>
-  idPacienteSeleccionado: any = 0;
+  idPacienteSeleccionado: any = "0";
   idMedicoLogueado: number = 1; 
   
   listaPacientes: any[] = [];
-  datosConsulta: any = null; // Almacenará la ficha completa del paciente para el HTML
+  datosConsulta: any = null; 
 
   constructor(
     private http: HttpClient,
@@ -30,14 +29,14 @@ export class ConsultasComponent implements OnInit {
     const usuarioSesion = localStorage.getItem('usuario');
     if (usuarioSesion) {
       const userObj = JSON.parse(usuarioSesion);
-      // Extrae tu ID de sesión real
+      // Extrae de forma segura el identificador numérico de la sesión activa
       this.idMedicoLogueado = userObj.id || userObj.id_usuario || 1; 
     }
     this.cargarPacientesDelMedico();
   }
 
-  // Carga inicial (Idéntico a la lógica funcional de tus Tratamientos)
   cargarPacientesDelMedico() {
+    // Si la ruta base directa da error, probamos alternativamente con el prefijo /api
     this.http.get<any[]>(`${this.API}/pacientes/${this.idMedicoLogueado}`)
       .subscribe({
         next: (data) => { 
@@ -45,14 +44,22 @@ export class ConsultasComponent implements OnInit {
           this.cdr.detectChanges();
         },
         error: (err) => { 
-          console.error('Error cargando pacientes en consultas:', err); 
+          console.warn('Intentando ruta alternativa para lista de pacientes...');
+          this.http.get<any[]>(`${this.API}/api/pacientes/${this.idMedicoLogueado}`)
+            .subscribe({
+              next: (data) => {
+                this.listaPacientes = data || [];
+                this.cdr.detectChanges();
+              },
+              error: (err2) => {
+                console.error('Error definitivo cargando pacientes:', err2);
+              }
+            });
         }
       });
   }
 
-  // 🛠️ FUNCIÓN DEL BOTÓN CORREGIDA
   realizarConsulta() {
-    // Forzamos la conversión a número para evitar que Angular pase un texto vacío o "0"
     const idPaciente = Number(this.idPacienteSeleccionado);
 
     if (idPaciente === 0 || !idPaciente) {
@@ -62,19 +69,40 @@ export class ConsultasComponent implements OnInit {
 
     console.log(`Enviando consulta a Flask para Paciente ID: ${idPaciente} y Médico ID: ${this.idMedicoLogueado}`);
 
-    // Hacemos la llamada exacta apuntando a tu endpoint de Python
-    this.http.get<any>(`${this.API}/api/consultas/paciente/${idPaciente}?id_medico=${this.idMedicoLogueado}`)
+    // Intentamos la petición al endpoint estructurado
+    const urlPrimaria = `${this.API}/api/consultas/paciente/${idPaciente}?id_medico=${this.idMedicoLogueado}`;
+    
+    this.http.get<any>(urlPrimaria)
       .subscribe({
         next: (data) => { 
-          console.log('Respuesta de la base de datos recibida con éxito:', data);
+          console.log('Respuesta recibida con éxito:', data);
           this.datosConsulta = data; 
-          this.cdr.detectChanges(); // Forzamos a Angular a pintar las tarjetas del HTML inmediatamente
+          this.cdr.detectChanges(); 
         },
         error: (err) => { 
-          console.error('Error crítico al obtener la ficha clínica desde Flask:', err); 
-          alert('Error en el servidor. Revise que la ruta exista en Python y que MySQL esté corriendo.');
-          this.datosConsulta = null;
-          this.cdr.detectChanges();
+          console.warn('Ruta primaria falló (404/500). Intentando comunicación con ruta alternativa...');
+          
+          // Reintento automático sin el prefijo /api en caso de desajuste de enrutamiento
+          const urlAlternativa = `${this.API}/consultas/paciente/${idPaciente}?id_medico=${this.idMedicoLogueado}`;
+          
+          this.http.get<any>(urlAlternativa)
+            .subscribe({
+              next: (data) => {
+                console.log('Respuesta recibida con éxito desde ruta alternativa:', data);
+                this.datosConsulta = data;
+                this.cdr.detectChanges();
+              },
+              error: (err2) => {
+                console.error('Error crítico al obtener la ficha clínica desde Flask:', err2); 
+                
+                // Extraemos el mensaje de error real enviado por Python si existe
+                const mensajeError = err2.error?.error || 'Error en el servidor. Revise que la ruta exista en Python y que MySQL esté corriendo.';
+                alert(mensajeError);
+                
+                this.datosConsulta = null;
+                this.cdr.detectChanges();
+              }
+            });
         }
       });
   }

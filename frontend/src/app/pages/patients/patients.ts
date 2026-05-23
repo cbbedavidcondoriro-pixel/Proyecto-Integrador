@@ -1,7 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // 👈 Agregamos ChangeDetectorRef para el renderizado instantáneo
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; 
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -38,11 +38,10 @@ export class Patients implements OnInit {
   constructor(
     private http: HttpClient, 
     private router: Router,
-    private cdr: ChangeDetectorRef // 👈 Inyectamos el detector de cambios
+    private cdr: ChangeDetectorRef 
   ) {}
 
   ngOnInit() {
-    // Usamos un pequeño delay de estabilidad al cambiar de pestaña
     setTimeout(() => {
       this.obtenerPacientes();
     }, 50);
@@ -56,8 +55,12 @@ export class Patients implements OnInit {
     }
 
     const medico = JSON.parse(sesion);
-    // Forzamos el ID de Saúl (1) si el objeto de sesión viene corrupto o vacío en el cambio de ruta
-    const medicoId = medico.id || medico.id_usuario || 1; 
+    const medicoId = medico.id || medico.id_usuario || medico.id_medico; 
+
+    if (!medicoId) {
+      console.error('❌ No se detectó un ID de médico en la sesión actual.');
+      return;
+    }
 
     console.log('Descargando lista completa de pacientes para el Médico ID:', medicoId);
 
@@ -65,11 +68,8 @@ export class Patients implements OnInit {
       .subscribe({
         next: (res) => {
           console.log('Pacientes recuperados de Flask exitosamente:', res);
-          // Sincronizamos los arreglos que usa el *ngFor en tu HTML
           this.pacientes = res || [];
           this.pacientesFiltrados = res || [];
-          
-          // Forzamos a Angular a pintar la tabla en el primer clic de inmediato
           this.cdr.detectChanges();
         },
         error: (err) => {
@@ -103,30 +103,32 @@ export class Patients implements OnInit {
 
   guardarPaciente() {
     const sesion = localStorage.getItem('usuario');
-    let medicoId = 1; 
-
-    if (sesion) {
-      const medico = JSON.parse(sesion);
-      medicoId = medico.id || medico.id_usuario || 1;
+    if (!sesion) {
+      this.router.navigate(['/login']);
+      return;
     }
+
+    const medico = JSON.parse(sesion);
+    const medicoId = medico.id || medico.id_usuario || medico.id_medico;
 
     if (!this.paciente.nombre || !this.paciente.ci) {
       alert('Por favor, ingresa los campos obligatorios (Nombre y CI).');
       return;
     }
 
+    // Estructura limpia que va directo a la tabla de pacientes
     const data = {
       medico_id: medicoId, 
       nombre: this.paciente.nombre,
       ci: this.paciente.ci,
-      edad: this.paciente.edad,
+      edad: this.paciente.edad ? Number(this.paciente.edad) : null,
       sexo: this.paciente.sexo,
       telefono: this.paciente.telefono,
       correo: this.paciente.correo,
       direccion: this.paciente.direccion,
       emergencia: this.paciente.emergencia,
       foto: this.paciente.foto, 
-      usuario: this.paciente.usuario.trim() || this.paciente.correo.trim() || `paciente_${this.paciente.ci}`,
+      usuario: this.paciente.usuario.trim() || `paciente_${this.paciente.ci}`,
       password: this.paciente.password || this.paciente.ci
     };
 
@@ -145,12 +147,12 @@ export class Patients implements OnInit {
         .subscribe({
           next: (res: any) => {
             alert(res.mensaje || '¡Paciente guardado exitosamente!');
-            this.obtenerPacientes(); // Recarga la tabla de inmediato
+            this.obtenerPacientes(); 
             this.limpiarFormulario();
           },
           error: (err) => {
             console.error('Error de red al guardar:', err);
-            alert('Error al registrar paciente.');
+            alert('Error al registrar paciente. Verifique que el CI o Usuario no estén repetidos.');
           }
         });
     }
@@ -170,9 +172,8 @@ export class Patients implements OnInit {
       emergencia: item.emergencia || '',
       foto: item.foto || '',
       usuario: item.usuario || '',
-      password: '' // Se deja vacío por seguridad al editar
+      password: '' // Vacío por seguridad
     };
-    // Hace un scroll suave hacia arriba para que el médico vea el formulario lleno listo para editar
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -182,7 +183,7 @@ export class Patients implements OnInit {
         .subscribe({
           next: (res: any) => {
             alert(res.mensaje || 'Paciente eliminado correctamente.');
-            this.obtenerPacientes(); // Actualiza la tabla automáticamente
+            this.obtenerPacientes(); 
           },
           error: (err) => console.error('Error al eliminar:', err)
         });

@@ -1,0 +1,93 @@
+<div class="historial-container" style="padding: 30px; color: #f3f4f6; font-family: 'Segoe UI', sans-serif;">
+    
+    <div class="historial-header" style="margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px;">
+        <h1 style="font-size: 26px; color: #10b981; margin: 0 0 8px 0; display: flex; align-items: center; gap: 10px;">🩺 Formulario de Evaluación Médica General y Odontológica</h1>
+        <p style="color: #9ca3af; margin: 0;">Ficha clínica de evolución. Complete la exploración física antes de proceder a la prescripción farmacológica.</p>
+    </div>
+
+    <form (ngSubmit)="guardarHistorial()">
+        
+        <div style="background: #111827; border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; margin-bottom: 25px;">
+            <label style="display: block; color: #10b981; font-weight: 600; margin-bottom: 10px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">1. Identificación del Paciente en Consulta</label>
+            <select [(ngModel)]="registro.paciente_id" name="paciente_id" style="width: 100%; padding: 12px; background: #1f2937; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; font-size: 15px; outline: none;">
+                <option value="0" disabled selected>-- Seleccione el paciente actualmente en el sillón/camilla dental --</option>
+                <option *ngFor="let pac of listaPacientes" [value]="pac.id">{{ pac.nombre }} (CI: {{ pac.ci }})</option>
+            </select>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 25px;">
+            
+            <div style="display: flex; flex-direction: column; gap: 25px;">
+                
+                <div style="background: #111827; border: 1px solid rgba(255,255,255,0.05); padding: 25px; border-radius: 12px;">
+                    <h3 style="color: #3b82f6; margin: 0 0 15px 0; font-size: 16px;">📋 Anamnesis y Sintomatología</h3>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; color: #9ca3af; margin-bottom: 6px; font-size: 13px;">Motivo Principal de Consulta</label>
+                        <input type="text" [(ngModel)]="registro.motivo_consulta" name="motivo_consulta" placeholder="Ej: Dolor pulsante en molar, revisión rutinaria, fiebre persistente..." style="width: 100%; padding: 12px; background: #1f2937; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; box-sizing: border-box; outline: none;">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; color: #9ca3af; margin-bottom: 6px; font-size: 13px;">Síntomas Principales Comunicados por el Paciente</label>
+                        <textarea [(ngModel)]="registro.sintomas_principales" name="sintomas_principales" rows="2" placeholder="Detalle los síntomas específicos..." style="width: 100%; padding: 12px; background: #1f2937; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; box-sizing: border-box; resize: none; outline: none;"></textarea>
+                    </div>
+
+                    <div>
+                        <label style="display: block; color: #9ca3af; margin-bottom: 6px; font-size: 13px;">Antecedentes Médicos de Relevancia (Alergias, Medicación Crónica, Diabetes)</label>
+                        <input type="text" [(ngModel)]="registro.antecedentes_relevantes" name="antecedentes_relevantes" placeholder="Ninguno / Alérgico a la penicilina, hipertenso..." style="width: 100%; padding: 12px; background: #1f2937; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; box-sizing: border-box; outline: none;">
+                    </div>
+                </div>
+
+                <div style="background: #111827; border: 1px solid rgba(255,255,255,0.05); padding: 25px; border-radius: 12px;">
+                    <h3 style="color: #3b82f6; margin: 0 0 15px 0; font-size: 16px;">🔍 Hallazgos Clínicos y Juicio Profesional</h3>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; color: #9ca3af; margin-bottom: 6px; font-size: 13px;">Examen Físico / Exploración Bucal o General Detallada</label>
+                        <textarea [(ngModel)]="registro.examen_fisico_detallado" name="examen_fisico_detallado" rows="3" placeholder="Dentistas: Estado de piezas dentales, encías. Médicos: Auscultación, palpación..." style="width: 100%; padding: 12px; background: #1f2937; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; box-sizing: border-box; resize: none; outline: none;"></textarea>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; color: #9ca3af; margin-bottom: 6px; font-size: 13px;">Diagnóstico Definitivo (CIE-10 o Descripción Clara)</label>
+                        <input type="text" [(ngModel)]="registro.diagnostico_definitivo" name="diagnostico_definitivo" placeholder="Ej: Pulpitis irreversible, faringoamigdalitis bacteriana..." style="width: 100%; padding: 12px; background: #1f2937; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; box-sizing: border-box; outline: none;">
+                    </div>
+
+                    <div>
+                        <label style="display: block; color: #9ca3af; margin-bottom: 6px; font-size: 13px;">Indicaciones Inmediatas / Medidas No Farmacológicas</label>
+                        <input type="text" [(ngModel)]="registro.indicaciones_inmediatas" name="indicaciones_inmediatas" placeholder="Ej: Aplicar compresa fría, reposo absoluto, enjuagues antisépticos..." style="width: 100%; padding: 12px; background: #1f2937; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; box-sizing: border-box; outline: none;">
+                    </div>
+                </div>
+
+            </div>
+
+            <div style="background: #111827; border: 1px solid rgba(255,255,255,0.05); padding: 25px; border-radius: 12px; height: fit-content;">
+                <h3 style="color: #eab308; margin: 0 0 20px 0; font-size: 16px; display: flex; align-items: center; gap: 8px;">⚡ Signos Vitales (Triaje)</h3>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; color: #9ca3af; margin-bottom: 6px; font-size: 13px;">Presión Arterial (mmHg)</label>
+                    <input type="text" [(ngModel)]="registro.presion_arterial" name="presion_arterial" placeholder="Ej: 120/80" style="width: 100%; padding: 10px; background: #1f2937; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; box-sizing: border-box; outline: none;">
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; color: #9ca3af; margin-bottom: 6px; font-size: 13px;">Frecuencia Cardíaca (BPM)</label>
+                    <input type="number" [(ngModel)]="registro.frecuencia_cardiaca" name="frecuencia_cardiaca" placeholder="Ej: 72" style="width: 100%; padding: 10px; background: #1f2937; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; box-sizing: border-box; outline: none;">
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; color: #9ca3af; margin-bottom: 6px; font-size: 13px;">Temperatura Corporal (°C)</label>
+                    <input type="number" step="0.1" [(ngModel)]="registro.temperatura_corporal" name="temperatura_corporal" placeholder="Ej: 36.5" style="width: 100%; padding: 10px; background: #1f2937; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; box-sizing: border-box; outline: none;">
+                </div>
+
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; color: #9ca3af; margin-bottom: 6px; font-size: 13px;">Saturación de Oxígeno (% SpO2)</label>
+                    <input type="number" [(ngModel)]="registro.saturacion_oxigeno" name="saturacion_oxigeno" placeholder="Ej: 98" style="width: 100%; padding: 10px; background: #1f2937; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; box-sizing: border-box; outline: none;">
+                </div>
+
+                <button type="submit" style="width: 100%; background: #10b981; color: white; border: none; padding: 14px; font-size: 15px; font-weight: 600; border-radius: 8px; cursor: pointer; transition: background 0.2s;">
+                    💾 Registrar y Recetar ➔
+                </button>
+            </div>
+
+        </div>
+
+    </form>
+</div>
