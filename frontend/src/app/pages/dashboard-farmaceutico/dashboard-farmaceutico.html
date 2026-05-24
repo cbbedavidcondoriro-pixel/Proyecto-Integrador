@@ -9,15 +9,17 @@
 
     <div class="profile-card">
       <div class="avatar-wrapper">
-        <img *ngIf="usuario?.foto" [src]="usuario.foto" alt="Avatar" class="avatar-img">
-        <div *ngIf="!usuario?.foto" class="avatar-placeholder">
+        <img *ngIf="imagenPerfilUrl" [src]="imagenPerfilUrl" alt="Avatar Farmacéutico" class="avatar-img">
+        
+        <div *ngIf="!imagenPerfilUrl" class="avatar-placeholder">
           {{ usuario?.nombre?.charAt(0) || 'F' }}
         </div>
         <span class="status-indicator"></span>
       </div>
       <div class="profile-details">
         <h3>{{ usuario?.nombre }} {{ usuario?.apellido || '' }}</h3>
-        <p>Farmacéutico Clínico</p>
+        <p class="specialty-text">🔹 {{ usuario?.especialidad || 'Farmacéutico Clínico e IoT' }}</p>
+        <p class="clinic-text">🏛️ {{ usuario?.clinica || 'Estación Central de Monitoreo' }}</p>
       </div>
     </div>
   </header>

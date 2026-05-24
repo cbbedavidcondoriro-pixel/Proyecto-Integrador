@@ -1,0 +1,88 @@
+<div class="profile-module-wrapper" *ngIf="farmaceutico">
+
+  <div class="module-header">
+    <div class="header-text">
+      <span class="badge-purple">CONFIGURACIÓN GENERAL</span>
+      <h1>Mi Cuenta Profesional</h1>
+      <p>Modifique su información personal, datos de contacto o actualice sus credenciales de seguridad de manera opcional.</p>
+    </div>
+  </div>
+
+  <div class="profile-layout-grid">
+    
+    <div class="avatar-card">
+      <div class="avatar-preview-container">
+        <img [src]="vistaPreviaFoto || 'https://ui-avatars.com/api/?name=' + farmaceutico.nombre + '+' + farmaceutico.apellido + '&background=a855f7&color=fff&size=150'" alt="Foto de perfil" class="profile-img">
+        
+        <div class="file-upload-btn" *ngIf="modoEdicion">
+          <label for="file-input">📸 Cambiar Foto</label>
+          <input id="file-input" type="file" (change)="onFotoSeleccionada($event)" accept="image/*">
+        </div>
+      </div>
+      <div class="avatar-info-text">
+        <h2>{{ farmaceutico.nombre }} {{ farmaceutico.apellido }}</h2>
+        <span class="role-badge">🔒 {{ farmaceutico.rol | uppercase }}</span>
+        <p class="user-meta">Usuario activo: <strong>{{ farmaceutico.usuario }}</strong></p>
+      </div>
+    </div>
+
+    <div class="details-card">
+      <div class="form-header-container">
+        <h3>{{ modoEdicion ? '📝 Modificar Datos del Perfil' : '📋 Información de la Cuenta' }}</h3>
+        <button class="btn-edit-toggle" *ngIf="!modoEdicion" (click)="activarEdicion()">✏️ Editar Perfil</button>
+      </div>
+      
+      <hr class="divider">
+
+      <form (ngSubmit)="actualizarPerfil()">
+        <div class="form-grid">
+          
+          <div class="input-box">
+            <label>Nombre(s)</label>
+            <input type="text" [(ngModel)]="farmaceuticoEditado.nombre" name="nombre" [disabled]="!modoEdicion" class="custom-input">
+          </div>
+
+          <div class="input-box">
+            <label>Apellido(s)</label>
+            <input type="text" [(ngModel)]="farmaceuticoEditado.apellido" name="apellido" [disabled]="!modoEdicion" class="custom-input">
+          </div>
+
+          <div class="input-box">
+            <label>Correo Electrónico</label>
+            <input type="email" [(ngModel)]="farmaceuticoEditado.correo" name="correo" [disabled]="!modoEdicion" class="custom-input">
+          </div>
+
+          <div class="input-box">
+            <label>Teléfono de Contacto</label>
+            <input type="text" [(ngModel)]="farmaceuticoEditado.telefono" name="telefono" [disabled]="!modoEdicion" class="custom-input">
+          </div>
+
+          <div class="input-box">
+            <label>Establecimiento / Clínica</label>
+            <input type="text" [(ngModel)]="farmaceuticoEditado.clinica" name="clinica" [disabled]="!modoEdicion" class="custom-input">
+          </div>
+
+          <div class="input-box">
+            <label>Nueva Contraseña (Dejar vacío para no cambiar)</label>
+            <input type="password" [(ngModel)]="farmaceuticoEditado.password" name="password" [disabled]="!modoEdicion" class="custom-input" placeholder="••••••••">
+          </div>
+
+          <div class="input-box full-width">
+            <label>Dirección de Oficina</label>
+            <textarea [(ngModel)]="farmaceuticoEditado.direccion" name="direccion" [disabled]="!modoEdicion" rows="2" class="custom-input"></textarea>
+          </div>
+
+        </div>
+
+        <div class="form-actions-bar" *ngIf="modoEdicion">
+          <button type="button" (click)="cancelarEdicion()" class="btn-cancel-profile">❌ Cancelar</button>
+          <button type="submit" class="btn-save-profile" [disabled]="cargando">
+            💾 Guardar Cambios
+          </button>
+        </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>

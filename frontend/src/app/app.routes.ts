@@ -14,6 +14,10 @@ import { BuscarPaciente } from './pages/buscar-paciente/buscar-paciente';
 
 import { RegistrarPaciente } from './pages/registrar-paciente/registrar-paciente';
 
+import { RegistrarTratamiento } from './pages/registrar-tratamiento/registrar-tratamiento';
+
+import { ConfiguracionFarmaceutico } from './pages/configuracion-farmaceutico/configuracion-farmaceutico';
+
 // Nueva importación del módulo de Historial Clínico y Reportes
 import { HistorialClinicoComponent } from './pages/historial-clinico/historial-clinico';
 import { ReportesComponent } from './pages/reportes/reportes';
@@ -81,6 +85,14 @@ export const routes: Routes = [
     path: 'registrar-paciente',
     component: RegistrarPaciente
     },
+    {
+    path: 'registrar-tratamiento',
+    component: RegistrarTratamiento
+    },
+    {
+    path: 'configuracion-farmaceutico',
+    component: ConfiguracionFarmaceutico
+   },
     {
         path: '**', // 👈 Comodín: si escriben cualquier ruta inválida, regresa al Home seguro
         redirectTo: ''

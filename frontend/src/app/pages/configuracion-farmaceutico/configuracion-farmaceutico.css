@@ -1,0 +1,69 @@
+.profile-module-wrapper {
+  padding: 35px;
+  background: #0b0f19;
+  min-height: 100vh;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #f3f4f6;
+  box-sizing: border-box;
+}
+
+.badge-purple {
+  background: rgba(168, 85, 247, 0.1);
+  color: #c084fc;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 30px;
+  letter-spacing: 0.5px;
+}
+
+.module-header { margin-bottom: 30px; }
+.header-text-container { display: flex; justify-content: space-between; align-items: center; }
+.module-header h1 { margin: 10px 0 5px 0; font-size: 28px; color: #fff; }
+.module-header p { margin: 0; color: #9ca3af; font-size: 14px; max-width: 650px; line-height: 1.5; }
+
+/* BOTONES DE EDICIÓN DEL HEADER */
+.btn-edit-inactive { background: #1f2937; border: 1px solid rgba(255,255,255,0.1); color: #fff; padding: 12px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+.btn-edit-inactive:hover { background: #374151; }
+.btn-edit-active { background: #ef4444; border: none; color: white; padding: 12px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+
+/* GRID PRINCIPAL */
+.profile-layout-grid { display: grid; grid-template-columns: 1fr 2.5fr; gap: 30px; max-width: 1150px; }
+
+/* TARJETA AVATAR */
+.avatar-card { background: #1f2937; border-radius: 16px; padding: 35px 20px; border: 1px solid rgba(255, 255, 255, 0.05); text-align: center; height: fit-content; }
+.avatar-preview-container { position: relative; width: 150px; height: 150px; margin: 0 auto 20px auto; }
+.profile-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 4px solid #c084fc; box-shadow: 0 0 15px rgba(168, 85, 247, 0.2); }
+.btn-upload-photo { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); background: #c084fc; color: #0b0f19; font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 20px; cursor: pointer; white-space: nowrap; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+
+.avatar-info-text h2 { margin: 0; font-size: 20px; color: #fff; }
+.role-badge { background: rgba(192, 132, 252, 0.1); color: #c084fc; font-size: 11px; font-weight: 700; padding: 4px 14px; border-radius: 30px; display: inline-block; margin: 10px 0; }
+.user-meta { margin: 5px 0 0 0; font-size: 13px; color: #6b7280; }
+
+/* TARJETA FORMULARIO */
+.details-card { background: #1f2937; border-radius: 16px; padding: 30px; border: 1px solid rgba(255, 255, 255, 0.05); }
+.card-headline-bar { display: flex; justify-content: space-between; align-items: center; }
+.details-card h3 { margin: 0; font-size: 18px; color: #fff; }
+.status-indicator { font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+.divider { border: 0; border-top: 1px solid rgba(255, 255, 255, 0.05); margin: 15px 0 25px 0; }
+
+/* FORMULARIO */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.input-box { display: flex; flex-direction: column; gap: 6px; }
+.input-box.full-width { grid-column: span 2; }
+.input-box label { font-size: 13px; color: #9ca3af; font-weight: 500; }
+.req { color: #ef4444; }
+
+.input-box input, .input-box textarea { background: #111827; border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px 15px; border-radius: 8px; color: #fff; font-size: 14px; outline: none; transition: 0.2s; }
+.input-box input:focus, .input-box textarea:focus { border-color: #c084fc; box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.15); }
+
+/* ESTADO DESHABILITADO AUTOMÁTICO */
+.input-box input:disabled, .input-box textarea:disabled { background: rgba(17, 24, 39, 0.4) !important; color: #6b7280 !important; border-color: rgba(255,255,255,0.02) !important; cursor: not-allowed; }
+
+.form-actions { display: flex; justify-content: flex-end; margin-top: 25px; }
+.btn-save-profile { background: #c084fc; color: #0b0f19; border: none; padding: 12px 30px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+.btn-save-profile:hover:not([disabled]) { background: #a855f7; color: white; transform: translateY(-1px); }
+.btn-save-profile:disabled { background: #4b5563; color: #9ca3af; cursor: not-allowed; }
+
+.animate-fade { animation: fadeIn 0.3s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }

@@ -1230,6 +1230,142 @@ def registrar_paciente_desde_farmacia():
         return jsonify({"success": False, "mensaje": "Error interno al procesar el registro."}), 500
 
 
+@app.route('/tratamientos/registrar-farmacia', methods=['POST'])
+def registrar_tratamiento_desde_farmacia():
+    try:
+        data = request.json
+        cursor = db.cursor()
+
+        # Extraemos los campos correspondientes a tu base de datos real
+        medico_id = data.get('medico_id') # ID de la farmacéutica encargada
+        paciente_id = data.get('paciente_id')
+        medicamento = data.get('medicamento')
+        dosis = data.get('dosis')
+        frecuencia = data.get('frecuencia')
+        via_administracion = data.get('via_administracion')
+        hora_inicio = data.get('hora_inicio') if data.get('hora_inicio') else None
+        duracion_dias = data.get('duracion_dias')
+        fecha_inicio = data.get('fecha_inicio')
+        fecha_final = data.get('fecha_final') if data.get('fecha_final') else None
+        observaciones = data.get('observaciones')
+        
+        # Flags Booleanos mapeados a enteros para MySQL (0 o 1)
+        activar_alertas = 1 if data.get('activar_alertas') else 0
+        monitoreo_tiempo_real = 1 if data.get('monitoreo_tiempo_real') else 0
+
+        # Query de Inserción idéntico a tu script SQL estructurado
+        query_insertar = """
+            INSERT INTO tratamientos (
+                medico_id, paciente_id, medicamento, dosis, frecuencia, 
+                via_administracion, hora_inicio, duracion_dias, fecha_inicio, 
+                fecha_final, activar_alertas, monitoreo_tiempo_real, observaciones
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        
+        valores = (
+            medico_id, paciente_id, medicamento, dosis, frecuencia,
+            via_administracion, hora_inicio, duracion_dias, fecha_inicio,
+            fecha_final, activar_alertas, monitoreo_tiempo_real, observaciones
+        )
+
+        cursor.execute(query_insertar, valores)
+        db.commit()
+        cursor.close()
+
+        return jsonify({"success": True, "mensaje": "Tratamiento asignado y sincronizado de forma exitosa."}), 201
+
+    except Exception as e:
+        db.rollback()
+        print("❌ Error crítico al insertar tratamiento:", str(e))
+        return jsonify({"success": False, "mensaje": "Error interno al guardar la receta médica."}), 500
+
+
+@app.route('/usuarios/perfil/<int:usuario_id>', methods=['GET'])
+def obtener_perfil_usuario(usuario_id):
+    try:
+        cursor = db.cursor(dictionary=True)
+        query = "SELECT id, nombre, apellido, usuario, correo, telefono, clinica, direccion, foto FROM usuarios WHERE id = %s"
+        cursor.execute(query, (usuario_id,))
+        usuario = cursor.fetchone()
+        cursor.close()
+
+        if not usuario:
+            return jsonify({"success": False, "mensaje": "Usuario no encontrado"}), 404
+
+        return jsonify(usuario), 200
+    except Exception as e:
+        print("❌ Error al obtener perfil:", str(e))
+        return jsonify({"success": False, "mensaje": "Error en el servidor"}), 500
+
+
+@app.route('/usuarios/actualizar-farmacia/<int:usuario_id>', methods=['PUT'])
+def actualizar_perfil_farmacia(usuario_id):
+    try:
+        cursor = db.cursor(dictionary=True)
+        
+        # 1. Traer los datos actuales para comparar y no perder información existente
+        cursor.execute("SELECT * FROM usuarios WHERE id = %s", (usuario_id,))
+        usuario_actual = cursor.fetchone()
+        
+        if not usuario_actual:
+            cursor.close()
+            return jsonify({"success": False, "mensaje": "Usuario no encontrado"}), 404
+
+        # 2. Recibir datos del formulario (Opcionales)
+        nombre = request.form.get('nombre') or usuario_actual['nombre']
+        apellido = request.form.get('apellido') or usuario_actual['apellido']
+        correo = request.form.get('correo') or usuario_actual['correo']
+        telefono = request.form.get('telefono') or usuario_actual['telefono']
+        clinica = request.form.get('clinica') or usuario_actual['clinica']
+        direccion = request.form.get('direccion') or usuario_actual['direccion']
+        
+        # Lógica de contraseña: Si no escribió nada, se queda la contraseña vieja
+        password = request.form.get('password')
+        if not password or password.strip() == '':
+            password = usuario_actual['password']
+
+        # Lógica de la foto: Por defecto dejamos la actual
+        nombre_foto_bd = usuario_actual['foto']
+
+        # 3. Procesar archivo físico si subió una foto nueva
+        if 'foto' in request.files:
+            file = request.files['foto']
+            if file.filename != '':
+                filename = secure_filename(f"user_{usuario_id}_{file.filename}")
+                filepath = os.path.join(UPLOAD_FOLDER, filename)
+                file.save(filepath)
+                nombre_foto_bd = filename # Guardamos solo el nombre del archivo corto en MySQL (VARCHAR 255)
+
+        # 4. Actualizar registro en la BD
+        query = """
+            UPDATE usuarios 
+            SET nombre = %s, apellido = %s, correo = %s, telefono = %s, clinica = %s, direccion = %s, password = %s, foto = %s
+            WHERE id = %s
+        """
+        valores = (nombre, apellido, correo, telefono, clinica, direccion, password, nombre_foto_bd, usuario_id)
+        cursor.execute(query, valores)
+        db.commit()
+
+        # Obtener el usuario fresco para retornar a Angular
+        cursor.execute("SELECT id, nombre, apellido, usuario, correo, telefono, clinica, direccion, foto, rol FROM usuarios WHERE id = %s", (usuario_id,))
+        usuario_refrescado = cursor.fetchone()
+        cursor.close()
+
+        return jsonify({
+            "success": True,
+            "mensaje": "¡Perfil actualizado de forma segura!",
+            "usuario": usuario_refrescado
+        }), 200
+
+    except Exception as e:
+        db.rollback()
+        print("❌ Error en actualización de farmacia:", str(e))
+        return jsonify({"success": False, "mensaje": "Error interno del servidor"}), 500
+
+
+
+
+
 if __name__ == '__main__':
     app.run(
         debug=True,
