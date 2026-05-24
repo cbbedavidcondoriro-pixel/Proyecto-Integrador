@@ -6,18 +6,9 @@
             <p>Administración completa de pacientes registrados en el sistema médico</p>
         </div>
 
-        <button class="btn-add" (click)="limpiarFormulario()">
-            + Nuevo Paciente
+        <button class="btn-add" (click)="irAListado()">
+            📋 Ver Lista de Pacientes
         </button>
-    </div>
-
-    <div class="search-box">
-        <input
-            type="text"
-            [(ngModel)]="terminoBusqueda"
-            [ngModelOptions]="{standalone: true}"
-            (input)="buscarPaciente()"
-            placeholder="Buscar paciente por nombre o carnet de identidad...">
     </div>
 
     <div class="form-card">
@@ -88,55 +79,16 @@
                 </div>
             </div>
 
-            <button type="button" class="save-btn" (click)="guardarPaciente()">
-                {{ editando ? '💾 Actualizar Datos del Paciente' : '💾 Guardar Paciente' }}
-            </button>
+            <div style="display: flex; gap: 12px; margin-top: 10px;">
+                <button type="button" class="save-btn" (click)="guardarPaciente()">
+                    {{ editando ? '💾 Actualizar Datos del Paciente' : '💾 Guardar Paciente' }}
+                </button>
+                
+                <button *ngIf="editando" type="button" class="action delete" style="padding: 0 20px; border-radius: 8px;" (click)="limpiarFormulario()">
+                    Cancelar Edición
+                </button>
+            </div>
         </form>
-    </div>
-
-    <div class="table-card">
-        <div class="table-header">
-            <h2>Pacientes Registrados</h2>
-        </div>
-
-        <div style="overflow-x: auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Paciente</th>
-                        <th>CI / Documento</th>
-                        <th>Edad</th>
-                        <th>Usuario (Acceso)</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <tr *ngIf="pacientesFiltrados.length === 0">
-                        <td colspan="5" style="text-align: center; color: #9ca3af; padding: 30px 0;">
-                            No existen registros disponibles de pacientes.
-                        </td>
-                    </tr>
-
-                    <tr *ngFor="let item of pacientesFiltrados">
-                        <td>
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <img *ngIf="item.foto" [src]="item.foto" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.1);">
-                                <div *ngIf="!item.foto" style="width: 40px; height: 40px; border-radius: 50%; background: #1f2937; display: flex; align-items: center; justify-content: center; font-size: 16px;">👤</div>
-                                <strong>{{ item.nombre }}</strong>
-                            </div>
-                        </td>
-                        <td style="color: #9ca3af;">{{ item.ci }}</td>
-                        <td>{{ item.edad ? item.edad + ' años' : '-' }}</td>
-                        <td style="color: #00ff9d; font-family: monospace;">{{ item.usuario || '-' }}</td>
-                        <td>
-                            <button class="action edit" (click)="seleccionarParaEditar(item)">Editar</button>
-                            <button class="action delete" (click)="eliminarPaciente(item.id)">Eliminar</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
     </div>
 
 </main>

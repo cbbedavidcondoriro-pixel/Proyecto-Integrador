@@ -10,9 +10,19 @@ import { Treatments } from './pages/treatments/treatments';
 import { ConsultasComponent } from './pages/consultas/consultas';
 import { ConfiguracionComponent } from './pages/configuracion/configuracion';
 
+import { BuscarPaciente } from './pages/buscar-paciente/buscar-paciente';
+
+import { RegistrarPaciente } from './pages/registrar-paciente/registrar-paciente';
+
 // Nueva importación del módulo de Historial Clínico y Reportes
 import { HistorialClinicoComponent } from './pages/historial-clinico/historial-clinico';
 import { ReportesComponent } from './pages/reportes/reportes';
+
+// 🚀 NUEVA VISTA: Importación de la pantalla dedicada al Listado Completo
+import { PatientsList } from './pages/patients/patients-list'; 
+
+// 💊 NUEVA VISTA FARMACIA: Importación de la pantalla exclusiva para el Farmacéutico
+import { DashboardFarmaceutico } from './pages/dashboard-farmaceutico/dashboard-farmaceutico';
 
 export const routes: Routes = [
     {
@@ -32,11 +42,19 @@ export const routes: Routes = [
         component: Dashboard
     },
     {
-        path: 'patients',
+        path: 'dashboard-farmaceutico', // 👈 Nueva ruta oficial para el módulo del farmacéutico global
+        component: DashboardFarmaceutico
+    },
+    {
+        path: 'patients', // 👈 Aquí se queda solo el formulario de Registro
         component: Patients
     },
     {
-        path: 'historial-clinico', // 👈 Ruta oficial mapeada para las observaciones médicas
+        path: 'patients-list', // 👈 Nueva ruta oficial para la tabla completa de pacientes
+        component: PatientsList
+    },
+    {
+        path: 'historial-clinico', 
         component: HistorialClinicoComponent
     },
     {
@@ -56,7 +74,15 @@ export const routes: Routes = [
         component: ConfiguracionComponent 
     },
     {
-        path: '**',
+    path: 'buscar-paciente',
+    component: BuscarPaciente
+    },
+    {
+    path: 'registrar-paciente',
+    component: RegistrarPaciente
+    },
+    {
+        path: '**', // 👈 Comodín: si escriben cualquier ruta inválida, regresa al Home seguro
         redirectTo: ''
     }
 ];

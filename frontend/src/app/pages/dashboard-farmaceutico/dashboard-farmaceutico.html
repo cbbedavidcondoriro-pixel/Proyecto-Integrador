@@ -1,0 +1,111 @@
+<main class="dashboard-pharmacy-wrapper">
+
+  <header class="pharmacy-header">
+    <div class="welcome-text">
+      <span class="badge-role">MÓDULO CENTRAL</span>
+      <h1>Estación de Farmacia y Telemetría</h1>
+      <p>Monitoreo de tratamientos activos y sincronización con redes de salud IoT</p>
+    </div>
+
+    <div class="profile-card">
+      <div class="avatar-wrapper">
+        <img *ngIf="usuario?.foto" [src]="usuario.foto" alt="Avatar" class="avatar-img">
+        <div *ngIf="!usuario?.foto" class="avatar-placeholder">
+          {{ usuario?.nombre?.charAt(0) || 'F' }}
+        </div>
+        <span class="status-indicator"></span>
+      </div>
+      <div class="profile-details">
+        <h3>{{ usuario?.nombre }} {{ usuario?.apellido || '' }}</h3>
+        <p>Farmacéutico Clínico</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="kpi-grid">
+    <div class="kpi-card card-cyan">
+      <div class="kpi-content">
+        <p class="kpi-title">Despachos del Mes</p>
+        <h2 class="kpi-value">{{ metrics.recetas_despachadas_mes }}</h2>
+      </div>
+      <span class="kpi-icon">📦</span>
+    </div>
+
+    <div class="kpi-card card-amber">
+      <div class="kpi-content">
+        <p class="kpi-title">Pendientes de Entrega</p>
+        <h2 class="kpi-value">{{ metrics.recetas_pendientes_hoy }}</h2>
+      </div>
+      <span class="kpi-icon">⏳</span>
+    </div>
+
+    <div class="kpi-card card-emerald">
+      <div class="kpi-content">
+        <p class="kpi-title">Capacidad del Almacén</p>
+        <h2 class="kpi-value">{{ metrics.nivel_stock_global }}</h2>
+      </div>
+      <span class="kpi-icon">📊</span>
+    </div>
+
+    <div class="kpi-card card-red">
+      <div class="kpi-content">
+        <p class="kpi-title">Alertas Médicas IoT</p>
+        <h2 class="kpi-value">{{ metrics.alertas_criticas_iot }}</h2>
+      </div>
+      <span class="kpi-icon">⚡</span>
+    </div>
+  </section>
+
+  <section class="main-dashboard-grid">
+    
+    <div class="dashboard-panel chart-panel">
+      <div class="panel-header">
+        <h3>📈 Historial de Medicación Despachada</h3>
+        <p>Volumen diario de recetas validadas y entregadas en ventanilla</p>
+      </div>
+      <div class="bar-chart-container">
+        <div *ngFor="let item of despachos_semana" class="chart-bar-wrapper">
+          <span class="bar-value">{{ item.cantidad }}</span>
+          <div class="chart-bar" [style.height.%]="item.cantidad"></div>
+          <span class="bar-label">{{ item.dia }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-panel stock-panel">
+      <div class="panel-header">
+        <h3>⚠️ Alertas de Stock Mínimo</h3>
+        <p>Insumos críticos que requieren reabastecimiento</p>
+      </div>
+      <div class="stock-list">
+        <div *ngFor="let prod of alertas_stock" class="stock-item" [ngClass]="'status-' + prod.estado.toLowerCase()">
+          <div class="stock-info">
+            <h4>{{ prod.medicamento }}</h4>
+            <p>Lote: {{ prod.lote }}</p>
+          </div>
+          <div class="stock-badge">
+            <span class="stock-number">{{ prod.stock_actual }} u.</span>
+            <span class="stock-lbl">{{ prod.estado }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="dashboard-panel iot-feed-panel">
+    <div class="panel-header">
+      <h3>📡 Monitor de Telemetría IoT (Nodos de Pacientes)</h3>
+      <p>Logs en tiempo real enviados por los pastilleros inteligentes distribuidos en la comunidad</p>
+    </div>
+    <div class="iot-logs-grid">
+      <div *ngFor="let log of logs_iot" class="log-row" [ngClass]="log.tipo">
+        <span class="log-time">{{ log.hora }}</span>
+        <span class="log-nodo">{{ log.nodo }}</span>
+        <p class="log-event">{{ log.evento }}</p>
+        <span class="log-dot"></span>
+      </div>
+    </div>
+  </section>
+
+</main>

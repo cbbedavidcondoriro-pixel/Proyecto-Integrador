@@ -25,8 +25,7 @@ export class Login {
   ) {}
 
   login() {
-
-    // validación básica
+    // Validación básica inicial
     if (!this.usuario.usuario || !this.usuario.password) {
       alert('Completa todos los campos');
       return;
@@ -36,28 +35,31 @@ export class Login {
       .subscribe((res: any) => {
 
         if (res.success) {
-
           alert('Bienvenido ' + res.usuario.usuario);
 
-          // guardar sesión
+          // 💾 Guardar sesión de manera persistente en formato JSON string
           localStorage.setItem('usuario', JSON.stringify(res.usuario));
 
-          // redirigir al dashboard
-          this.router.navigate(['/dashboard']);
+          // 🔍 Extraemos el rol del objeto y lo normalizamos a minúsculas sin espacios
+          const rolUsuario = (res.usuario.rol || '').toLowerCase().trim();
+          console.log('🔑 [DEBUG LOGIN] Rol detectado del usuario:', rolUsuario);
+
+          // 🧭 Redirección Condicional Inteligente
+          if (rolUsuario === 'farmaceutico' || rolUsuario === 'farmacia') {
+            console.log('✈️ Redirigiendo al Módulo de Farmacia Avanzado...');
+            this.router.navigate(['/dashboard-farmaceutico']);
+          } else {
+            console.log('✈️ Redirigiendo al Panel Médico...');
+            this.router.navigate(['/dashboard']);
+          }
 
         } else {
-
           alert(res.mensaje);
-
         }
 
       }, error => {
-
-        console.log(error);
+        console.log('❌ Error en petición HTTP /login:', error);
         alert('Error de conexión con el servidor');
-
       });
-
   }
-
 }

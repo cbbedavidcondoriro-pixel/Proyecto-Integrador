@@ -1,0 +1,99 @@
+<main class="register-module-wrapper">
+
+  <div class="module-header">
+    <div class="header-text">
+      <span class="badge-cyan">ADMISIÓN DE PACIENTES</span>
+      <h1>Registrar Nuevo Paciente</h1>
+      <p>Introduce los datos del paciente para incorporarlo al ecosistema médico global. El registro se guardará libre de asignación médica inicial.</p>
+    </div>
+  </div>
+
+  <div class="form-card animate-fade">
+    <form (ngSubmit)="guardarPaciente()" #formPaciente="ngForm">
+      
+      <div class="form-section">
+        <h3>👤 Ficha de Identificación</h3>
+        <div class="form-grid">
+          
+          <div class="input-box">
+            <label>Nombre Completo <span class="required">*</span></label>
+            <input type="text" [(ngModel)]="paciente.nombre" name="nombre" placeholder="Ej. David Condori" required>
+          </div>
+
+          <div class="input-box">
+            <label>Cédula de Identidad (CI) <span class="required">*</span></label>
+            <input type="text" [(ngModel)]="paciente.ci" name="ci" placeholder="Ej. 9441033" required>
+          </div>
+
+          <div class="input-box">
+            <label>Edad</label>
+            <input type="number" [(ngModel)]="paciente.edad" name="edad" placeholder="Ej. 22">
+          </div>
+
+          <div class="input-box">
+            <label>Género / Sexo</label>
+            <select [(ngModel)]="paciente.sexo" name="sexo" class="custom-select">
+              <option value="Masculino">Masculino</option>
+              <option value="Femenino">Femenino</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>📞 Información de Contacto</h3>
+        <div class="form-grid">
+          
+          <div class="input-box">
+            <label>Teléfono Celular</label>
+            <input type="text" [(ngModel)]="paciente.telefono" name="telefono" placeholder="Ej. 64334044">
+          </div>
+
+          <div class="input-box">
+            <label>Correo Electrónico</label>
+            <input type="email" [(ngModel)]="paciente.correo" name="correo" placeholder="ejemplo@unifranz.edu.bo">
+          </div>
+
+          <div class="input-box full-width">
+            <label>Contacto de Emergencia (Nombre y Teléfono)</label>
+            <input type="text" [(ngModel)]="paciente.emergencia" name="emergencia" placeholder="Ej. María Condori (Madre) - 75932176">
+          </div>
+
+          <div class="input-box full-width">
+            <label>Dirección Domiciliaria</label>
+            <textarea [(ngModel)]="paciente.direccion" name="direccion" rows="2" placeholder="Ej. Calle Uruguay Nro 45..."></textarea>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="form-section login-section-box">
+        <h3>🔐 Credenciales del Sistema (Acceso Web / Pastillero IoT)</h3>
+        <p class="section-subtitle">Estos datos le permitirán al paciente loguearse en su aplicación móvil o pantalla IoT para recibir alertas.</p>
+        
+        <div class="form-grid">
+          <div class="input-box">
+            <label>Nombre de Usuario <span class="required">*</span></label>
+            <input type="text" [(ngModel)]="paciente.usuario" name="usuario" placeholder="Ej. david123" required>
+          </div>
+
+          <div class="input-box">
+            <label>Contraseña de Acceso <span class="required">*</span></label>
+            <input type="password" [(ngModel)]="paciente.password" name="password" placeholder="••••••••" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" (click)="limpiarFormulario()" class="btn-clear">Limpiar Campos</button>
+        <button type="submit" class="btn-save" [disabled]="cargando">
+          {{ cargando ? 'Guardando Registro...' : '💾 Registrar Paciente' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+</main>

@@ -44,6 +44,14 @@ export class Patients implements OnInit {
   ngOnInit() {
     setTimeout(() => {
       this.obtenerPacientes();
+
+      // 🔍 ESCUCHA DE REDIRECCIÓN: Si venimos desde la tabla externa para editar
+      const compartido = sessionStorage.getItem('paciente_a_editar');
+      if (compartido) {
+        const datosPaciente = JSON.parse(compartido);
+        this.seleccionarParaEditar(datosPaciente);
+        sessionStorage.removeItem('paciente_a_editar'); // Limpieza del caché temporal
+      }
     }, 50);
   }
 
@@ -62,12 +70,9 @@ export class Patients implements OnInit {
       return;
     }
 
-    console.log('Descargando lista completa de pacientes para el Médico ID:', medicoId);
-
     this.http.get<any[]>(`${this.API}/pacientes/${medicoId}`)
       .subscribe({
         next: (res) => {
-          console.log('Pacientes recuperados de Flask exitosamente:', res);
           this.pacientes = res || [];
           this.pacientesFiltrados = res || [];
           this.cdr.detectChanges();
@@ -116,7 +121,6 @@ export class Patients implements OnInit {
       return;
     }
 
-    // Estructura limpia que va directo a la tabla de pacientes
     const data = {
       medico_id: medicoId, 
       nombre: this.paciente.nombre,
@@ -137,8 +141,8 @@ export class Patients implements OnInit {
         .subscribe({
           next: (res: any) => {
             alert(res.mensaje || 'Paciente actualizado con éxito.');
-            this.obtenerPacientes();
-            this.limpiarFormulario();
+            // Redirige automáticamente al listado para ver el cambio
+            this.irAListado();
           },
           error: (err) => console.error('Error al actualizar paciente:', err)
         });
@@ -147,8 +151,9 @@ export class Patients implements OnInit {
         .subscribe({
           next: (res: any) => {
             alert(res.mensaje || '¡Paciente guardado exitosamente!');
-            this.obtenerPacientes(); 
             this.limpiarFormulario();
+            // Redirige automáticamente para ver al nuevo paciente en la tabla completa
+            this.irAListado();
           },
           error: (err) => {
             console.error('Error de red al guardar:', err);
@@ -158,7 +163,7 @@ export class Patients implements OnInit {
     }
   }
 
-  seleccionarParaEditar(item: any) {
+seleccionarParaEditar(item: any) {
     this.editando = true;
     this.idPacienteEditando = item.id;
     this.paciente = {
@@ -174,9 +179,13 @@ export class Patients implements OnInit {
       usuario: item.usuario || '',
       password: '' // Vacío por seguridad
     };
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // ✨ CORREGIDO: Subir al inicio de la pantalla de forma segura sin romper Angular
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    
+    this.cdr.detectChanges();
   }
-
   eliminarPaciente(id: number) {
     if (confirm('¿Estás seguro de que deseas eliminar este paciente del sistema?')) {
       this.http.delete(`${this.API}/pacientes/${id}`)
@@ -211,6 +220,11 @@ export class Patients implements OnInit {
       fileInputElement.value = '';
     }
     this.cdr.detectChanges();
+  }
+
+  // Navegación directa a la pantalla de la tabla extendida
+  irAListado() {
+    this.router.navigate(['/patients-list']);
   }
 
   logout() {

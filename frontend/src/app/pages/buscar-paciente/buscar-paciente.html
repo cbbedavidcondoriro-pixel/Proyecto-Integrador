@@ -1,0 +1,106 @@
+<main class="search-module-wrapper">
+
+  <div class="module-header">
+    <div class="header-text">
+      <span class="badge-blue">CONSULTA GLOBAL</span>
+      <h1>Buscador Centralizado de Pacientes</h1>
+      <p>Localiza cualquier paciente en el sistema mediante su C.I. para gestionar la entrega de recetas médicas.</p>
+    </div>
+  </div>
+
+  <div class="search-card">
+    <div class="search-input-group">
+      <span class="input-icon">💳</span>
+      <input type="text" [(ngModel)]="buscarCI" placeholder="Ingresa el número de carnet (CI)..." 
+             (keyup.enter)="ejecutarBusqueda()" class="custom-input">
+      <button (click)="ejecutarBusqueda()" class="btn-search">
+        {{ cargando ? 'Consultando...' : 'Buscar Paciente' }}
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="busquedaRealizada" class="results-container">
+    
+    <div *ngIf="cargando" class="loading-state">
+      <div class="spinner"></div>
+      <p>Buscando en la base de datos central, por favor espera...</p>
+    </div>
+
+    <div *ngIf="pacienteEncontrado && !cargando" class="patient-grid">
+      
+      <div class="info-card animate-fade">
+        <div class="card-title-bar">
+          <h3>👤 Datos Personales</h3>
+          <button (click)="limpiarFicha()" class="btn-close">Cerrar Ficha</button>
+        </div>
+        
+        <div class="patient-details">
+          <div class="detail-item">
+            <span class="lbl">Nombre Completo:</span>
+            <span class="val">{{ pacienteEncontrado.nombre }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="lbl">Documento de Identidad (CI):</span>
+            <span class="val highlighting">{{ pacienteEncontrado.ci }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="lbl">Edad / Sexo:</span>
+            <span class="val">{{ pacienteEncontrado.edad }} años • {{ pacienteEncontrado.sexo }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="lbl">Contacto:</span>
+            <span class="val">{{ pacienteEncontrado.telefono || 'No registrado' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="lbl">Contacto de Emergencia:</span>
+            <span class="val" style="color: #ef4444;">🚨 {{ pacienteEncontrado.emergencia || 'No registrado' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="treatments-card animate-fade">
+        <div class="card-title-bar">
+          <h3>💊 Tratamientos Asignados por el Médico</h3>
+          <span class="badge-status" style="background: rgba(16,185,129,0.1); color: #10b981; padding: 2px 8px; border-radius: 10px; font-size: 11px;">Ecosistema Activo</span>
+        </div>
+
+        <div *ngIf="medicamentosPaciente.length > 0" class="meds-list" style="display: flex; flex-direction: column; gap: 15px;">
+          <div *ngFor="let med of medicamentosPaciente" style="background: rgba(0,0,0,0.2); padding: 18px; border-radius: 12px; border-left: 4px solid #00bcff; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h4 style="margin: 0 0 6px 0; color: #fff; font-size: 17px; letter-spacing: 0.3px;">{{ med.medicamento }}</h4>
+              <p style="margin: 0 4px 0 0; font-size: 13px; color: #9ca3af; line-height: 1.4;">
+                <strong>Dosis:</strong> {{ med.dosis }} <br>
+                <strong>Frecuencia:</strong> {{ med.frecuencia }} • <strong>Vía:</strong> {{ med.via_administracion }} <br>
+                <strong>Duración:</strong> {{ med.duracion_dias }} días
+              </p>
+              <p *ngIf="med.observaciones" style="margin: 6px 0 0 0; font-size: 12px; color: #e5e7eb; font-style: italic; background: rgba(255,255,255,0.03); padding: 4px 8px; border-radius: 4px;">
+                📋 Obs: {{ med.observaciones }}
+              </p>
+            </div>
+            
+            <button (click)="despacharMedicamento(med.id)" style="background: #00bcff; color: #0b0f19; border: none; padding: 12px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px; transition: 0.2s; white-space: nowrap;">
+              📦 Entregar
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="medicamentosPaciente.length === 0" style="text-align: center; padding: 40px 20px;">
+          <span style="font-size: 40px; display: block; margin-bottom: 10px;">🍃</span>
+          <h4 style="color: #fff; margin: 0;">Sin tratamientos registrados</h4>
+          <p style="color: #9ca3af; font-size: 13px; margin: 5px 0 0 0;">El paciente existe, pero no cuenta con recetas médicas activas en este momento.</p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div *ngIf="!pacienteEncontrado && !cargando" class="error-state animate-fade">
+      <span class="error-icon">⚠️</span>
+      <h3>Paciente No Registrado</h3>
+      <p>No se encontró ninguna coincidencia para el carnet <strong>"{{ buscarCI }}"</strong> en la base de datos general.</p>
+      <button (click)="limpiarFicha()" class="btn-retry">Intentar con otro CI</button>
+    </div>
+
+  </div>
+
+</main>

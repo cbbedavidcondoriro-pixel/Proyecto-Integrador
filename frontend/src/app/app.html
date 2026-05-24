@@ -2,16 +2,17 @@
     
     <aside *ngIf="isLoggedIn" class="sidebar no-print">
         <div class="sidebar-top">
-            <div class="logo">
-                🏥 SmartMediIoT
+            
+            <div class="logo" [style.color]="esFarmaceutico ? '#00bcff' : '#00ff9d'">
+                {{ esFarmaceutico ? '💊 SmartFarmacia' : '🏥 SmartMediIoT' }}
             </div>
 
-            <ul class="menu">
+            <ul class="menu" *ngIf="!esFarmaceutico">
                 <li routerLink="/dashboard" routerLinkActive="active">
                     <span class="menu-icon">📊</span> Dashboard
                 </li>
                 <li routerLink="/patients" routerLinkActive="active">
-                    <span class="menu-icon">👨‍⚕️</span> Pacientes
+                    <span class="menu-icon">👨‍⚕️</span> Registrar Paciente
                 </li>
                 <li routerLink="/historial-clinico" routerLinkActive="active">
                     <span class="menu-icon">📝</span> Historial Clínico
@@ -25,10 +26,25 @@
                 <li routerLink="/consultas" routerLinkActive="active">
                     <span class="menu-icon">🔍</span> Consultas Clínicas
                 </li>
+                <li routerLink="/patients-list" routerLinkActive="active">
+                    <span class="menu-icon">📋</span> Ver Pacientes
+                </li>
                 <li routerLink="/configuracion" routerLinkActive="active">
                     <span class="menu-icon">⚙️</span> Configuración
                 </li>
             </ul>
+
+<ul class="menu" *ngIf="esFarmaceutico">
+    <li routerLink="/dashboard-farmaceutico" routerLinkActive="active">
+        <span class="menu-icon">📊</span> Dashboard
+    </li>
+    <li routerLink="/buscar-paciente" routerLinkActive="active">
+        <span class="menu-icon">🔍</span> Buscar Pacientes
+    </li>
+    <li routerLink="/registrar-paciente" routerLinkActive="active">
+        <span class="menu-icon">➕</span> Registrar Paciente
+    </li>
+</ul>
         </div>
 
         <div class="logout-box" (click)="logout()">

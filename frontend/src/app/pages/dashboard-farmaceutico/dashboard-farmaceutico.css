@@ -1,0 +1,201 @@
+.dashboard-pharmacy-wrapper {
+  padding: 35px;
+  background: #0b0f19;
+  min-height: 100vh;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #f3f4f6;
+  box-sizing: border-box;
+}
+
+/* HEADER Y PERFIL */
+.pharmacy-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111827;
+  padding: 25px 35px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 35px;
+}
+.badge-role {
+  background: rgba(0, 188, 255, 0.1);
+  color: #00bcff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 30px;
+  letter-spacing: 1px;
+}
+.pharmacy-header h1 {
+  margin: 8px 0 4px 0;
+  font-size: 28px;
+  color: #fff;
+}
+.pharmacy-header p {
+  margin: 0;
+  color: #9ca3af;
+  font-size: 14px;
+}
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.avatar-wrapper {
+  position: relative;
+  width: 55px;
+  height: 55px;
+}
+.avatar-img, .avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.avatar-placeholder {
+  background: linear-gradient(135deg, #00bcff, #3b82f6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+}
+.status-indicator {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: #00ff9d;
+  border: 2px solid #111827;
+  border-radius: 50%;
+}
+.profile-details h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #fff;
+}
+.profile-details p {
+  margin: 2px 0 0 0;
+  font-size: 12px;
+  color: #00bcff;
+}
+
+/* KPIs GRID */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 25px;
+  margin-bottom: 35px;
+}
+.kpi-card {
+  background: #1f2937;
+  padding: 25px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+.card-cyan { border-left: 5px solid #00bcff; }
+.card-amber { border-left: 5px solid #f59e0b; }
+.card-emerald { border-left: 5px solid #10b981; }
+.card-red { border-left: 5px solid #ef4444; }
+
+.kpi-title { margin: 0; font-size: 13px; color: #9ca3af; }
+.kpi-value { margin: 10px 0 0 0; font-size: 32px; color: #fff; font-weight: 700; }
+.kpi-icon { font-size: 30px; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px; }
+
+/* PANELS GENERALS */
+.dashboard-panel {
+  background: #1f2937;
+  border-radius: 20px;
+  padding: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.panel-header h3 { margin: 0; font-size: 18px; color: #fff; }
+.panel-header p { margin: 5px 0 20px 0; font-size: 13px; color: #9ca3af; }
+
+.main-dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 35px;
+  margin-bottom: 35px;
+}
+
+/* GRÁFICO */
+.bar-chart-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 200px;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 14px;
+}
+.chart-bar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 12%;
+}
+.bar-value { font-size: 11px; color: #00bcff; font-weight: 600; margin-bottom: 5px; }
+.chart-bar {
+  width: 100%;
+  background: linear-gradient(to top, #3b82f6, #00bcff);
+  border-radius: 6px 6px 0 0;
+  transition: height 0.5s ease;
+}
+.bar-label { font-size: 12px; color: #9ca3af; margin-top: 8px; }
+
+/* STOCK LIST */
+.stock-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.stock-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+}
+.stock-item h4 { margin: 0; font-size: 14px; color: #fff; }
+.stock-item p { margin: 3px 0 0 0; font-size: 12px; color: #9ca3af; }
+.stock-badge { text-align: right; }
+.stock-number { display: block; font-size: 14px; font-weight: 700; color: #fff; }
+.stock-lbl { font-size: 10px; text-transform: uppercase; font-weight: bold; }
+
+.status-crítico { border-right: 4px solid #ef4444; }
+.status-crítico .stock-lbl { color: #ef4444; }
+.status-bajo { border-right: 4px solid #f59e0b; }
+.status-bajo .stock-lbl { color: #f59e0b; }
+
+/* TELEMETRIA IOT LOGS */
+.iot-logs-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+.log-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  gap: 20px;
+}
+.log-time { font-size: 12px; color: #9ca3af; font-family: monospace; }
+.log-nodo { font-size: 12px; font-weight: 700; color: #00bcff; white-space: nowrap; }
+.log-event { margin: 0; font-size: 13px; color: #e5e7eb; flex-grow: 1; }
+.log-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+.success .log-dot { background: #10b981; box-shadow: 0 0 8px #10b981; }
+.danger .log-dot { background: #ef4444; box-shadow: 0 0 8px #ef4444; }
+.info .log-dot { background: #3b82f6; box-shadow: 0 0 8px #3b82f6; }

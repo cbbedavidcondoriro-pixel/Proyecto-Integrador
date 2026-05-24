@@ -1,0 +1,206 @@
+.search-module-wrapper {
+  padding: 35px;
+  background: #0b0f19;
+  min-height: 100vh;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #f3f4f6;
+  box-sizing: border-box;
+}
+
+.badge-blue {
+  background: rgba(0, 188, 255, 0.1);
+  color: #00bcff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 30px;
+  letter-spacing: 0.5px;
+}
+
+.module-header h1 {
+  margin: 10px 0 5px 0;
+  font-size: 28px;
+  color: #fff;
+}
+
+.module-header p {
+  margin: 0 0 30px 0;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+/* CAJA DE BUSQUEDA */
+.search-card {
+  background: #1f2937;
+  padding: 25px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 30px;
+}
+
+.search-input-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: #111827;
+  padding: 8px 15px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.input-icon {
+  font-size: 20px;
+}
+
+.custom-input {
+  flex-grow: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 16px;
+  padding: 10px 0;
+}
+
+.btn-search {
+  background: #00bcff;
+  color: #0b0f19;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-search:hover {
+  background: #38bdf8;
+  transform: translateY(-1px);
+}
+
+/* GRID DE RESULTADOS */
+.patient-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 30px;
+}
+
+.info-card, .treatments-card {
+  background: #1f2937;
+  border-radius: 16px;
+  padding: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.card-title-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.card-title-bar h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #fff;
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.patient-details {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detail-item .lbl {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.detail-item .val {
+  font-size: 15px;
+  color: #e5e7eb;
+  font-weight: 500;
+}
+
+.highlighting {
+  color: #00bcff !important;
+  font-weight: 700 !important;
+}
+
+/* CONTENEDOR DE TRATAMIENTOS PRÓXIMO PASO */
+.placeholder-treatments {
+  text-align: center;
+  padding: 40px 20px;
+  border: 2px dashed rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}
+
+.meds-icon {
+  font-size: 40px;
+  display: block;
+  margin-bottom: 15px;
+}
+
+.placeholder-treatments h4 {
+  margin: 0 0 10px 0;
+  color: #fff;
+  font-size: 16px;
+}
+
+.placeholder-treatments p {
+  color: #9ca3af;
+  font-size: 13px;
+  max-width: 400px;
+  margin: 0 auto 20px auto;
+  line-height: 1.5;
+}
+
+.btn-action-next {
+  background: rgba(0, 188, 255, 0.1);
+  color: #00bcff;
+  border: 1px solid rgba(0, 188, 255, 0.3);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ESTADOS EXTRA */
+.error-state {
+  text-align: center;
+  background: #1f2937;
+  padding: 40px;
+  border-radius: 16px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.error-icon { font-size: 45px; }
+.error-state h3 { color: #ef4444; margin: 15px 0 5px 0; }
+.error-state p { color: #9ca3af; font-size: 14px; margin: 0 0 20px 0; }
+.btn-retry { background: rgba(255,255,255,0.05); color:#fff; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; }
+
+.animate-fade {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

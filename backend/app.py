@@ -931,6 +931,305 @@ def obtener_reporte_consolidado(id_paciente):
     finally:
         cursor.close()
 
+
+
+@app.route('/api/historial/<int:id>', methods=['PUT', 'OPTIONS'])
+@app.route('/historial/<int:id>', methods=['PUT', 'OPTIONS'])
+def modificar_historial_clinico(id):
+    if request.method == 'OPTIONS':
+        return jsonify({"success": True}), 200
+
+    data = request.get_json() or request.json
+    cursor = db.cursor(dictionary=True)
+
+    try:
+        # Extraemos y limpiamos los datos mapeando a las columnas reales de tu DB
+        motivo_consulta = data.get('motivo_consulta', '').strip()
+        diagnostico_definitivo = data.get('diagnostico_definitivo', '').strip()
+
+        if not motivo_consulta or not diagnostico_definitivo:
+            return jsonify({"success": False, "mensaje": "El motivo de consulta y el diagnóstico son requeridos."}), 400
+
+        sql = """
+            UPDATE historial_clinico 
+            SET 
+                motivo_consulta = %s, 
+                sintomas_principales = %s, 
+                antecedentes_medicos = %s, 
+                examen_fisico = %s, 
+                diagnostico_definitivo = %s, 
+                indicaciones_inmediatas = %s, 
+                presion_arterial = %s, 
+                frecuencia_cardiaca = %s, 
+                temperatura = %s, 
+                saturacion_oxigeno = %s
+            WHERE id = %s
+        """
+        
+        valores = (
+            motivo_consulta,
+            data.get('sintomas_principales', '').strip(),
+            data.get('antecedentes_medicos', '').strip(),
+            data.get('examen_fisico', '').strip(),
+            diagnostico_definitivo,
+            data.get('indicaciones_inmediatas', '').strip(),
+            data.get('presion_arterial'),
+            data.get('frecuencia_cardiaca'),
+            data.get('temperatura'),
+            data.get('saturacion_oxigeno'),
+            id
+        )
+
+        cursor.execute(sql, valores)
+        db.commit()
+
+        return jsonify({
+            "success": True,
+            "mensaje": "¡Historial clínico actualizado con éxito!"
+        }), 200
+
+    except Exception as e:
+        db.rollback()
+        print(f"❌ Error al editar historial {id}: {str(e)}")
+        return jsonify({"success": False, "error": str(e)}), 500
+    finally:
+        cursor.close()
+
+
+# ==========================================
+#      RUTAS PARA ELIMINAR HISTORIAL
+# ==========================================
+@app.route('/api/historial/<int:id>', methods=['DELETE', 'OPTIONS'])
+@app.route('/historial/<int:id>', methods=['DELETE', 'OPTIONS'])
+def eliminar_historial_clinico(id):
+    if request.method == 'OPTIONS':
+        return jsonify({"success": True}), 200
+
+    cursor = db.cursor()
+    try:
+        cursor.execute("DELETE FROM historial_clinico WHERE id = %s", (id,))
+        db.commit()
+        return jsonify({"success": True, "mensaje": "Historial clínico eliminado correctamente."}), 200
+    except Exception as e:
+        db.rollback()
+        print(f"❌ Error al eliminar historial {id}: {str(e)}")
+        return jsonify({"success": False, "error": str(e)}), 500
+    finally:
+        cursor.close()
+
+
+# ==========================================
+#      RUTAS PARA MODIFICAR TRATAMIENTO
+# ==========================================
+# ==========================================
+@app.route('/api/tratamientos/<int:id>', methods=['PUT', 'OPTIONS'])
+@app.route('/tratamientos/<int:id>', methods=['PUT', 'OPTIONS'])
+def modificar_tratamiento_real(id):
+    if request.method == 'OPTIONS':
+        return jsonify({"success": True}), 200
+
+    data = request.get_json() or request.json
+    print("📥 Datos exactos que llegan al PUT:", data)
+    
+    cursor = None
+    try:
+        cursor = db.cursor()
+
+        # 1. Validar el campo básico obligatorio
+        medicamento = data.get('medicamento')
+        if not medicamento:
+            return jsonify({'error': 'El nombre del medicamento es obligatorio.'}), 400
+
+        # 2. Manejo estricto de Fechas y Horas para evitar errores de tipo en MySQL
+        hora_inicio = data.get('hora_inicio') if data.get('hora_inicio') and str(data.get('hora_inicio')).strip() else None
+        fecha_inicio = data.get('fecha_inicio') if data.get('fecha_inicio') and str(data.get('fecha_inicio')).strip() else None
+        fecha_final = data.get('fecha_final') if data.get('fecha_final') and str(data.get('fecha_final')).strip() else None
+
+        # 3. Parsear la duración a entero puro
+        duracion_raw = data.get('duracion_dias')
+        if duracion_raw is None or str(duracion_raw).strip() == "" or str(duracion_raw).lower() == "null":
+            duracion_dias = None
+        else:
+            try:
+                solo_num = ''.join(filter(str.isdigit, str(duracion_raw)))
+                duracion_dias = int(solo_num) if solo_num else None
+            except:
+                duracion_dias = None
+
+        # 4. Capturar los switches IoT tal como los manda tu consultas.ts (0 o 1)
+        activar_alertas = 1 if data.get('activar_alertas') == 1 or data.get('activar_alertas') is True else 0
+        notificar_incumplimiento = 1 if data.get('notificar_incumplimiento') == 1 or data.get('notificar_incumplimiento') is True else 0
+        monitoreo_tiempo_real = 1 if data.get('monitoreo_tiempo_real') == 1 or data.get('monitoreo_tiempo_real') is True else 0
+        alertar_familiar = 1 if data.get('alertar_familiar') == 1 or data.get('alertar_familiar') is True else 0
+
+        # 5. QUERY REAL: Quitamos 'observaciones' porque no existe en tu tabla de tratamientos de la BD
+        # Solo actualizamos los valores propios del medicamento usando el ID único de la fila
+        query = """
+            UPDATE tratamientos 
+            SET 
+                medicamento = %s, 
+                dosis = %s, 
+                frecuencia = %s, 
+                via_administracion = %s, 
+                hora_inicio = %s, 
+                duracion_dias = %s, 
+                fecha_inicio = %s, 
+                fecha_final = %s, 
+                activar_alertas = %s, 
+                notificar_incumplimiento = %s, 
+                monitoreo_tiempo_real = %s, 
+                alertar_familiar = %s
+            WHERE id = %s
+        """
+        
+        valores = (
+            medicamento,
+            data.get('dosis'),
+            data.get('frecuencia'),
+            data.get('via_administracion', 'Oral'),
+            hora_inicio,
+            duracion_dias,
+            fecha_inicio,
+            fecha_final,
+            activar_alertas,
+            notificar_incumplimiento,
+            monitoreo_tiempo_real,
+            alertar_familiar,
+            id
+        )
+
+        cursor.execute(query, valores)
+        db.commit()
+        
+        print(f"✅ [Flask] Fila {id} en 'tratamientos' actualizada con éxito.")
+        return jsonify({"success": True, "mensaje": "¡Tratamiento médico modificado con éxito!"}), 200
+
+    except Exception as e:
+        if db.is_connected():
+            db.rollback()
+        print(f"❌ Error real de MySQL: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+# ==========================================
+#      RUTAS PARA ELIMINAR TRATAMIENTO
+# ==========================================
+@app.route('/api/tratamientos/<int:id>', methods=['DELETE', 'OPTIONS'])
+@app.route('/tratamientos/<int:id>', methods=['DELETE', 'OPTIONS'])
+def eliminar_tratamiento(id):
+    if request.method == 'OPTIONS':
+        return jsonify({"success": True}), 200
+
+    cursor = db.cursor()
+    try:
+        cursor.execute("DELETE FROM tratamientos WHERE id = %s", (id,))
+        db.commit()
+        return jsonify({"success": True, "mensaje": "Tratamiento removido con éxito."}), 200
+    except Exception as e:
+        db.rollback()
+        print(f"❌ Error al eliminar tratamiento {id}: {str(e)}")
+        return jsonify({"success": False, "error": str(e)}), 500
+    finally:
+        cursor.close()
+
+
+
+@app.route('/pacientes/buscar/<ci>', methods=['GET'])
+def buscar_paciente_con_recetas(ci):
+    try:
+        # Abrimos el cursor con dictionary=True para manejarlo fácil como JSON
+        cursor = db.cursor(dictionary=True)
+        
+        # 1. Buscamos al paciente por su "ci" exacto (VARCHAR de tu tabla pacientes)
+        query_paciente = """
+            SELECT id, nombre, ci, edad, sexo, telefono, correo, direccion, emergencia 
+            FROM pacientes 
+            WHERE ci = %s
+        """
+        cursor.execute(query_paciente, (ci,))
+        paciente = cursor.fetchone()
+        
+        # Si no existe el paciente en la BD
+        if not paciente:
+            cursor.close()
+            return jsonify({"success": False, "mensaje": "Paciente no registrado"}), 404
+            
+        # 2. Si existe, buscamos sus tratamientos reales usando las columnas de TU script SQL
+        query_tratamientos = """
+            SELECT id, medicamento, dosis, frecuencia, via_administracion, duracion_dias, observaciones
+            FROM tratamientos 
+            WHERE paciente_id = %s
+        """
+        cursor.execute(query_tratamientos, (paciente['id'],))
+        tratamientos = cursor.fetchall()
+        
+        # 3. Estructuramos la respuesta limpia para Angular
+        respuesta = {
+            "success": True,
+            "nombre": paciente['nombre'],
+            "ci": paciente['ci'],
+            "edad": paciente['edad'],
+            "sexo": paciente['sexo'],
+            "telefono": paciente['telefono'],
+            "correo": paciente['correo'],
+            "direccion": paciente['direccion'],
+            "emergencia": paciente['emergencia'],
+            "tratamientos": tratamientos  # Enviamos la lista de medicamentos encontrados
+        }
+        
+        cursor.close()
+        return jsonify(respuesta), 200
+
+    except Exception as e:
+        print("❌ Error en el servidor Flask:", str(e))
+        return jsonify({"success": False, "mensaje": "Error interno del servidor"}), 500
+
+@app.route('/pacientes/registrar-farmacia', methods=['POST'])
+def registrar_paciente_desde_farmacia():
+    try:
+        data = request.json
+        cursor = db.cursor()
+
+        # 1. Extraemos los campos enviados desde Angular
+        nombre = data.get('nombre')
+        ci = data.get('ci')
+        edad = data.get('edad')
+        sexo = data.get('sexo')
+        telefono = data.get('telefono')
+        correo = data.get('correo')
+        direccion = data.get('direccion')
+        emergencia = data.get('emergencia')
+        usuario = data.get('usuario')
+        password = data.get('password')
+
+        # 2. Validación de duplicados (CI o Usuario repetido)
+        cursor.execute("SELECT id FROM pacientes WHERE ci = %s OR usuario = %s", (ci, usuario))
+        existente = cursor.fetchone()
+        if existente:
+            cursor.close()
+            return jsonify({"success": False, "mensaje": "El número de CI o el nombre de Usuario ya se encuentran registrados."}), 400
+
+        # 3. Insertamos el paciente. 
+        # Ponemos explícitamente NULL en la columna medico_id tal como acordamos
+        query_insertar = """
+            INSERT INTO pacientes (medico_id, nombre, ci, edad, sexo, telefono, correo, direccion, emergencia, usuario, password, rol)
+            VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 'paciente')
+        """
+        valores = (nombre, ci, edad, sexo, telefono, correo, direccion, emergencia, usuario, password)
+        
+        cursor.execute(query_insertar, valores)
+        db.commit()
+        cursor.close()
+
+        return jsonify({"success": True, "mensaje": "Paciente incorporado exitosamente sin asignación médica."}), 201
+
+    except Exception as e:
+        db.rollback()
+        print("❌ Error crítico en registro de farmacia:", str(e))
+        return jsonify({"success": False, "mensaje": "Error interno al procesar el registro."}), 500
+
+
 if __name__ == '__main__':
     app.run(
         debug=True,

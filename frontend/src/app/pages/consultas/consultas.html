@@ -1,57 +1,225 @@
-<div class="consultas-container" style="padding: 20px; color: white; font-family: Arial, sans-serif;">
+<div class="consultas-container" style="padding: 40px; background-color: #0b0f19; min-height: 100vh; color: #ffffff; width: 100%; box-sizing: border-box; font-family: 'Segoe UI', sans-serif;">
     
-    <div class="header-consultas" style="margin-bottom: 20px;">
-        <h1 style="font-size: 28px; font-weight: bold; margin-bottom: 5px;">🔍 Consultas Clínicas de Pacientes</h1>
-        <p style="color: #9ca3af; margin: 0;">Revise expedientes personales y verifique el estado de los tratamientos asignados.</p>
+    <div class="header-consultas" style="margin-bottom: 30px;">
+        <h1 style="font-size: 32px; font-weight: 700; color: #ffffff; margin-bottom: 10px;">🔍 Sistema de Gestión Clínico e IoT</h1>
+        <p style="color: #9ca3af; font-size: 16px;">Consola interactiva de expedientes médicos, triaje de signos vitales e instrumentación de alertas IoT.</p>
     </div>
 
-    <div class="selector-box" style="display: flex; gap: 15px; align-items: flex-end; background: #111827; padding: 20px; border-radius: 12px; margin: 25px 0; border: 1px solid rgba(255,255,255,0.05);">
+    <div class="selector-box" style="display: flex; gap: 20px; align-items: flex-end; background: #111827; padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 30px;">
         <div style="flex-grow: 1;">
-            <label style="display: block; color: #9ca3af; margin-bottom: 8px; font-size: 14px;">Pacientes del Médico</label>
-            <select [(ngModel)]="idPacienteSeleccionado" style="width: 100%; padding: 12px; background: #1f2937; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; font-size: 15px; outline: none; cursor: pointer;">
-                <option value="0" disabled selected>-- Seleccione un paciente de su lista --</option>
-                <option *ngFor="let pac of listaPacientes" [value]="pac.id">{{ pac.nombre }} (CI: {{ pac.ci }})</option>
+            <label style="display: block; color: #9ca3af; margin-bottom: 8px; font-size: 14px; font-weight: 500;">Seleccionar Paciente para Consulta</label>
+            <select [(ngModel)]="idPacienteSeleccionado" style="width: 100%; padding: 14px; background: #1f2937; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; font-size: 15px; outline: none; cursor: pointer;">
+                <option value="0" disabled selected>-- Elija un paciente de la lista --</option>
+                <option *ngFor="let pac of listaPacientes" [value]="pac.id">🧑‍⚕️ {{ pac.nombre }} (CI: {{ pac.ci || 'Sin Documento' }})</option>
             </select>
         </div>
-        <button (click)="realizarConsulta()" style="background: #10b981; color: white; border: none; padding: 13px 26px; font-size: 15px; font-weight: 600; border-radius: 8px; cursor: pointer; transition: background 0.2s;">
-            Consultar Ficha
+        <button (click)="realizarConsulta()" style="background: #10b981; color: white; border: none; padding: 14px 28px; font-size: 15px; font-weight: 600; border-radius: 10px; cursor: pointer; transition: background 0.2s;">
+            📂 Cargar Ficha y Expediente
         </button>
     </div>
 
-    <div *ngIf="datosConsulta" style="margin-top: 25px;">
+    <div *ngIf="!datosConsulta" style="text-align: center; padding: 60px; background: #111827; border-radius: 16px; border: 1px dashed rgba(255,255,255,0.1);">
+        <p style="color: #6b7280; font-size: 16px; margin: 0;">Seleccione un paciente para sincronizar su historial clínico y parámetros de tratamiento.</p>
+    </div>
+
+    <div *ngIf="datosConsulta">
         
-        <div class="perfil-card" style="background: #111827; padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px;">
-            <h3 style="color: #10b981; margin-top: 0; margin-bottom: 15px; font-size: 18px;">👤 Información General del Paciente</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; color: #e5e7eb;">
-                <p style="margin: 5px 0;"><strong>Nombre Completo:</strong> {{ datosConsulta.paciente.nombre }}</p>
-                <p style="margin: 5px 0;"><strong>Documento (CI):</strong> {{ datosConsulta.paciente.ci }}</p>
-                <p style="margin: 5px 0;"><strong>Edad:</strong> {{ datosConsulta.paciente.edad || 'No registrada' }} años</p>
-                <p style="margin: 5px 0;"><strong>Género/Sexo:</strong> {{ datosConsulta.paciente.sexo || 'No especificado' }}</p>
-                <p style="margin: 5px 0;"><strong>Teléfono:</strong> {{ datosConsulta.paciente.telefono || 'Sin número' }}</p>
-                <p style="margin: 5px 0;"><strong>Email:</strong> {{ datosConsulta.paciente.correo || 'Sin correo' }}</p>
+        <div class="tabs-navigation" style="display: flex; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; padding-bottom: 1px;">
+            <button (click)="pestanaActiva = 'ficha'" [style.border-bottom]="pestanaActiva === 'ficha' ? '3px solid #10b981' : '3px solid transparent'" [style.color]="pestanaActiva === 'ficha' ? '#10b981' : '#9ca3af'" style="background: transparent; border: none; padding: 12px 20px; font-size: 15px; font-weight: 600; cursor: pointer;">
+                👤 Datos Personales
+            </button>
+            <button (click)="pestanaActiva = 'historial'" [style.border-bottom]="pestanaActiva === 'historial' ? '3px solid #3b82f6' : '3px solid transparent'" [style.color]="pestanaActiva === 'historial' ? '#3b82f6' : '#9ca3af'" style="background: transparent; border: none; padding: 12px 20px; font-size: 15px; font-weight: 600; cursor: pointer;">
+                📝 Historial Clínico y Triaje
+            </button>
+            <button (click)="pestanaActiva = 'tratamiento'" [style.border-bottom]="pestanaActiva === 'tratamiento' ? '3px solid #f59e0b' : '3px solid transparent'" [style.color]="pestanaActiva === 'tratamiento' ? '#f59e0b' : '#9ca3af'" style="background: transparent; border: none; padding: 12px 20px; font-size: 15px; font-weight: 600; cursor: pointer;">
+                💊 Tratamientos y Alertas IoT
+            </button>
+        </div>
+
+        <div *ngIf="pestanaActiva === 'ficha'" style="background: #111827; padding: 30px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
+            <h3 style="color: #10b981; margin-top: 0; margin-bottom: 20px; font-size: 20px;">👤 Información Completa de Filiación</h3>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;"><span style="color:#6b7280; font-size:12px; display:block;">ID INTERNO DEL PACIENTE:</span><strong># {{ datosConsulta.paciente?.id }}</strong></div>
+                <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;"><span style="color:#6b7280; font-size:12px; display:block;">DOCUMENTO DE IDENTIDAD (CI):</span><strong>{{ datosConsulta.paciente?.ci || 'No registrado' }}</strong></div>
+                
+                <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;"><span style="color:#6b7280; font-size:12px; display:block;">NOMBRE COMPLETO:</span><strong>{{ datosConsulta.paciente?.nombre }}</strong></div>
+                <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;"><span style="color:#6b7280; font-size:12px; display:block;">EDAD:</span><strong>{{ datosConsulta.paciente?.edad || datosConsulta.paciente?.fecha_nacimiento || 'No especificada' }} años</strong></div>
+                
+                <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;"><span style="color:#6b7280; font-size:12px; display:block;">GÉNERO:</span><strong>{{ datosConsulta.paciente?.genero || datosConsulta.paciente?.sexo || 'Sin definir' }}</strong></div>
+                <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;"><span style="color:#6b7280; font-size:12px; display:block;">TELÉFONO DE CONTACTO:</span><strong>{{ datosConsulta.paciente?.telefono || datosConsulta.paciente?.celular || 'Sin número registrado' }}</strong></div>
+                
+                <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;"><span style="color:#6b7280; font-size:12px; display:block;">CORREO ELECTRÓNICO:</span><strong>{{ datosConsulta.paciente?.email || datosConsulta.paciente?.correo || 'Sin correo asociado' }}</strong></div>
+                <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px;"><span style="color:#6b7280; font-size:12px; display:block;">DIRECCIÓN DOMICILIARIA:</span><strong>{{ datosConsulta.paciente?.direccion || 'No especificada' }}</strong></div>
             </div>
         </div>
 
-        <div *ngIf="!datosConsulta.tiene_tratamiento" style="background: rgba(245, 158, 11, 0.08); border: 1px solid #f59e0b; padding: 20px; border-radius: 12px; margin-top: 15px;">
-            <h4 style="color: #f59e0b; margin: 0 0 6px 0; font-size: 16px; font-weight: bold;">⚠️ Sin tratamiento asignado</h4>
-            <p style="color: #9ca3af; margin: 0; font-size: 14px;">El paciente se encuentra registrado de manera correcta, pero <strong>actualmente no cuenta con ninguna receta o tratamiento activo</strong> en la plataforma SmartMedIoT.</p>
-        </div>
-
-        <div *ngIf="datosConsulta.tiene_tratamiento" style="background: #111827; padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
-            <h3 style="color: #3b82f6; margin-top: 0; margin-bottom: 15px; font-size: 18px;">💊 Información del Tratamiento</h3>
-            <div style="background: #1f2937; padding: 20px; border-radius: 10px; color: #e5e7eb;">
-                <h4 style="color: #10b981; margin: 0 0 10px 0; font-size: 18px; font-weight: bold;">{{ datosConsulta.tratamiento.medicamento }}</h4>
-                <p style="margin: 6px 0;"><strong>Dosis:</strong> {{ datosConsulta.tratamiento.dosis }}</p>
-                <p style="margin: 6px 0;"><strong>Frecuencia:</strong> {{ datosConsulta.tratamiento.frecuencia }}</p>
-                <p style="margin: 6px 0;"><strong>Vía de Administración:</strong> {{ datosConsulta.tratamiento.via_administracion }}</p>
-                <p style="margin: 6px 0;"><strong>Periodo Clínico:</strong> Desde el {{ datosConsulta.tratamiento.fecha_inicio }} al {{ datosConsulta.tratamiento.fecha_final }}</p>
-                
-                <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
-                    <p style="margin-bottom: 4px;"><strong>Indicaciones / Observaciones:</strong></p>
-                    <p style="font-style: italic; color: #9ca3af; margin: 0;">" {{ datosConsulta.tratamiento.observaciones || 'Sin anotaciones adicionales.' }} "</p>
+        <div *ngIf="pestanaActiva === 'historial'" style="background: #111827; padding: 30px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px;">
+                <h3 style="color: #3b82f6; margin: 0; font-size: 20px;">📋 Registro de Evolución Médica</h3>
+                <div *ngIf="datosConsulta.historial_clinico" style="display: flex; gap: 10px;">
+                    <button (click)="abrirModalHistorial(datosConsulta.historial_clinico)" style="background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); padding: 8px 16px; font-size: 13px; font-weight: 600; border-radius: 6px; cursor: pointer;">✏️ Modificar Campos</button>
+                    <button (click)="eliminarHistorial(datosConsulta.historial_clinico.id)" style="background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 16px; font-size: 13px; font-weight: 600; border-radius: 6px; cursor: pointer;">🗑️ Eliminar</button>
                 </div>
             </div>
+
+            <div *ngIf="datosConsulta.historial_clinico" style="display: flex; flex-direction: column; gap: 20px;">
+                <div style="background: rgba(59, 130, 246, 0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.1);">
+                    <h4 style="color:#60a5fa; margin-top:0; margin-bottom:15px; font-size:13px; text-transform:uppercase;">💓 Bloque 3: Signos Vitales Tomados en Triaje</h4>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; text-align: center;">
+                        <div style="background:#1f2937; padding:12px; border-radius:8px;"><span style="color:#9ca3af; font-size:11px; display:block;">PRESIÓN ARTERIAL</span><strong style="font-size:16px; color:white;">{{ datosConsulta.historial_clinico.presion_arterial || 'Sin datos' }} mmHg</strong></div>
+                        <div style="background:#1f2937; padding:12px; border-radius:8px;"><span style="color:#9ca3af; font-size:11px; display:block;">FRECUENCIA CARDÍACA</span><strong style="font-size:16px; color:white;">{{ datosConsulta.historial_clinico.frecuencia_cardiaca || 'Sin datos' }} lpm</strong></div>
+                        <div style="background:#1f2937; padding:12px; border-radius:8px;"><span style="color:#9ca3af; font-size:11px; display:block;">TEMPERATURA</span><strong style="font-size:16px; color:white;">{{ datosConsulta.historial_clinico.temperatura || 'Sin datos' }} °C</strong></div>
+                        <div style="background:#1f2937; padding:12px; border-radius:8px;"><span style="color:#9ca3af; font-size:11px; display:block;">SATURACIÓN DE OXÍGENO</span><strong style="font-size:16px; color:#10b981;">{{ datosConsulta.historial_clinico.saturacion_oxigeno || 'Sin datos' }}%</strong></div>
+                    </div>
+                </div>
+
+                <div style="background: rgba(16, 185, 129, 0.04); padding: 18px; border-radius: 10px; border-left: 4px solid #10b981;">
+                    <span style="color:#10b981; font-size:12px; display:block; font-weight:600;">🎯 DIAGNÓSTICO DEFINITIVO:</span>
+                    <p style="margin:5px 0 0 0; font-size:16px; font-weight:600; color:#f3f4f6;">{{ datosConsulta.historial_clinico.diagnostico_definitivo }}</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: rgba(255,255,255,0.01); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.03);">
+                        <strong style="color:#9ca3af; font-size:12px; display:block; margin-bottom:5px;">📋 MOTIVO DE LA CONSULTA:</strong>
+                        <p style="margin:0; font-size:14px; color:#e5e7eb;">{{ datosConsulta.historial_clinico.motivo_consulta }}</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.01); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.03);">
+                        <strong style="color:#9ca3af; font-size:12px; display:block; margin-bottom:5px;">☣️ SÍNTOMAS PRINCIPALES PRESENTADOS:</strong>
+                        <p style="margin:0; font-size:14px; color:#e5e7eb;">{{ datosConsulta.historial_clinico.sintomas_principales }}</p>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                    <div style="background:#1f2937; padding:15px; border-radius:8px;">
+                        <span style="color:#6b7280; font-size:11px; display:block;">📚 ANTECEDENTES MÉDICOS</span>
+                        <p style="margin:5px 0 0 0; font-size:13px; color:#d1d5db;">{{ datosConsulta.historial_clinico.antecedentes_medicos || 'Ninguno cargado.' }}</p>
+                    </div>
+                    <div style="background:#1f2937; padding:15px; border-radius:8px;">
+                        <span style="color:#6b7280; font-size:11px; display:block;">🔍 EXAMEN FÍSICO</span>
+                        <p style="margin:5px 0 0 0; font-size:13px; color:#d1d5db;">{{ datosConsulta.historial_clinico.examen_fisico || 'Sin observaciones.' }}</p>
+                    </div>
+                    <div style="background:#1f2937; padding:15px; border-radius:8px;">
+                        <span style="color:#3b82f6; font-size:11px; display:block;">⚡ INDICACIONES INMEDIATAS</span>
+                        <p style="margin:5px 0 0 0; font-size:13px; color:#60a5fa; font-weight:500;">{{ datosConsulta.historial_clinico.indicaciones_inmediatas || 'Sin indicaciones críticas.' }}</p>
+                    </div>
+                </div>
+                <p style="font-size:11px; color:#4b5563; text-align:right; margin:0;">Estado: {{ datosConsulta.historial_clinico.fecha_evaluacion }}</p>
+            </div>
+
+            <div *ngIf="!datosConsulta.historial_clinico" style="background: rgba(245, 158, 11, 0.05); border: 1px dashed #f59e0b; padding: 40px; border-radius: 12px; text-align: center;">
+                <p style="color: #f59e0b; margin: 0; font-size: 14px;">⚠️ Este paciente no cuenta con una historia clínica asociada en este momento.</p>
+            </div>
         </div>
 
+        <div *ngIf="pestanaActiva === 'tratamiento'" style="background: #111827; padding: 30px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px;">
+                <h3 style="color: #f59e0b; margin: 0; font-size: 20px;">💊 Ficha Terapéutica y Prescripción Farmacéutica</h3>
+                <div *ngIf="datosConsulta.tiene_tratamiento && datosConsulta.tratamiento" style="display: flex; gap: 10px;">
+                    <button (click)="abrirModalTratamiento(datosConsulta.tratamiento)" style="background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4); padding: 8px 16px; font-size: 13px; font-weight: 600; border-radius: 6px; cursor: pointer;">✏️ Modificar Tratamiento</button>
+                    <button (click)="eliminarTratamiento(datosConsulta.tratamiento.id)" style="background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); padding: 8px 16px; font-size: 13px; font-weight: 600; border-radius: 6px; cursor: pointer;">🗑️ Dar de Baja</button>
+                </div>
+            </div>
+
+            <div *ngIf="datosConsulta.tiene_tratamiento && datosConsulta.tratamiento" style="display: flex; flex-direction: column; gap: 20px;">
+                <div style="background: #1f2937; padding: 24px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                    <h4 style="color: #10b981; margin: 0 0 15px 0; font-size: 22px;">💊 Fármaco Asignado: {{ datosConsulta.tratamiento.medicamento }}</h4>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; font-size: 14px;">
+                        <p style="margin:0;"><strong>Dosis:</strong> {{ datosConsulta.tratamiento.dosis || 'No definida' }}</p>
+                        <p style="margin:0;"><strong>Frecuencia:</strong> {{ datosConsulta.tratamiento.frecuencia || 'No definida' }}</p>
+                        <p style="margin:0;"><strong>Vía de Administración:</strong> {{ datosConsulta.tratamiento.via_administracion || 'No definida' }}</p>
+                        <p style="margin:0;"><strong>Hora de Inicio:</strong> {{ datosConsulta.tratamiento.hora_inicio || 'No definida' }}</p>
+                        <p style="margin:0;"><strong>Duración Total:</strong> {{ datosConsulta.tratamiento.duracion_dias || '0' }} días</p>
+                        <p style="margin:0;"><strong>Vigencia:</strong> Del {{ datosConsulta.tratamiento.fecha_inicio }} al {{ datosConsulta.tratamiento.fecha_final }}</p>
+                    </div>
+                    
+                    <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px;">
+                        <span style="color:#6b7280; font-size:12px; display:block;">ANOTACIONES Y OBSERVACIONES CLÍNICAS:</span>
+                        <p style="margin:5px 0 0 0; color:#e5e7eb; font-style:italic;">" {{ datosConsulta.tratamiento.observaciones || 'Sin especificaciones añadidas.' }} "</p>
+                    </div>
+                </div>
+
+                <div style="background: rgba(245, 158, 11, 0.02); border: 1px solid rgba(245, 158, 11, 0.1); padding: 20px; border-radius: 12px;">
+                    <h4 style="color: #f59e0b; margin-top: 0; margin-bottom: 15px; font-size: 13px; text-transform: uppercase;">🤖 Configuración de Telemetría y Automatización IoT</h4>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; text-align: center;">
+                        <div [style.background]="(datosConsulta.tratamiento.activar_alertas == 1 || datosConsulta.tratamiento.activar_alertas == true) ? 'rgba(16, 185, 129, 0.12)' : '#1f2937'" style="padding:12px; border-radius:8px;">
+                            <span style="color:#9ca3af; font-size:11px; display:block; margin-bottom:4px;">ALERTAS PASTILLERO</span>
+                            <strong [style.color]="(datosConsulta.tratamiento.activar_alertas == 1 || datosConsulta.tratamiento.activar_alertas == true) ? '#10b981' : '#ef4444'">{{ (datosConsulta.tratamiento.activar_alertas == 1 || datosConsulta.tratamiento.activar_alertas == true) ? 'ACTIVO ✔' : 'INACTIVO ❌' }}</strong>
+                        </div>
+                        <div [style.background]="(datosConsulta.tratamiento.notificar_incumplimiento == 1 || datosConsulta.tratamiento.notificar_incumplimiento == true) ? 'rgba(16, 185, 129, 0.12)' : '#1f2937'" style="padding:12px; border-radius:8px;">
+                            <span style="color:#9ca3af; font-size:11px; display:block; margin-bottom:4px;">AVISAR OLVIDOS</span>
+                            <strong [style.color]="(datosConsulta.tratamiento.notificar_incumplimiento == 1 || datosConsulta.tratamiento.notificar_incumplimiento == true) ? '#10b981' : '#ef4444'">{{ (datosConsulta.tratamiento.notificar_incumplimiento == 1 || datosConsulta.tratamiento.notificar_incumplimiento == true) ? 'ACTIVO ✔' : 'INACTIVO ❌' }}</strong>
+                        </div>
+                        <div [style.background]="(datosConsulta.tratamiento.monitoreo_tiempo_real == 1 || datosConsulta.tratamiento.monitoreo_tiempo_real == true) ? 'rgba(16, 185, 129, 0.12)' : '#1f2937'" style="padding:12px; border-radius:8px;">
+                            <span style="color:#9ca3af; font-size:11px; display:block; margin-bottom:4px;">TIEMPO REAL IoT</span>
+                            <strong [style.color]="(datosConsulta.tratamiento.monitoreo_tiempo_real == 1 || datosConsulta.tratamiento.monitoreo_tiempo_real == true) ? '#10b981' : '#ef4444'">{{ (datosConsulta.tratamiento.monitoreo_tiempo_real == 1 || datosConsulta.tratamiento.monitoreo_tiempo_real == true) ? 'MONITOREANDO 📡' : 'INACTIVO ❌' }}</strong>
+                        </div>
+                        <div [style.background]="(datosConsulta.tratamiento.alertar_familiar == 1 || datosConsulta.tratamiento.alertar_familiar == true) ? 'rgba(16, 185, 129, 0.12)' : '#1f2937'" style="padding:12px; border-radius:8px;">
+                            <span style="color:#9ca3af; font-size:11px; display:block; margin-bottom:4px;">ALERTA FAMILIARES</span>
+                            <strong [style.color]="(datosConsulta.tratamiento.alertar_familiar == 1 || datosConsulta.tratamiento.alertar_familiar == true) ? '#10b981' : '#ef4444'">{{ (datosConsulta.tratamiento.alertar_familiar == 1 || datosConsulta.tratamiento.alertar_familiar == true) ? 'ACTIVO ✔' : 'INACTIVO ❌' }}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="!datosConsulta.tiene_tratamiento || !datosConsulta.tratamiento" style="background: rgba(245, 158, 11, 0.05); border: 1px dashed #f59e0b; padding: 40px; border-radius: 12px; text-align: center;">
+                <p style="color: #f59e0b; margin: 0; font-size: 14px;">⚠️ El paciente no posee tratamientos o prescripciones farmacológicas activas cargadas en este médico.</p>
+            </div>
+        </div>
     </div>
+
+    <div *ngIf="mostrarModalHistorial" style="position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(4px);">
+        <div style="background: #111827; padding: 30px; border-radius: 16px; width: 750px; max-width: 95%; border: 1px solid rgba(255,255,255,0.1); max-height: 90vh; overflow-y: auto;">
+            <h3 style="color: #3b82f6; margin-top: 0; margin-bottom: 20px; font-size: 20px;">✏️ Formulario de Edición: Historial Clínico</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px;">
+                    <div><label style="font-size:11px; color:#9ca3af;">P. Arterial</label><input type="text" [(ngModel)]="historialEditando.presion_arterial" style="width:100%; background:#1f2937; border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:white; padding:8px; box-sizing:border-box;"></div>
+                    <div><label style="font-size:11px; color:#9ca3af;">F. Cardíaca</label><input type="text" [(ngModel)]="historialEditando.frecuencia_cardiaca" style="width:100%; background:#1f2937; border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:white; padding:8px; box-sizing:border-box;"></div>
+                    <div><label style="font-size:11px; color:#9ca3af;">Temperatura</label><input type="text" [(ngModel)]="historialEditando.temperatura" style="width:100%; background:#1f2937; border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:white; padding:8px; box-sizing:border-box;"></div>
+                    <div><label style="font-size:11px; color:#9ca3af;">Sat. Oxígeno</label><input type="text" [(ngModel)]="historialEditando.saturacion_oxigeno" style="width:100%; background:#1f2937; border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:white; padding:8px; box-sizing:border-box;"></div>
+                </div>
+                <div><label style="font-size:12px; color:#9ca3af;">Diagnóstico Definitivo</label><textarea [(ngModel)]="historialEditando.diagnostico_definitivo" rows="2" style="width:100%; background:#1f2937; border:1px solid rgba(255,255,255,0.1); color:white; padding:8px; border-radius:6px; box-sizing:border-box;"></textarea></div>
+                <div><label style="font-size:12px; color:#9ca3af;">Motivo de Consulta</label><textarea [(ngModel)]="historialEditando.motivo_consulta" rows="2" style="width:100%; background:#1f2937; border:1px solid rgba(255,255,255,0.1); color:white; padding:8px; border-radius:6px; box-sizing:border-box;"></textarea></div>
+                <div><label style="font-size:12px; color:#9ca3af;">Síntomas Principales</label><textarea [(ngModel)]="historialEditando.sintomas_principales" rows="2" style="width:100%; background:#1f2937; border:1px solid rgba(255,255,255,0.1); color:white; padding:8px; border-radius:6px; box-sizing:border-box;"></textarea></div>
+                <div><label style="font-size:12px; color:#9ca3af;">Antecedentes Médicos</label><textarea [(ngModel)]="historialEditando.antecedentes_medicos" rows="2" style="width:100%; background:#1f2937; border:1px solid rgba(255,255,255,0.1); color:white; padding:8px; border-radius:6px; box-sizing:border-box;"></textarea></div>
+                <div><label style="font-size:12px; color:#9ca3af;">Examen Físico</label><textarea [(ngModel)]="historialEditando.examen_fisico" rows="2" style="width:100%; background:#1f2937; border:1px solid rgba(255,255,255,0.1); color:white; padding:8px; border-radius:6px; box-sizing:border-box;"></textarea></div>
+                <div><label style="font-size:12px; color:#9ca3af;">Indicaciones Inmediatas</label><textarea [(ngModel)]="historialEditando.indicaciones_inmediatas" rows="2" style="width:100%; background:#1f2937; border:1px solid rgba(255,255,255,0.1); color:white; padding:8px; border-radius:6px; box-sizing:border-box;"></textarea></div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 25px;">
+                <button (click)="mostrarModalHistorial = false" style="background: #374151; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">Cancelar</button>
+                <button (click)="guardarHistorialEditado()" style="background: #3b82f6; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;">Actualizar Historial</button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="mostrarModalTratamiento" style="position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(4px);">
+        <div style="background: #111827; padding: 30px; border-radius: 16px; width: 600px; max-width: 95%; border: 1px solid rgba(255,255,255,0.1);">
+            <h3 style="color: #f59e0b; margin-top: 0; margin-bottom: 20px; font-size: 20px;">✏️ Editar Tratamiento Médico</h3>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <div><label style="font-size:12px; color:#9ca3af;">Medicamento</label><input type="text" [(ngModel)]="tratamientoEditando.medicamento" style="width:100%; background:#1f2937; border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:white; padding:8px; box-sizing:border-box;"></div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div><label style="font-size:12px; color:#9ca3af;">Dosis</label><input type="text" [(ngModel)]="tratamientoEditando.dosis" style="width:100%; background:#1f2937; border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:white; padding:8px; box-sizing:border-box;"></div>
+                    <div><label style="font-size:12px; color:#9ca3af;">Frecuencia</label><input type="text" [(ngModel)]="tratamientoEditando.frecuencia" style="width:100%; background:#1f2937; border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:white; padding:8px; box-sizing:border-box;"></div>
+                </div>
+                <div><label style="font-size:12px; color:#9ca3af;">Observaciones</label><textarea [(ngModel)]="tratamientoEditando.observaciones" rows="3" style="width:100%; background:#1f2937; border:1px solid rgba(255,255,255,0.1); color:white; padding:8px; border-radius:6px; box-sizing:border-box;"></textarea></div>
+                
+                <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
+                    <h5 style="color: #f59e0b; margin: 0 0 10px 0; font-size: 12px; text-transform: uppercase;">Ajustes Telemetría IoT</h5>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px;">
+                        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input type="checkbox" [(ngModel)]="tratamientoEditando.activar_alertas"> Activar Pastillero</label>
+                        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input type="checkbox" [(ngModel)]="tratamientoEditando.notificar_incumplimiento"> Avisar Olvidos</label>
+                        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input type="checkbox" [(ngModel)]="tratamientoEditando.monitoreo_tiempo_real"> Tiempo Real IoT</label>
+                        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;"><input type="checkbox" [(ngModel)]="tratamientoEditando.alertar_familiar"> Alerta Familiar</label>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 25px;">
+                <button (click)="mostrarModalTratamiento = false" style="background: #374151; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">Cancelar</button>
+                <button (click)="guardarTratamientoEditado()" style="background: #f59e0b; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+
 </div>
