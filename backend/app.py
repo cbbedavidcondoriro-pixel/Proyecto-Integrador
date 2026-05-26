@@ -1363,6 +1363,59 @@ def actualizar_perfil_farmacia(usuario_id):
         return jsonify({"success": False, "mensaje": "Error interno del servidor"}), 500
 
 
+@app.route('/api/paciente/login', methods=['POST'])
+def login_paciente():
+    try:
+        data = request.json
+        usuario = data.get('usuario')
+        password = data.get('password')
+
+        cursor = db.cursor(dictionary=True)
+        # Buscamos en la tabla pacientes usando sus credenciales
+        query = "SELECT id, nombre, ci, edad, sexo, telefono, usuario FROM pacientes WHERE usuario = %s AND password = %s"
+        cursor.execute(query, (usuario, password))
+        paciente = cursor.fetchone()
+        cursor.close()
+
+        if paciente:
+            return jsonify({
+                "success": True,
+                "mensaje": f"¡Bienvenido {paciente['nombre']}!",
+                "paciente": paciente
+            }), 200
+        else:
+            return jsonify({"success": False, "mensaje": "Usuario o contraseña incorrectos."}), 401
+            
+    except Exception as e:
+        print("❌ Error en login de paciente:", str(e))
+        return jsonify({"success": False, "mensaje": "Error interno del servidor."}), 500
+
+
+@app.route('/api/paciente/<int:paciente_id>/tratamientos', methods=['GET'])
+def obtener_tratamientos_paciente(paciente_id):
+    try:
+        cursor = db.cursor(dictionary=True)
+        # Jalamos los medicamentos recetados por el médico o farmacéutico
+        query = """
+            SELECT id, medicamento, dosis, frecuencia, via_administracion, 
+                   hora_inicio, duracion_dias, fecha_inicio, activar_alertas 
+            FROM tratamientos 
+            WHERE paciente_id = %s 
+            ORDER BY hora_inicio ASC
+        """
+        cursor.execute(query, (paciente_id,))
+        tratamientos = cursor.fetchall()
+        cursor.close()
+
+        return jsonify(tratamientos), 200
+        
+    except Exception as e:
+        print("❌ Error al obtener recetas del paciente:", str(e))
+        return jsonify({"success": False, "mensaje": "Error al conectar con el pastillero."}), 500
+
+
+
+
 
 
 
