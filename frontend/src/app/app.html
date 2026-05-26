@@ -1,6 +1,6 @@
-<div class="app-layout-container">
+<div class="app-layout-container" [class.is-paciente-mode]="esPaciente">
     
-    <aside *ngIf="isLoggedIn" class="sidebar no-print">
+    <aside *ngIf="isLoggedIn && !esPaciente" class="sidebar no-print">
         <div class="sidebar-top">
             
             <div class="logo" [style.color]="esFarmaceutico ? '#00bcff' : '#00ff9d'">
@@ -34,23 +34,23 @@
                 </li>
             </ul>
 
-<ul class="menu" *ngIf="esFarmaceutico">
-    <li routerLink="/dashboard-farmaceutico" routerLinkActive="active">
-        <span class="menu-icon">📊</span> Dashboard
-    </li>
-    <li routerLink="/buscar-paciente" routerLinkActive="active">
-        <span class="menu-icon">🔍</span> Buscar Pacientes
-    </li>
-    <li routerLink="/registrar-paciente" routerLinkActive="active">
-        <span class="menu-icon">➕</span> Registrar Paciente
-    </li>
-    <li routerLink="/registrar-tratamiento" routerLinkActive="active">
-        <span class="menu-icon">💊</span> Asignar Receta
-    </li>
-    <li routerLink="/configuracion-farmaceutico" routerLinkActive="active">
-        <span class="menu-icon">⚙️</span> Configuración
-    </li>
-</ul>
+            <ul class="menu" *ngIf="esFarmaceutico">
+                <li routerLink="/dashboard-farmaceutico" routerLinkActive="active">
+                    <span class="menu-icon">📊</span> Dashboard
+                </li>
+                <li routerLink="/buscar-paciente" routerLinkActive="active">
+                    <span class="menu-icon">🔍</span> Buscar Pacientes
+                </li>
+                <li routerLink="/registrar-paciente" routerLinkActive="active">
+                    <span class="menu-icon">➕</span> Registrar Paciente
+                </li>
+                <li routerLink="/registrar-tratamiento" routerLinkActive="active">
+                    <span class="menu-icon">💊</span> Asignar Receta
+                </li>
+                <li routerLink="/configuracion-farmaceutico" routerLinkActive="active">
+                    <span class="menu-icon">⚙️</span> Configuración
+                </li>
+            </ul>
         </div>
 
         <div class="logout-box" (click)="logout()">
@@ -58,7 +58,9 @@
         </div>
     </aside>
 
-    <main class="main-content-layout" [style.margin-left]="isLoggedIn ? '260px' : '0px'" [style.width]="isLoggedIn ? 'calc(100% - 260px)' : '100%'">
+    <main class="main-content-layout" 
+          [style.margin-left]="(isLoggedIn && !esPaciente) ? '260px' : '0px'" 
+          [style.width]="(isLoggedIn && !esPaciente) ? 'calc(100% - 260px)' : '100%'">
         <router-outlet></router-outlet>
     </main>
 

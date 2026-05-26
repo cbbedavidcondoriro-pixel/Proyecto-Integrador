@@ -1,0 +1,312 @@
+/* DISEÑO BASE CORPORATIVO */
+.welcome-wrapper {
+  background-color: #0a1128;
+  background-image: linear-gradient(135deg, #0a1128 0%, #101e42 100%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: #f1f5f9;
+  padding: 70px 24px 30px 24px;
+  box-sizing: border-box;
+}
+
+/* BARRA SUPERIOR DE RED */
+.top-announcement-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #1e293b;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  font-size: 13px;
+  color: #cbd5e1;
+  box-sizing: border-box;
+  z-index: 10;
+}
+
+.status-pill-online {
+  background: rgba(14, 165, 233, 0.15);
+  color: #38bdf8;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid rgba(14, 165, 233, 0.2);
+}
+
+.welcome-container {
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+  margin-top: 20px;
+}
+
+/* SECCIÓN HERO (IMAGEN + TEXTO LATERAL) */
+.hero-section {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 40px;
+  align-items: center;
+  background: rgba(17, 30, 59, 0.6);
+  padding: 40px;
+  border-radius: 24px;
+  border: 1px solid rgba(56, 189, 248, 0.05);
+  text-align: left;
+}
+
+.badge-iot {
+  background: rgba(56, 189, 248, 0.08);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.15);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 30px;
+  letter-spacing: 1.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  background-color: #38bdf8;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #38bdf8;
+  animation: beacon 2s infinite;
+}
+
+.hero-text-content h1 {
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0 0 15px 0;
+  color: #ffffff;
+}
+
+.hero-text-content p {
+  color: #94a3b8;
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0 0 30px 0;
+}
+
+/* CONTENEDOR DE LA IMAGEN EXTERNA */
+.hero-image-container {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+  border: 2px solid rgba(255, 255, 255, 0.05);
+}
+
+.medical-professional-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.image-overlay-card {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.card-stat {
+  color: #38bdf8;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.card-label {
+  color: #cbd5e1;
+  font-size: 11px;
+}
+
+/* BOTÓN DE ACCIÓN */
+.btn-start {
+  background-color: #38bdf8;
+  color: #0a1128;
+  border: none;
+  padding: 18px 50px;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.25s ease-out;
+  box-shadow: 0 4px 20px rgba(56, 189, 248, 0.3);
+}
+
+.btn-start:hover {
+  background-color: #0ea5e9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(14, 165, 233, 0.4);
+}
+
+/* GRILLA DE CARACTERÍSTICAS (3 Columnas Horizontales) */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.feature-card {
+  background: #111e3b;
+  padding: 30px 24px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  text-align: center;
+  transition: border-color 0.25s;
+}
+
+.feature-card:hover {
+  border-color: rgba(56, 189, 248, 0.2);
+}
+
+.card-icon-box {
+  font-size: 32px;
+  margin-bottom: 15px;
+}
+
+.feature-card h3 {
+  font-size: 17px;
+  color: #ffffff;
+  margin: 0 0 10px 0;
+  font-weight: 600;
+}
+
+.feature-card p {
+  color: #94a3b8;
+  font-size: 13.5px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* SECCIÓN DE HARDWARE IoT */
+.hardware-status-section {
+  background: #0f172a;
+  padding: 30px;
+  border-radius: 20px;
+  border: 1px dashed rgba(255, 255, 255, 0.05);
+  text-align: left;
+}
+
+.status-header h3 {
+  margin: 0 0 5px 0;
+  font-size: 18px;
+  color: #fff;
+}
+
+.status-header p {
+  margin: 0 0 25px 0;
+  color: #64748b;
+  font-size: 13.5px;
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: #1e293b;
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.led-green { background: #10b981; box-shadow: 0 0 10px #10b981; }
+.led-blue { background: #3b82f6; box-shadow: 0 0 10px #3b82f6; }
+.led-orange { background: #f59e0b; box-shadow: 0 0 10px #f59e0b; }
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-info strong { font-size: 13.5px; color: #f8fafc; }
+.item-info span { font-size: 11.5px; color: #94a3b8; }
+
+/* REGLAS INFERIORES / PIE */
+.welcome-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 25px;
+}
+
+.welcome-footer p {
+  color: #475569;
+  font-size: 12px;
+  margin: 0 0 6px 0;
+}
+
+.welcome-footer .footer-note {
+  color: #64748b;
+  font-weight: 600;
+}
+
+/* RESPONSIVE: COMPACTACIÓN VERTICAL (MÓVIL PARADO) */
+@media (max-width: 900px) {
+  .hero-section {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding: 25px;
+  }
+  .hero-text-content h1 { font-size: 30px; }
+  .btn-start { width: 100%; }
+  
+  .features-grid, .status-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .hero-image-container {
+    height: 200px;
+  }
+}
+
+/* SECCIÓN DE ANIMACIONES */
+.animate-fade { animation: fadeInUp 0.4s ease-out both; }
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes beacon {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.5; }
+}

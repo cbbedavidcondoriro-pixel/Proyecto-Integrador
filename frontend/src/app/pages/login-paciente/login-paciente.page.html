@@ -1,43 +1,38 @@
-<ion-content [fullscreen]="true" class="login-bg">
-  <div class="login-container">
-    
-    <div class="logo-area">
-      <div class="iot-pulse">💊</div>
-      <h1>SmartMediIoT</h1>
-      <p>Pastillero Inteligente & Monitoreo Médico</p>
-    </div>
-
-    <ion-card class="custom-card">
-      <ion-card-header>
-        <ion-card-title class="ion-text-center">Portal del Paciente</ion-card-title>
-      </ion-card-header>
-
-      <ion-card-content>
-        <form (ngSubmit)="iniciarSesion()">
-          
-          <div class="input-wrapper">
-            <label>👤 Nombre de Usuario</label>
-            <input type="text" [(ngModel)]="usuario" name="usuario" placeholder="Ej. david123" class="mobile-input">
-          </div>
-
-          <div class="input-wrapper">
-            <label>🔐 Contraseña del Dispositivo</label>
-            <input type="password" [(ngModel)]="password" name="password" placeholder="••••••••" class="mobile-input">
-          </div>
-
-          <ion-button type="submit" expand="block" class="btn-login" color="success">
-            Conectar con mi Pastillero
-          </ion-button>
-
-        </form>
-      </ion-card-content>
-    </ion-card>
-
-    <div class="footer-note">
-      <p>Si no recuerda sus credenciales de acceso IoT, solicítelas en la ventanilla de farmacia de la clínica.</p>
-    </div>
-
+<div class="login-mobile-container">
+  
+  <div class="logo-section">
+    <div class="pulse-icon">💊</div>
+    <h2>SmartMediIoT</h2>
+    <p>Portal de Monitoreo para Pacientes</p>
   </div>
 
-  <ion-loading [isOpen]="cargando" message="Sincronizando con la red médica..."></ion-loading>
-</ion-content>
+  <div class="login-card">
+    <h3>Iniciar Sesión IoT</h3>
+    <p class="subtitle">Introduce las credenciales asignadas a tu pastillero</p>
+
+    <form (ngSubmit)="iniciarSesion()">
+      
+      <div class="form-group">
+        <label>👤 Nombre de Usuario</label>
+        <input type="text" [(ngModel)]="usuario" name="usuario" placeholder="Ej. david123" class="input-mobile">
+      </div>
+
+      <div class="form-group">
+        <label>🔐 Contraseña</label>
+        <input type="password" [(ngModel)]="password" name="password" placeholder="••••••••" class="input-mobile">
+      </div>
+
+      <button type="submit" class="btn-submit-mobile" [disabled]="cargando">
+        {{ cargando ? 'Sincronizando...' : 'Conectar con mi Pastillero' }}
+      </button>
+
+    </form>
+  </div>
+
+  <div *ngIf="cargando" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Sincronizando con la red médica...</p>
+  </div>
+
+  <p class="help-footer">¿No tienes cuenta? Solicita tu acceso en el área de farmacia de la clínica.</p>
+</div>

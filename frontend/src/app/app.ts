@@ -7,45 +7,65 @@ import { filter } from 'rxjs/operators';
   selector: 'app-root',
   standalone: true,
   imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
-  templateUrl: './app.html', /* 👈 Se mantiene tu archivo de plantilla */
+  templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
 export class App { 
   isLoggedIn = false;
-  esFarmaceutico = false; // 👈 Nuestra nueva bandera inteligente
+  esFarmaceutico = false; 
+  esPaciente = false; // 👈 Nueva bandera inteligente para el paciente
 
   constructor(private router: Router) {
-    // Detecta la ruta para ocultar el menú en el Home/Login y verificar el Rol
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
       
-      // 1. Lógica original: Si está en la raíz, login o registro, ocultamos el sidebar
-      if (event.url === '/' || event.url === '/login' || event.url === '/register') {
+      const urlActual = event.url;
+
+      // 1. Ocultar el sidebar inmediatamente si está en las pantallas del paciente o accesos públicos
+      if (
+        urlActual === '/' || 
+        urlActual === '/login' || 
+        urlActual === '/register' || 
+        urlActual === '/inicio-paciente' || 
+        urlActual === '/login-paciente'
+      ) {
         this.isLoggedIn = false;
         this.esFarmaceutico = false;
-      } else {
+        this.esPaciente = urlActual.includes('paciente');
+        return;
+      }
+
+      // 2. Si está en un panel interno, leemos las sesiones para estructurar el menú
+      const user = localStorage.getItem('usuario');
+      const pacienteSesion = localStorage.getItem('paciente_sesion');
+
+      if (pacienteSesion) {
+        // Si hay sesión de paciente, escondemos barra de médicos
+        this.isLoggedIn = false;
+        this.esFarmaceutico = false;
+        this.esPaciente = true;
+      } else if (user) {
+        this.esPaciente = false;
         this.isLoggedIn = true;
         
-        // 2. Nueva lógica: Leer el rol desde el localStorage para adaptar el menú
-        const user = localStorage.getItem('usuario');
-        if (user) {
-          const usuarioObj = JSON.parse(user);
-          const rol = (usuarioObj.rol || '').toLowerCase().trim();
-          
-          // Si el rol es farmaceutico o farmacia, activamos su menú especial
-          this.esFarmaceutico = (rol === 'farmaceutico' || rol === 'farmacia');
-          console.log(`[Sidebar Central] Rol detectado: ${rol} | ¿Es Farmacia?: ${this.esFarmaceutico}`);
-        }
+        const usuarioObj = JSON.parse(user);
+        const rol = (usuarioObj.rol || '').toLowerCase().trim();
+        
+        this.esFarmaceutico = (rol === 'farmaceutico' || rol === 'farmacia');
+        console.log(`[Sidebar] Rol: ${rol} | ¿Es Farmacia?: ${this.esFarmaceutico}`);
+      } else {
+        this.isLoggedIn = false;
       }
 
     });
   }
 
   logout() {
-    localStorage.clear(); // 👈 Limpiamos el localStorage para borrar los datos del usuario
+    localStorage.clear(); 
     this.isLoggedIn = false;
     this.esFarmaceutico = false;
+    this.esPaciente = false;
     this.router.navigate(['/']);
   }
 }

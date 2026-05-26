@@ -9,24 +9,24 @@ import { Patients } from './pages/patients/patients';
 import { Treatments } from './pages/treatments/treatments'; 
 import { ConsultasComponent } from './pages/consultas/consultas';
 import { ConfiguracionComponent } from './pages/configuracion/configuracion';
-
 import { BuscarPaciente } from './pages/buscar-paciente/buscar-paciente';
-
 import { RegistrarPaciente } from './pages/registrar-paciente/registrar-paciente';
-
 import { RegistrarTratamiento } from './pages/registrar-tratamiento/registrar-tratamiento';
-
 import { ConfiguracionFarmaceutico } from './pages/configuracion-farmaceutico/configuracion-farmaceutico';
 
-// Nueva importación del módulo de Historial Clínico y Reportes
+// Módulo de Historial Clínico y Reportes
 import { HistorialClinicoComponent } from './pages/historial-clinico/historial-clinico';
 import { ReportesComponent } from './pages/reportes/reportes';
 
-// 🚀 NUEVA VISTA: Importación de la pantalla dedicada al Listado Completo
+// Vista dedicada al Listado Completo de Pacientes
 import { PatientsList } from './pages/patients/patients-list'; 
 
-// 💊 NUEVA VISTA FARMACIA: Importación de la pantalla exclusiva para el Farmacéutico
+// Vista exclusiva para el Dashboard del Farmacéutico
 import { DashboardFarmaceutico } from './pages/dashboard-farmaceutico/dashboard-farmaceutico';
+
+// 🚀 NUEVAS IMPORTACIONES EXCLUSIVAS PARA EL PACIENTE SINKRONIZADO CON IOT
+import { InicioPaciente } from './pages/inicio-paciente/inicio-paciente';
+import { LoginPacientePage } from './pages/login-paciente/login-paciente.page';
 
 export const routes: Routes = [
     {
@@ -46,15 +46,15 @@ export const routes: Routes = [
         component: Dashboard
     },
     {
-        path: 'dashboard-farmaceutico', // 👈 Nueva ruta oficial para el módulo del farmacéutico global
+        path: 'dashboard-farmaceutico', 
         component: DashboardFarmaceutico
     },
     {
-        path: 'patients', // 👈 Aquí se queda solo el formulario de Registro
+        path: 'patients', 
         component: Patients
     },
     {
-        path: 'patients-list', // 👈 Nueva ruta oficial para la tabla completa de pacientes
+        path: 'patients-list', 
         component: PatientsList
     },
     {
@@ -78,23 +78,37 @@ export const routes: Routes = [
         component: ConfiguracionComponent 
     },
     {
-    path: 'buscar-paciente',
-    component: BuscarPaciente
+        path: 'buscar-paciente',
+        component: BuscarPaciente
     },
     {
-    path: 'registrar-paciente',
-    component: RegistrarPaciente
+        path: 'registrar-paciente',
+        component: RegistrarPaciente
     },
     {
-    path: 'registrar-tratamiento',
-    component: RegistrarTratamiento
+        path: 'registrar-tratamiento',
+        component: RegistrarTratamiento
     },
     {
-    path: 'configuracion-farmaceutico',
-    component: ConfiguracionFarmaceutico
-   },
+        path: 'configuracion-farmaceutico',
+        component: ConfiguracionFarmaceutico
+    },
+
+    // 🔔 RUTA DE BIENVENIDA EXCLUSIVA PARA PACIENTES (VISTA MÓVIL)
     {
-        path: '**', // 👈 Comodín: si escriben cualquier ruta inválida, regresa al Home seguro
+        path: 'inicio-paciente',
+        component: InicioPaciente
+    },
+
+    // 🔐 INICIO DE SESIÓN EXCLUSIVO PARA PACIENTES
+    {
+        path: 'login-paciente',
+        component: LoginPacientePage
+    },
+
+    // 🛑 COMODÍN GLOBAL (Siempre debe ser la última ruta del arreglo)
+    {
+        path: '**', 
         redirectTo: ''
     }
 ];
