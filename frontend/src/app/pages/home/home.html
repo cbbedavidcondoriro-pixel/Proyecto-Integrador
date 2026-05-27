@@ -1,168 +1,118 @@
 <nav class="navbar">
-
     <div class="logo">
-        🏥 SmartMediIoT
+        <span class="brand-icon">🏥</span> SmartMedi-IoT
     </div>
 
     <div class="menu">
-
-        <a href="#">
-            Inicio
-        </a>
-
-        <a routerLink="/login">
-            Ingresar
-        </a>
-
-        <a routerLink="/register">
-            Registrarse
-        </a>
-
+        <a href="#" class="active">Inicio</a>
+        <a routerLink="/login" class="nav-btn-login">Ingresar</a>
+        <a routerLink="/register" class="nav-btn-register">Registrarse</a>
     </div>
-
 </nav>
 
-<section class="hero">
-
+<section id="hero-section" class="hero">
     <div class="overlay"></div>
 
     <div class="hero-content">
-
-        <h1>
-            Sistema Inteligente
-            de Gestión Médica
-        </h1>
+        <h1>Sistema Inteligente<br><span>de Gestión Médica</span></h1>
 
         <p>
-
-            Plataforma moderna para clínicas,
-            hospitales y consultorios médicos,
-            enfocada en tratamientos inteligentes,
-            monitoreo de pacientes y recordatorios
-            automáticos mediante IoT.
-
+            Plataforma moderna para clínicas, hospitales y consultorios médicos,
+            enfocada en tratamientos inteligentes, monitoreo de pacientes y
+            recordatorios automáticos mediante tecnología IoT avanzada.
         </p>
 
         <div class="buttons">
-
             <button routerLink="/login" class="btn-green">
                 Ingresar al Sistema
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
             </button>
 
             <button routerLink="/register" class="btn-dark">
                 Crear Cuenta
             </button>
-
         </div>
-
     </div>
-
 </section>
 
-<section class="presentation">
-
+<section id="presentation-section" class="presentation">
     <div class="presentation-left">
-
-        <h2>
-            Transformando la Gestión Médica
-        </h2>
-
+        <span class="tag-badge">Innovación Tecnológica</span>
+        <h2>Transformando la<br>Gestión Médica Colectiva</h2>
+        
         <p>
-
-            SmartMediIoT permite administrar
-            pacientes, tratamientos médicos,
-            medicamentos y monitoreo inteligente
-            desde una sola plataforma moderna.
-
+            SmartMedi-IoT permite administrar expedientes de pacientes, dosificación de tratamientos médicos, 
+            control estricto de inventarios farmacéuticos y monitoreo inteligente de signos desde una interfaz centralizada y veloz.
         </p>
 
         <p>
-
-            Nuestro sistema está diseñado para
-            clínicas, dentistas, farmacias y
-            centros médicos que buscan optimizar
-            la atención médica con tecnología.
-
+            Nuestro ecosistema modular está finamente diseñado para clínicas privadas, consultorios odontológicos, 
+            redes de farmacias y centros de alta complejidad médica que buscan dar el salto hacia la medicina del futuro.
         </p>
-
     </div>
 
     <div class="presentation-right">
-
-        <iframe
-            src="https://www.youtube.com/embed/tGpOUj-9-yc"
-            title="Video"
-            frameborder="0"
-            allowfullscreen>
-        </iframe>
-
+        <div class="video-container">
+            <iframe
+                src="https://www.youtube.com/embed/tGpOUj-9-yc"
+                title="Presentación Corporativa SmartMedi"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+        </div>
     </div>
-
 </section>
 
 <section class="cards-section">
-
-    <div class="card">
-
-        <div class="icon">
-            👨‍⚕️
-        </div>
-
-        <h3>
-            Gestión de Pacientes
-        </h3>
-
-        <p>
-            Registro y administración completa
-            de historiales médicos y tratamientos.
-        </p>
-
+    <div class="section-title-wrapper">
+        <span class="sub-title">Servicios Integrales</span>
+        <h2>Módulos Especializados</h2>
     </div>
 
-    <div class="card">
-
-        <div class="icon">
-            💊
+    <div class="cards-container">
+        <div class="card">
+            <div class="card-border-glow"></div>
+            <div class="icon">👨‍⚕️</div>
+            <h3>Gestión de Pacientes</h3>
+            <p>Registro centralizado, trazabilidad de historiales médicos en tiempo real y asignación precisa de tratamientos dinámicos.</p>
         </div>
 
-        <h3>
-            Recordatorios Inteligentes
-        </h3>
-
-        <p>
-            Alertas automáticas para mejorar
-            el cumplimiento del tratamiento.
-        </p>
-
-    </div>
-
-    <div class="card">
-
-        <div class="icon">
-            📊
+        <div class="card">
+            <div class="card-border-glow"></div>
+            <div class="icon">💊</div>
+            <h3>Alertas Inteligentes</h3>
+            <p>Algoritmos automáticos de recordatorios dirigidos a pacientes para maximizar la efectividad del cumplimiento terapéutico.</p>
         </div>
 
-        <h3>
-            Monitoreo en Tiempo Real
-        </h3>
-
-        <p>
-            Visualización avanzada del estado
-            de pacientes y tratamientos médicos.
-        </p>
-
+        <div class="card">
+            <div class="card-border-glow"></div>
+            <div class="icon">📊</div>
+            <h3>Monitoreo IoT</h3>
+            <p>Visualización avanzada de telemetría de salud y analíticas críticas estructuradas para médicos y farmacéuticos.</p>
+        </div>
     </div>
-
 </section>
 
+<div class="scroll-tracker" [class.is-scrolled]="estaScrolled">
+    <a (click)="ejecutarScrollAccion()" class="scroll-link" href="javascript:void(0)">
+        <span class="scroll-text">{{ estaScrolled ? 'Subir Arriba' : 'Deslizar Abajo' }}</span>
+        
+        <div class="mouse-icon" *ngIf="!estaScrolled">
+            <div class="wheel"></div>
+        </div>
+
+        <div class="arrow-up-icon" *ngIf="estaScrolled">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+        </div>
+    </a>
+</div>
+
 <footer>
-
-    <h2>
-        🏥 SmartMediIoT
-    </h2>
-
-    <p>
-        Plataforma Inteligente de Gestión Médica
-    </p>
-
+    <div class="footer-content">
+        <h2>🏥 SmartMedi-IoT</h2>
+        <p>Plataforma Inteligente de Soporte y Gestión Médica Continua</p>
+        <div class="footer-divider"></div>
+        <p class="copyright">&copy; 2026 SmartMedi-IoT. Todos los derechos reservados.</p>
+    </div>
 </footer>

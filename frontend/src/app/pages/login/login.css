@@ -19,7 +19,7 @@
 }
 
 /* ==========================================================================
-   2. CONTENEDOR DE LA PÁGINA (Fondo con Imagen y Centrado Absoluto)
+   2. CONTENEDOR DE LA PÁGINA (Con centrado absoluto)
    ========================================================================== */
 .login-container {
     position: fixed;
@@ -27,49 +27,62 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: url('https://images.unsplash.com/photo-1584982751601-97dcc096659c?q=80&w=2070') no-repeat center center;
-    background-size: cover;
     display: flex;
-    justify-content: center; /* Centrado horizontal real */
-    align-items: center;     /* Centrado vertical real */
+    justify-content: center;
+    align-items: center;     
     box-sizing: border-box;
     padding: 20px;
+    overflow: hidden;
+    background-color: #0b0f19; /* Fondo de seguridad oscuro */
 }
 
-/* CAPA OSCURA PREMIUM DE FONDO */
+/* 🌟 ESTILOS DE VIDEO MEJORADOS (Capa al fondo absoluto) */
+.background-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    pointer-events: none; /* Evita que el usuario interactúe con el reproductor */
+}
+
+/* CAPA OSCURA PREMIUM SOBRE EL VIDEO */
 .overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(11, 15, 25, 0.8) 0%, rgba(11, 15, 25, 0.95) 100%);
-    z-index: 1;
+    background: radial-gradient(circle, rgba(11, 15, 25, 0.65) 0%, rgba(11, 15, 25, 0.85) 100%);
+    z-index: 2;
 }
 
 /* ==========================================================================
-   3. TARJETA DE INGRESO (LOGIN CARD)
+   3. TARJETA DE INGRESO (LOGIN CARD - Transparencia y Cristal Esmerilado)
    ========================================================================== */
 .login-card {
     width: 1050px;
     max-width: 95%;
     min-height: 620px;
-    background: rgba(17, 24, 39, 0.75);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    /* 🌟 Transparencia equilibrada para que se aprecie el video de fondo perfectamente */
+    background: rgba(17, 24, 39, 0.6);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
     border-radius: 28px;
     overflow: hidden;
     display: grid;
     grid-template-columns: 1.1fr 0.9fr;
     position: relative;
-    z-index: 2;
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    z-index: 3; /* Forzado por encima del video y del overlay */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
 }
 
 /* PANEL IZQUIERDO (Identidad SmartMediIoT) */
 .left {
-    background: linear-gradient(135, rgba(16, 185, 129, 0.12), rgba(0, 0, 0, 0.4));
+    background: linear-gradient(135, rgba(16, 185, 129, 0.08), rgba(0, 0, 0, 0.45));
     padding: 60px;
     display: flex;
     flex-direction: column;
@@ -78,7 +91,7 @@
 }
 
 .left h1 {
-    color: #10b981; /* Verde esmeralda médico unificado */
+    color: #10b981;
     font-size: 46px;
     margin-bottom: 24px;
     font-weight: 800;
@@ -86,7 +99,7 @@
 }
 
 .left p {
-    color: #9ca3af;
+    color: #cbd5e1;
     font-size: 19px;
     line-height: 1.7;
     font-weight: 400;
@@ -98,7 +111,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background: rgba(15, 23, 42, 0.4);
+    background: rgba(15, 23, 42, 0.25);
 }
 
 .right h2 {
@@ -134,10 +147,50 @@
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* CONTENEDOR RELATIVO PARA ALINEAR EL OJO */
+.password-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input {
+    padding-right: 50px;
+}
+
 .input-group input:focus {
     border-color: #10b981;
     background-color: #1f2937;
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+/* ESTILO PROFESIONAL DEL BOTÓN CON OJITOS SVGS */
+.toggle-password {
+    position: absolute;
+    right: 16px;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #9ca3af !important;
+    width: auto !important;
+    padding: 0 !important;
+    cursor: pointer;
+    transform: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.toggle-password:hover {
+    color: #10b981 !important;
+    background: none !important;
+}
+
+.toggle-password svg {
+    width: 20px;
+    height: 20px;
 }
 
 /* CHECKBOX Y OPCIONES SECUNDARIAS */
@@ -177,7 +230,7 @@
 }
 
 /* BOTÓN DE ENTRADA PRINCIPAL */
-button {
+.btn-submit {
     width: 100%;
     padding: 16px;
     background: #10b981;
@@ -191,13 +244,13 @@ button {
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
 }
 
-button:hover {
+.btn-submit:hover {
     background: #34d399;
     transform: translateY(-1px);
     box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
 }
 
-button:active {
+.btn-submit:active {
     transform: translateY(1px);
 }
 
@@ -205,7 +258,7 @@ button:active {
 .register-link {
     margin-top: 35px;
     text-align: center;
-    color: #6b7280;
+    color: #9ca3af;
     font-size: 14px;
 }
 
@@ -232,7 +285,7 @@ button:active {
     }
 
     .left {
-        display: none; /* Esconde info médica en pantallas chicas */
+        display: none;
     }
 
     .right {

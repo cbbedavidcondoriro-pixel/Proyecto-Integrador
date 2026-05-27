@@ -31,10 +31,11 @@ export class App implements OnInit { // 🌟 Tu clase original 'App' intacta
   }
 
   evaluarRutaYMenu(url: string) {
-    // 🔒 SI ES RUTA DE PACIENTE (Inicio, Login o Dashboard): Ocultamos totalmente la barra administrativa
-    if (url === '/' || url === '/inicio-paciente' || url.includes('/login-paciente') || url.includes('/dashboard-paciente')) {
+    // 🔒 SI ES RUTA PÚBLICA, DE PACIENTE O DE REGISTRO: Ocultamos totalmente la barra administrativa
+    // 🌟 SE AÑADIÓ: url.includes('/register') para limpiar la pantalla de creación de cuentas
+    if (url === '/' || url === '/inicio-paciente' || url.includes('/login-paciente') || url.includes('/dashboard-paciente') || url.includes('/register')) {
       this.esPaciente = true;   
-      this.isLoggedIn = false;  // Al ser false, el *ngIf del <aside> no se activará para el paciente
+      this.isLoggedIn = false;  // Al ser false, el *ngIf del <aside> no se activará
       return;
     }
 

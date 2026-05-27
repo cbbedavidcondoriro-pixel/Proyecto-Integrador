@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common'; // 🌟 REQUISITO CRUCIAL: Para que funcione el *ngIf
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, CommonModule], // 🌟 AQUÍ AGREGADO: CommonModule soluciona el error NG0303
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
@@ -17,7 +18,10 @@ export class Login {
   usuario = {
     usuario: '',
     password: ''
-  }
+  };
+
+  // 🌟 VARIABLE DE CONTROL: false = oculto (password), true = visible (text)
+  mostrarPassword: boolean = false;
 
   constructor(
     private http: HttpClient,
@@ -25,7 +29,6 @@ export class Login {
   ) {}
 
   login() {
-    // Validación básica inicial
     if (!this.usuario.usuario || !this.usuario.password) {
       alert('Completa todos los campos');
       return;
@@ -37,14 +40,11 @@ export class Login {
         if (res.success) {
           alert('Bienvenido ' + res.usuario.usuario);
 
-          // 💾 Guardar sesión de manera persistente en formato JSON string
           localStorage.setItem('usuario', JSON.stringify(res.usuario));
 
-          // 🔍 Extraemos el rol del objeto y lo normalizamos a minúsculas sin espacios
           const rolUsuario = (res.usuario.rol || '').toLowerCase().trim();
           console.log('🔑 [DEBUG LOGIN] Rol detectado del usuario:', rolUsuario);
 
-          // 🧭 Redirección Condicional Inteligente
           if (rolUsuario === 'farmaceutico' || rolUsuario === 'farmacia') {
             console.log('✈️ Redirigiendo al Módulo de Farmacia Avanzado...');
             this.router.navigate(['/dashboard-farmaceutico']);
