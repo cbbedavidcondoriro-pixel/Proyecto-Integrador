@@ -14,6 +14,8 @@ import { RegistrarPaciente } from './pages/registrar-paciente/registrar-paciente
 import { RegistrarTratamiento } from './pages/registrar-tratamiento/registrar-tratamiento';
 import { ConfiguracionFarmaceutico } from './pages/configuracion-farmaceutico/configuracion-farmaceutico';
 
+import { DashboardPaciente } from './pages/dashboard-paciente/dashboard-paciente';
+
 // Módulo de Historial Clínico y Reportes
 import { HistorialClinicoComponent } from './pages/historial-clinico/historial-clinico';
 import { ReportesComponent } from './pages/reportes/reportes';
@@ -104,6 +106,10 @@ export const routes: Routes = [
     {
         path: 'login-paciente',
         component: LoginPacientePage
+    },
+    {
+    path: 'dashboard-paciente',
+    component: DashboardPaciente
     },
 
     // 🛑 COMODÍN GLOBAL (Siempre debe ser la última ruta del arreglo)

@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-registrar-paciente',
   standalone: true,
-  imports: [RouterLink, CommonModule, HttpClientModule, FormsModule],
+  imports: [CommonModule, HttpClientModule, FormsModule],
   templateUrl: './registrar-paciente.html',
   styleUrl: './registrar-paciente.css'
 })

@@ -1,38 +1,63 @@
 <div class="login-mobile-container">
   
-  <div class="logo-section">
-    <div class="pulse-icon">💊</div>
-    <h2>SmartMediIoT</h2>
-    <p>Portal de Monitoreo para Pacientes</p>
-  </div>
+  <header class="logo-section">
+    <div class="pulse-icon-container">
+      <span class="pulse-ring"></span>
+      <div class="main-icon">🧬</div>
+    </div>
+    <h2>Bienvenido</h2>
+    <p>PortalPacientes</p>
+  </header>
 
   <div class="login-card">
-    <h3>Iniciar Sesión IoT</h3>
-    <p class="subtitle">Introduce las credenciales asignadas a tu pastillero</p>
+    <h3>Login Paciente</h3>
+    <p class="subtitle">Ingrese las credenciales correctas</p>
 
-    <form (ngSubmit)="iniciarSesion()">
+    <div>
       
       <div class="form-group">
-        <label>👤 Nombre de Usuario</label>
-        <input type="text" [(ngModel)]="usuario" name="usuario" placeholder="Ej. david123" class="input-mobile">
+        <label for="input-user">👤 NOMBRE DE USUARIO</label>
+        <input 
+          id="input-user"
+          type="text" 
+          [(ngModel)]="usuario" 
+          name="usuario" 
+          placeholder="Ej. david" 
+          class="input-mobile"
+          autocomplete="username"
+          required>
       </div>
 
       <div class="form-group">
-        <label>🔐 Contraseña</label>
-        <input type="password" [(ngModel)]="password" name="password" placeholder="••••••••" class="input-mobile">
+        <label for="input-pass">🔐 CONTRASEÑA ASIGNADA</label>
+        <input 
+          id="input-pass"
+          type="password" 
+          [(ngModel)]="password" 
+          name="password" 
+          placeholder="••••••••" 
+          class="input-mobile"
+          autocomplete="current-password"
+          required>
       </div>
 
-      <button type="submit" class="btn-submit-mobile" [disabled]="cargando">
-        {{ cargando ? 'Sincronizando...' : 'Conectar con mi Pastillero' }}
+      <button type="button" class="btn-submit-mobile" [disabled]="cargando" (click)="iniciarSesion()">
+        <span *ngIf="!cargando">Ingresar al Sistema ➔</span>
+        <span *ngIf="cargando">Sincronizando Canal...</span>
       </button>
 
-    </form>
+    </div>
   </div>
 
   <div *ngIf="cargando" class="loading-overlay">
-    <div class="spinner"></div>
-    <p>Sincronizando con la red médica...</p>
+    <div class="spinner-box">
+      <div class="spinner"></div>
+    </div>
+    <p>Estableciendo enlace seguro con la base de datos clínica...</p>
   </div>
 
-  <p class="help-footer">¿No tienes cuenta? Solicita tu acceso en el área de farmacia de la clínica.</p>
+  <footer class="help-footer">
+    <p>¿No cuenta con credenciales de red local? <br>Solicite la activación en el departamento de Farmacia.</p>
+  </footer>
+
 </div>

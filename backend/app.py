@@ -1367,51 +1367,175 @@ def actualizar_perfil_farmacia(usuario_id):
 def login_paciente():
     try:
         data = request.json
-        usuario = data.get('usuario')
-        password = data.get('password')
+        print("📥 Datos de login recibidos en Flask:", data)
+        
+        usuario_req = str(data.get('usuario', '')).strip()
+        password_req = str(data.get('password', '')).strip()
+
+        if not usuario_req or not password_req:
+            return jsonify({"success": False, "mensaje": "Faltan ingresar datos obligatorios."}), 200
 
         cursor = db.cursor(dictionary=True)
-        # Buscamos en la tabla pacientes usando sus credenciales
-        query = "SELECT id, nombre, ci, edad, sexo, telefono, usuario FROM pacientes WHERE usuario = %s AND password = %s"
-        cursor.execute(query, (usuario, password))
+        
+        # SQL adaptativo para comparar cadenas y números sin romper la consulta
+        query = """
+            SELECT id, nombre, ci, edad, sexo, telefono, usuario, rol 
+            FROM pacientes 
+            WHERE LOWER(usuario) = LOWER(%s) AND CAST(password AS CHAR) = %s
+        """
+        cursor.execute(query, (usuario_req, password_req))
         paciente = cursor.fetchone()
         cursor.close()
 
+        print("🔍 Resultado de búsqueda en MySQL para paciente:", paciente)
+
         if paciente:
+            # Si los datos existen en la tabla, autorizamos el acceso
             return jsonify({
                 "success": True,
                 "mensaje": f"¡Bienvenido {paciente['nombre']}!",
                 "paciente": paciente
             }), 200
         else:
-            return jsonify({"success": False, "mensaje": "Usuario o contraseña incorrectos."}), 401
+            # 💡 En lugar de lanzar 401 (que bloquea el celular), mandamos success: False con un 200 limpio
+            return jsonify({
+                "success": False, 
+                "mensaje": "Usuario o contraseña incorrectos. Verifique sus credenciales."
+            }), 200
             
     except Exception as e:
-        print("❌ Error en login de paciente:", str(e))
-        return jsonify({"success": False, "mensaje": "Error interno del servidor."}), 500
-
+        print("❌ Error interno en login de paciente:", str(e))
+        return jsonify({
+            "success": False, 
+            "mensaje": f"Error en la consulta de base de datos: {str(e)}"
+        }), 200
 
 @app.route('/api/paciente/<int:paciente_id>/tratamientos', methods=['GET'])
 def obtener_tratamientos_paciente(paciente_id):
     try:
         cursor = db.cursor(dictionary=True)
-        # Jalamos los medicamentos recetados por el médico o farmacéutico
+        
+        # 🌟 CONSULTA AJUSTADA A TU BD REAL:
+        # Unimos tratamientos con usuarios para saber qué médico le asignó la receta.
         query = """
-            SELECT id, medicamento, dosis, frecuencia, via_administracion, 
-                   hora_inicio, duracion_dias, fecha_inicio, activar_alertas 
-            FROM tratamientos 
-            WHERE paciente_id = %s 
-            ORDER BY hora_inicio ASC
+            SELECT 
+                t.id, 
+                t.medicamento, 
+                t.dosis, 
+                t.frecuencia, 
+                t.via_administracion, 
+                t.hora_inicio, 
+                t.duracion_dias, 
+                t.fecha_inicio, 
+                t.fecha_final,
+                t.observaciones,
+                u.nombre AS doctor_nombre,
+                u.apellido AS doctor_apellido
+            FROM tratamientos t
+            INNER JOIN usuarios u ON t.medico_id = u.id
+            WHERE t.paciente_id = %s 
+            ORDER BY t.hora_inicio ASC
         """
         cursor.execute(query, (paciente_id,))
         tratamientos = cursor.fetchall()
         cursor.close()
 
-        return jsonify(tratamientos), 200
+        # Retornamos los datos reales mapeados de tu BD
+        return jsonify({
+            "success": True,
+            "tratamientos": tratamientos
+        }), 200
         
     except Exception as e:
-        print("❌ Error al obtener recetas del paciente:", str(e))
-        return jsonify({"success": False, "mensaje": "Error al conectar con el pastillero."}), 500
+        print("❌ Error real en tu consulta SQL de smartmedi:", str(e))
+        return jsonify({
+            "success": False, 
+            "mensaje": "Error interno al procesar las tablas de tratamientos y médicos."
+        }), 500
+
+
+@app.route('/api/paciente/<paciente_id>/dashboard-completo', methods=['GET'])
+def obtener_dashboard_completo(paciente_id):
+    if not paciente_id or paciente_id == 'undefined' or paciente_id == 'null':
+        return jsonify({"success": False, "mensaje": "ID de paciente inválido o sesión corrupta."}), 400
+        
+    cursor = None
+    try:
+        cursor = db.cursor(dictionary=True)
+        
+        # 1. PERFIL REAL DEL PACIENTE
+        query_perfil = """
+            SELECT p.id, p.nombre, p.ci, p.edad, p.sexo, p.telefono, p.correo, p.direccion, p.emergencia, p.foto,
+                   u.nombre AS medico_nombre, u.apellido AS medico_apellido, u.especialidad AS medico_especialidad
+            FROM pacientes p
+            INNER JOIN usuarios u ON p.medico_id = u.id
+            WHERE p.id = %s
+        """
+        cursor.execute(query_perfil, (int(paciente_id),))
+        perfil = cursor.fetchone()
+        
+        if not perfil:
+            return jsonify({"success": False, "mensaje": "El ID de paciente no existe en la BD."}), 404
+
+        # 2. TRATAMIENTOS ASIGNADOS
+        # 🌟 AQUÍ ESTÁ EL CAMBIO IMPORTANTE: Usamos TIME_FORMAT para convertir la hora a Texto (HH:MM)
+        query_tratamientos = """
+            SELECT 
+                id, 
+                medicamento, 
+                dosis, 
+                frecuencia, 
+                via_administracion, 
+                TIME_FORMAT(hora_inicio, '%%H:%%i') AS hora_inicio, 
+                duracion_dias, 
+                fecha_inicio, 
+                fecha_final, 
+                observaciones
+            FROM tratamientos 
+            WHERE paciente_id = %s 
+            ORDER BY hora_inicio ASC
+        """
+        cursor.execute(query_tratamientos, (int(paciente_id),))
+        tratamientos = cursor.fetchall()
+
+        # Convertir fechas (date) a string por si acaso causan conflictos similares
+        for t in tratamientos:
+            if t['fecha_inicio']:
+                t['fecha_inicio'] = t['fecha_inicio'].isoformat()
+            if t['fecha_final']:
+                t['fecha_final'] = t['fecha_final'].isoformat()
+
+        # 3. ÚLTIMO REGISTRO DE HISTORIAL CLÍNICO
+        query_historial = """
+            SELECT id, fecha_evaluacion, motivo_consulta, sintomas_principales, antecedentes_medicos, 
+                   examen_fisico, diagnostico_definitivo, indicaciones_inmediatas,
+                   presion_arterial, frecuencia_cardiaca, temperatura, saturacion_oxigeno
+            FROM historial_clinico
+            WHERE paciente_id = %s
+            ORDER BY fecha_evaluacion DESC LIMIT 1
+        """
+        cursor.execute(query_historial, (int(paciente_id),))
+        historial = cursor.fetchone()
+
+        # Convertimos la fecha del historial a ISO string si existe
+        if historial and historial['fecha_evaluacion']:
+            historial['fecha_evaluacion'] = historial['fecha_evaluacion'].isoformat()
+
+        # Enviamos la respuesta limpia con textos planos que JSON sí puede serializar
+        return jsonify({
+            "success": True,
+            "perfil": perfil,
+            "tratamientos": tratamientos,
+            "historial": historial
+        }), 200
+        
+    except Exception as e:
+        print("❌ Error interno en la consulta Flask-MySQL:", str(e))
+        return jsonify({"success": False, "mensaje": f"Error interno en MySQL: {str(e)}"}), 500
+        
+    finally:
+        if cursor:
+            cursor.close()
 
 
 

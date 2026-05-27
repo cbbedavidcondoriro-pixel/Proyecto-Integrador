@@ -1,0 +1,169 @@
+<div class="dashboard-mobile-container">
+  
+  <header class="dashboard-header">
+    <div class="user-profile-bar">
+      <div class="avatar-box">
+        <img *ngIf="perfilBD?.foto" [src]="perfilBD.foto" alt="Foto Paciente" style="width:100%; height:100%; border-radius:50%; object-fit: cover;" />
+        <span *ngIf="!perfilBD?.foto">👤</span>
+      </div>
+      
+      <div class="user-info">
+        <span class="welcome-label">EXPEDIENTE CLÍNICO DIGITAL</span>
+        <h2>{{ perfilBD?.nombre || 'Cargando...' }}</h2>
+        <span class="welcome-label" style="margin-top: 4px; color: #38bdf8;">
+          C.I: {{ perfilBD?.ci }} • {{ perfilBD?.edad }} años • Sexo: {{ perfilBD?.sexo }}
+        </span>
+      </div>
+      <button class="btn-logout-icon" (click)="logoutPaciente()" title="Cerrar Sesión">🚪</button>
+    </div>
+    <p class="current-date">{{ fechaActual }}</p>
+  </header>
+
+  <div *ngIf="errorMensaje" class="error-connection-banner" style="background: rgba(239,68,68,0.1); border: 1px solid #ef4444; padding: 10px; border-radius: 12px; text-align: center; color: #ef4444;">
+    ⚠️ {{ errorMensaje }}
+  </div>
+
+  <div *ngIf="cargando" class="loading-cards">
+    <div class="simple-spinner"></div>
+    <p>Sincronizando Expediente, Historial y Pastillero desde MySQL...</p>
+  </div>
+
+  <ng-container *ngIf="!cargando && !errorMensaje">
+    
+    <section class="iot-status-card">
+      <div class="card-status-header">
+        <div class="iot-title">
+          <span class="pulse-indicator" style="background-color: #38bdf8; box-shadow: 0 0 8px #38bdf8;"></span>
+          <h3>Anamnesis e Historial de Evolución</h3>
+        </div>
+        <span class="connection-badge" style="background: rgba(56, 189, 248, 0.1); color: #38bdf8;">
+          Último Control: {{ historialClinico ? (historialClinico.fecha_evaluacion | date:'dd/MM/yyyy') : 'Sin registros' }}
+        </span>
+      </div>
+
+      <div *ngIf="!historialClinico" class="empty-state-card" style="padding: 15px;">
+        <p>No se registran visitas previas en el historial clínico de este paciente.</p>
+      </div>
+
+      <div *ngIf="historialClinico" class="med-details" style="background: #0f172a; margin-bottom: 12px;">
+        <div class="detail-row">
+          <span class="detail-icon">🩺</span>
+          <div class="detail-text">
+            <span class="detail-label">Motivo de Consulta</span>
+            <strong class="detail-val">"{{ historialClinico.motivo_consulta }}"</strong>
+          </div>
+        </div>
+        <div class="detail-row">
+          <span class="detail-icon">🧠</span>
+          <div class="detail-text">
+            <span class="detail-label">Síntomas Principales e Informe Clínico</span>
+            <strong class="detail-val" style="font-weight: normal; color: #cbd5e1;">{{ historialClinico.sintomas_principales }}</strong>
+          </div>
+        </div>
+        <div class="detail-row">
+          <span class="detail-icon">📋</span>
+          <div class="detail-text">
+            <span class="detail-label">Diagnóstico Definitivo</span>
+            <strong class="detail-val text-highlight">{{ historialClinico.diagnostico_definitivo }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <h4 style="font-size: 12px; color: #64748b; margin: 10px 0 6px 0; text-transform: uppercase; font-weight: 700;">Signos Vitales del Historial</h4>
+      <div class="iot-meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">P. Arterial</span>
+          <span class="meta-value">❤️ {{ historialClinico?.presion_arterial || 'N/A' }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Fr. Cardíaca</span>
+          <span class="meta-value">💓 {{ historialClinico?.frecuencia_cardiaca || 'N/A' }} bpm</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Temperatura</span>
+          <span class="meta-value">🌡️ {{ historialClinico?.temperatura || 'N/A' }}°C</span>
+        </div>
+      </div>
+    </section>
+
+    <main class="medication-section">
+      <div class="section-title-bar">
+        <h3>💊 Tratamientos Farmacéuticos Prescritos</h3>
+        <span class="count-badge">{{ tratamientos.length }} recetas</span>
+      </div>
+
+      <div *ngIf="tratamientos.length === 0" class="empty-state-card">
+        <div class="empty-icon">💊</div>
+        <h4>Sin Tratamientos</h4>
+        <p>El médico asignado (Dr. {{ perfilBD?.medico_nombre }} {{ perfilBD?.medico_apellido }}) no ha cargado recetas vigentes aún.</p>
+      </div>
+
+      <div *ngIf="tratamientos.length > 0" class="medication-grid">
+        <div class="med-card" *ngFor="let item of tratamientos">
+          
+          <div class="med-card-header">
+            <div class="med-badge-slot">Código Receta #{{ item.id }}</div>
+            <span class="status-pill-active">● Tratamiento en Curso</span>
+          </div>
+          
+          <h4 class="med-name">{{ item.medicamento }}</h4>
+          
+          <div class="med-details">
+            <div class="detail-row">
+              <span class="detail-icon">⚖️</span>
+              <div class="detail-text">
+                <span class="detail-label">Dosis Prescrita</span>
+                <strong class="detail-val">{{ item.dosis }}</strong>
+              </div>
+            </div>
+            
+            <div class="detail-row">
+              <span class="detail-icon">⏱️</span>
+              <div class="detail-text">
+                <span class="detail-label">Frecuencia / Horario</span>
+                <strong class="detail-val">Cada {{ item.frecuencia }}</strong>
+              </div>
+            </div>
+
+            <div class="detail-row">
+              <span class="detail-icon">🔔</span>
+              <div class="detail-text">
+                <span class="detail-label">Primera Alarma del Día</span>
+                <strong class="detail-val text-highlight">{{ item.hora_inicio }}</strong>
+              </div>
+            </div>
+
+            <div class="detail-row">
+              <span class="detail-icon">🧪</span>
+              <div class="detail-text">
+                <span class="detail-label">Vía de Administración</span>
+                <strong class="detail-val">{{ item.via_administracion }}</strong>
+              </div>
+            </div>
+
+            <div class="detail-row">
+              <span class="detail-icon">📅</span>
+              <div class="detail-text">
+                <span class="detail-label">Período de Consumo</span>
+                <strong class="detail-val">{{ item.duracion_dias }} días (Finaliza: {{ item.fecha_final | date:'dd/MM/yyyy' }})</strong>
+              </div>
+            </div>
+
+            <div *ngIf="item.observaciones" style="margin-top: 5px; border-top: 1px dashed rgba(255,255,255,0.05); padding-top: 8px;">
+              <span class="detail-label">Indicaciones de Toma:</span>
+              <p style="margin: 3px 0 0 0; font-size: 12.5px; color: #cbd5e1; font-style: italic;">"{{ item.observaciones }}"</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+  </ng-container>
+
+  <footer class="dashboard-footer">
+    <p>Médico Supervisor Interno: Dr. {{ perfilBD?.medico_nombre }} {{ perfilBD?.medico_apellido }} ({{ perfilBD?.medico_especialidad }})</p>
+    <p class="institution">Plataforma SmartMedi • Conexión de Datos Segura</p>
+  </footer>
+
+</div>

@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-configuracion-farmaceutico',
   standalone: true,
-  imports: [RouterLink, CommonModule, HttpClientModule, FormsModule],
+  imports: [CommonModule, HttpClientModule, FormsModule],
   templateUrl: './configuracion-farmaceutico.html',
   styleUrl: './configuracion-farmaceutico.css'
 })

@@ -1,67 +1,61 @@
-import { Component } from '@angular/core';
-import { Router, NavigationEnd, RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, NavigationEnd, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './app.html',
-  styleUrls: ['./app.css']
+  styleUrls: ['./app.css'],
+  standalone: true,
+  imports: [CommonModule, RouterModule]
 })
-export class App { 
-  isLoggedIn = false;
-  esFarmaceutico = false; 
-  esPaciente = false; // 👈 Nueva bandera inteligente para el paciente
+export class App implements OnInit { // 🌟 Tu clase original 'App' intacta
+  
+  isLoggedIn: boolean = false;
+  esFarmaceutico: boolean = false;
+  esPaciente: boolean = false; // 🌟 Bandera de control para aislar al paciente
 
-  constructor(private router: Router) {
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    // Evaluar la ruta actual nada más arrancar la aplicación
+    this.evaluarRutaYMenu(this.router.url);
+
+    // Rastrear los cambios de ruta en tiempo real mientras navega
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
-      
-      const urlActual = event.url;
-
-      // 1. Ocultar el sidebar inmediatamente si está en las pantallas del paciente o accesos públicos
-      if (
-        urlActual === '/' || 
-        urlActual === '/login' || 
-        urlActual === '/register' || 
-        urlActual === '/inicio-paciente' || 
-        urlActual === '/login-paciente'
-      ) {
-        this.isLoggedIn = false;
-        this.esFarmaceutico = false;
-        this.esPaciente = urlActual.includes('paciente');
-        return;
-      }
-
-      // 2. Si está en un panel interno, leemos las sesiones para estructurar el menú
-      const user = localStorage.getItem('usuario');
-      const pacienteSesion = localStorage.getItem('paciente_sesion');
-
-      if (pacienteSesion) {
-        // Si hay sesión de paciente, escondemos barra de médicos
-        this.isLoggedIn = false;
-        this.esFarmaceutico = false;
-        this.esPaciente = true;
-      } else if (user) {
-        this.esPaciente = false;
-        this.isLoggedIn = true;
-        
-        const usuarioObj = JSON.parse(user);
-        const rol = (usuarioObj.rol || '').toLowerCase().trim();
-        
-        this.esFarmaceutico = (rol === 'farmaceutico' || rol === 'farmacia');
-        console.log(`[Sidebar] Rol: ${rol} | ¿Es Farmacia?: ${this.esFarmaceutico}`);
-      } else {
-        this.isLoggedIn = false;
-      }
-
+      this.evaluarRutaYMenu(event.urlAfterRedirects || event.url);
     });
   }
 
+  evaluarRutaYMenu(url: string) {
+    // 🔒 SI ES RUTA DE PACIENTE (Inicio, Login o Dashboard): Ocultamos totalmente la barra administrativa
+    if (url === '/' || url === '/inicio-paciente' || url.includes('/login-paciente') || url.includes('/dashboard-paciente')) {
+      this.esPaciente = true;   
+      this.isLoggedIn = false;  // Al ser false, el *ngIf del <aside> no se activará para el paciente
+      return;
+    }
+
+    // 👨‍⚕️ SI ES RUTA DE MÉDICO O FARMACÉUTICO: Tu lógica original sigue operando intacta
+    this.esPaciente = false;
+    const user = localStorage.getItem('usuario'); // Lee el usuario guardado por el login de médicos/farmacia
+    if (user) {
+      this.isLoggedIn = true;
+      const usuarioObj = JSON.parse(user);
+      const rol = (usuarioObj.rol || '').toLowerCase().trim();
+      
+      // Activa el menú correspondiente para farmacia o médico
+      this.esFarmaceutico = (rol === 'farmaceutico' || rol === 'farmacia');
+      console.log(`[Sidebar Central] Rol detectado: ${rol} | ¿Es Farmacia?: ${this.esFarmaceutico}`);
+    } else {
+      this.isLoggedIn = false;
+    }
+  }
+
   logout() {
+    // Tu función original de cierre de sesión
     localStorage.clear(); 
     this.isLoggedIn = false;
     this.esFarmaceutico = false;

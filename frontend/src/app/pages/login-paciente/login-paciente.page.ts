@@ -1,55 +1,70 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-paciente',
   templateUrl: './login-paciente.page.html',
-  styleUrls: ['./login-paciente.page.scss'], // O si es .css pon .css aquí
+  styleUrls: ['./login-paciente.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule] // Solo módulos estándar web
+  imports: [CommonModule, FormsModule, HttpClientModule]
 })
 export class LoginPacientePage implements OnInit {
 
-  // Usamos la IP de tu PC para que el celular también pueda comunicarse con el Backend de Flask
-  API = 'http://192.168.100.7:5000'; 
+  API: string = 'http://localhost:5000'; // Base por defecto para la PC
   usuario: string = '';
   password: string = '';
   cargando: boolean = false;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router) {
+    // 💡 TRUCO INTELIGENTE: Si entras desde la IP en tu celular, Angular cambiará automáticamente la API a la IP local
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      this.API = `http://${window.location.hostname}:5000`;
+    }
+  }
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 
-  iniciarSesion() {
-    if (!this.usuario.trim() || !this.password.trim()) {
-      alert('Por favor, introduce tu usuario y contraseña del pastillero.');
+  iniciarSesion(): void {
+    if (!this.usuario || !this.password) {
+      alert('Por favor, introduzca su usuario y contraseña del pastillero.');
       return;
     }
 
     this.cargando = true;
 
     const datos = {
-      usuario: this.usuario,
-      password: this.password
+      usuario: String(this.usuario).trim(),
+      password: String(this.password).trim()
     };
 
-    this.http.post(`${this.API}/api/paciente/login`, datos)
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    console.log(`🚀 Intentando conectar al backend en: ${this.API}/api/paciente/login`);
+
+    this.http.post(`${this.API}/api/paciente/login`, datos, { headers })
       .subscribe({
         next: (res: any) => {
           this.cargando = false;
-          alert(res.mensaje);
-          // Guardamos la sesión del paciente
-          localStorage.setItem('paciente_sesion', JSON.stringify(res.paciente));
           
-          // Por ahora puedes dejarlo comentando hasta crear la vista del pastillero real
-          // this.router.navigate(['/dashboard-paciente']);
+          if (res.success) {
+            alert(res.mensaje);
+            // Guardamos la sesión en el LocalStorage del dispositivo (PC o celular)
+            localStorage.setItem('paciente_sesion', JSON.stringify(res.paciente));
+            // Redirección directa al dashboard del paciente
+            this.router.navigate(['/dashboard-paciente']);
+          } else {
+            alert(res.mensaje);
+          }
         },
-        error: (err) => {
+        error: (err: any) => {
           this.cargando = false;
-          alert(err.error?.mensaje || 'Error de conexión con el servidor.');
+          console.error('Detalle completo del error de red:', err);
+          alert('Error de enlace de red local. Verifique que Flask esté corriendo con host="0.0.0.0"');
         }
       });
   }
