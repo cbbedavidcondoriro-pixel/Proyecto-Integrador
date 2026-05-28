@@ -135,54 +135,60 @@ def dashboard(usuario_id):
     cursor = db.cursor(dictionary=True)
 
     try:
-        # Contar ÚNICAMENTE los pacientes que pertenecen de forma estricta a este médico
+        # 1. Contar PACIENTES estrictamente de este médico
         cursor.execute("SELECT COUNT(*) as total FROM pacientes WHERE medico_id = %s", (usuario_id,))
         pacientes = cursor.fetchone()['total']
 
-        # Contar tratamientos activos generales
-        try:
-            cursor.execute("SELECT COUNT(*) as total FROM tratamientos")
-            tratamientos = cursor.fetchone()['total']
-        except Exception:
-            tratamientos = 0  
+        # 2. Contar TRATAMIENTOS activos de este médico
+        cursor.execute("SELECT COUNT(*) as total FROM tratamientos WHERE medico_id = %s", (usuario_id,))
+        tratamientos = cursor.fetchone()['total']
 
-        # Contar recordatorios emitidos generales
-        try:
-            cursor.execute("SELECT COUNT(*) as total FROM recordatorios")
-            recordatorios = cursor.fetchone()['total']
-        except Exception:
-            recordatorios = 0  
+        # 3. Contar HISTORIALES CLÍNICOS creados por este médico
+        cursor.execute("SELECT COUNT(*) as total FROM historial_clinico WHERE medico_id = %s", (usuario_id,))
+        historiales = cursor.fetchone()['total']
 
-        # Obtener la lista de los últimos 5 pacientes registrados por este médico específico
-        try:
-            cursor.execute("""
-                SELECT id, nombre, ci, edad 
-                FROM pacientes 
-                WHERE medico_id = %s 
-                ORDER BY id DESC 
-                LIMIT 5
-            """, (usuario_id,))
-            lista_pacientes = cursor.fetchall()
-        except Exception as e:
-            print("Error al obtener la lista de pacientes:", str(e))
-            lista_pacientes = []
+        # 4. Contar PACIENTES MASCULINOS Y FEMENINOS de este médico (Para la gráfica real)
+        cursor.execute("""
+            SELECT 
+                SUM(CASE WHEN sexo IN ('Masculino', 'M', 'm', 'masculino') THEN 1 ELSE 0 END) as hombres,
+                SUM(CASE WHEN sexo IN ('Femenino', 'F', 'f', 'femenino') THEN 1 ELSE 0 END) as mujeres
+            FROM pacientes 
+            WHERE medico_id = %s
+        """, (usuario_id,))
+        generos = cursor.fetchone()
+        hombres = generos['hombres'] if generos['hombres'] else 0
+        mujeres = generos['mujeres'] if generos['mujeres'] else 0
 
-        # Métrica IoT proporcional a sus pacientes asignados
+        # 5. Obtener los últimos 5 pacientes registrados por este médico
+        cursor.execute("""
+            SELECT id, nombre, ci, edad, sexo 
+            FROM pacientes 
+            WHERE medico_id = %s 
+            ORDER BY id DESC 
+            LIMIT 5
+        """, (usuario_id,))
+        lista_pacientes = cursor.fetchall()
+
+        # Dispositivos IoT equivalentes a sus pacientes asignados
         dispositivos_iot = pacientes 
 
         return jsonify({
             "pacientes": pacientes,
             "tratamientos": tratamientos,
-            "recordatorios": recordatorios,
+            "historiales": historiales,
             "dispositivos_iot": dispositivos_iot,
-            "lista_pacientes": lista_pacientes
+            "lista_pacientes": lista_pacientes,
+            "grafica_genero": {
+                "hombres": hombres,
+                "mujeres": mujeres
+            }
         })
 
     except Exception as e:
-        print("Error en dashboard:", str(e))
+        print("❌ Error en el procesamiento del Dashboard:", str(e))
         return jsonify({
-            "pacientes": 0, "tratamientos": 0, "recordatorios": 0, "dispositivos_iot": 0,
-            "lista_pacientes": [], "error": str(e)
+            "pacientes": 0, "tratamientos": 0, "historiales": 0, "dispositivos_iot": 0,
+            "lista_pacientes": [], "grafica_genero": {"hombres": 0, "mujeres": 0}, "error": str(e)
         }), 500
     finally:
         cursor.close()

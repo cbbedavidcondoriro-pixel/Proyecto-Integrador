@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; 
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core'; 
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -20,6 +20,10 @@ export class Patients implements OnInit {
   terminoBusqueda: string = '';
   editando: boolean = false;
   idPacienteEditando: number | null = null;
+  
+  // 🌟 Variables unificadas con el Dashboard para controlar la tarjeta flotante
+  medicoLogueado: any = null;
+  mostrarTarjetaDoctor: boolean = false;
 
   paciente = {
     nombre: '',
@@ -42,6 +46,8 @@ export class Patients implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.cargarSesionMedico();
+    
     setTimeout(() => {
       this.obtenerPacientes();
 
@@ -50,9 +56,30 @@ export class Patients implements OnInit {
       if (compartido) {
         const datosPaciente = JSON.parse(compartido);
         this.seleccionarParaEditar(datosPaciente);
-        sessionStorage.removeItem('paciente_a_editar'); // Limpieza del caché temporal
+        sessionStorage.removeItem('paciente_a_editar');
       }
     }, 50);
+  }
+
+  cargarSesionMedico() {
+    const sesion = localStorage.getItem('usuario');
+    if (sesion) {
+      this.medicoLogueado = JSON.parse(sesion);
+    } else {
+      this.router.navigate(['/login']);
+    }
+  }
+
+  // 🌟 Control idéntico al Dashboard para alternar visualización de la tarjeta
+  toggleTarjetaDoctor() {
+    this.mostrarTarjetaDoctor = !this.mostrarTarjetaDoctor;
+    this.cdr.detectChanges();
+  }
+
+  // Cierra la tarjeta automáticamente si haces clic fuera de ella
+  @HostListener('document:click', ['$event'])
+  cerrarTarjetaAlDarClicFuera(event: Event) {
+    this.mostrarTarjetaDoctor = false;
   }
 
   obtenerPacientes() {
@@ -141,7 +168,6 @@ export class Patients implements OnInit {
         .subscribe({
           next: (res: any) => {
             alert(res.mensaje || 'Paciente actualizado con éxito.');
-            // Redirige automáticamente al listado para ver el cambio
             this.irAListado();
           },
           error: (err) => console.error('Error al actualizar paciente:', err)
@@ -152,7 +178,6 @@ export class Patients implements OnInit {
           next: (res: any) => {
             alert(res.mensaje || '¡Paciente guardado exitosamente!');
             this.limpiarFormulario();
-            // Redirige automáticamente para ver al nuevo paciente en la tabla completa
             this.irAListado();
           },
           error: (err) => {
@@ -163,7 +188,7 @@ export class Patients implements OnInit {
     }
   }
 
-seleccionarParaEditar(item: any) {
+  seleccionarParaEditar(item: any) {
     this.editando = true;
     this.idPacienteEditando = item.id;
     this.paciente = {
@@ -177,15 +202,15 @@ seleccionarParaEditar(item: any) {
       emergencia: item.emergencia || '',
       foto: item.foto || '',
       usuario: item.usuario || '',
-      password: '' // Vacío por seguridad
+      password: ''
     };
     
-    // ✨ CORREGIDO: Subir al inicio de la pantalla de forma segura sin romper Angular
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
     
     this.cdr.detectChanges();
   }
+
   eliminarPaciente(id: number) {
     if (confirm('¿Estás seguro de que deseas eliminar este paciente del sistema?')) {
       this.http.delete(`${this.API}/pacientes/${id}`)
@@ -222,7 +247,6 @@ seleccionarParaEditar(item: any) {
     this.cdr.detectChanges();
   }
 
-  // Navegación directa a la pantalla de la tabla extendida
   irAListado() {
     this.router.navigate(['/patients-list']);
   }

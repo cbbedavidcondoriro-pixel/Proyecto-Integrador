@@ -1,11 +1,48 @@
 <main class="main-content">
 
-    <div class="topbar">
-        <div>
+    <div class="topbar-clinica">
+        <div class="topbar-left">
             <h1>Gestión de Pacientes</h1>
-            <p>Administración completa de pacientes registrados en el sistema médico</p>
+            <p>Sistema Inteligente de Monitoreo Clínico & Nodos IoT</p>
         </div>
 
+        <div class="doctor-profile" (click)="toggleTarjetaDoctor(); $event.stopPropagation()">
+            <div class="avatar-container">
+                <img *ngIf="medicoLogueado?.foto" [src]="medicoLogueado.foto" alt="Doctor" class="avatar-img">
+                <div *ngIf="!medicoLogueado?.foto" class="avatar-fallback">
+                    {{ medicoLogueado?.nombre?.charAt(0) || 'D' }}
+                </div>
+                <div class="status-indicator"></div>
+            </div>
+            
+            <div class="doctor-info">
+                <h3>Dr. {{ medicoLogueado?.nombre || 'Médico' }} {{ medicoLogueado?.apellido || '' }}</h3>
+                <span class="role-badge">{{ medicoLogueado?.especialidad || 'Especialista' }}</span>
+            </div>
+
+            <div class="doctor-card-modal" *ngIf="mostrarTarjetaDoctor" (click)="$event.stopPropagation()">
+                <div class="modal-header-doctor">
+                    <h4>Información del Especialista</h4>
+                    <button class="close-btn-doctor" (click)="toggleTarjetaDoctor()">×</button>
+                </div>
+                <div class="modal-body-doctor">
+                    <div class="modal-avatar-center">
+                        <div class="large-avatar">{{ medicoLogueado?.nombre?.charAt(0) }}</div>
+                    </div>
+                    <p><strong>Nombre Completo:</strong> {{ medicoLogueado?.nombre }} {{ medicoLogueado?.apellido }}</p>
+                    <p><strong>Usuario Clínico:</strong> @{{ medicoLogueado?.usuario }}</p>
+                    <p><strong>Correo Electrónico:</strong> {{ medicoLogueado?.correo || 'No registrado' }}</p>
+                    <p><strong>Teléfono de Contacto:</strong> {{ medicoLogueado?.telefono || 'No registrado' }}</p>
+                    <p><strong>Clínica / Hospital:</strong> {{ medicoLogueado?.clinica || 'Centro Médico General' }}</p>
+                    <p><strong>Especialidad Médica:</strong> {{ medicoLogueado?.especialidad || 'Medicina General' }}</p>
+                    <p><strong>Dirección Consultorio:</strong> {{ medicoLogueado?.direccion || 'Área de consulta externa' }}</p>
+                    <span class="badge-role-modal">{{ medicoLogueado?.rol || 'MEDICO' }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-bottom: 25px; display: flex; justify-content: flex-end;">
         <button class="btn-add" (click)="irAListado()">
             📋 Ver Lista de Pacientes
         </button>
