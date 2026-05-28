@@ -1,8 +1,45 @@
-<div class="reportes-container" style="padding: 40px; background-color: #0b0f19; min-height: 100vh; color: #ffffff; width: 100%; box-sizing: border-box; font-family: 'Segoe UI', sans-serif;">
+<div class="reportes-container">
     
-    <div class="header-reportes no-print" style="margin-bottom: 30px;">
-        <h1 style="font-size: 32px; font-weight: 700; color: #ffffff; margin-bottom: 10px;">📋 Centro de Reportes Clínicos Avanzado</h1>
-        <p style="color: #9ca3af; font-size: 16px;">Consolidación forense de historiales, auditoría de telemetría IoT y récord de fidelidad farmacológica.</p>
+    <div class="topbar-clinica no-print">
+        <div class="topbar-left">
+            <h1>Centro de Reportes Clínicos Avanzado</h1>
+            <p>Consolidación forense de historiales, auditoría de telemetría IoT y récord de fidelidad farmacológica.</p>
+        </div>
+
+        <div class="doctor-profile" (click)="toggleTarjetaDoctor(); $event.stopPropagation()">
+            <div class="avatar-container">
+                <img *ngIf="usuario?.foto" [src]="usuario.foto" alt="Doctor" class="avatar-img">
+                <div *ngIf="!usuario?.foto" class="avatar-fallback">
+                    {{ usuario?.nombre?.charAt(0) || 'D' }}
+                </div>
+                <div class="status-indicator"></div>
+            </div>
+            
+            <div class="doctor-info">
+                <h3>Dr. {{ usuario?.nombre || 'Médico' }} {{ usuario?.apellido || '' }}</h3>
+                <span class="role-badge">{{ usuario?.especialidad || 'Especialista' }}</span>
+            </div>
+
+            <div class="doctor-card-modal" *ngIf="mostrarTarjetaDoctor" (click)="$event.stopPropagation()">
+                <div class="modal-header-doctor">
+                    <h4>Información del Especialista</h4>
+                    <button class="close-btn-doctor" (click)="toggleTarjetaDoctor()">×</button>
+                </div>
+                <div class="modal-body-doctor">
+                    <div class="modal-avatar-center">
+                        <div class="large-avatar">{{ usuario?.nombre?.charAt(0) }}</div>
+                    </div>
+                    <p><strong>Nombre Completo:</strong> {{ usuario?.nombre }} {{ usuario?.apellido }}</p>
+                    <p><strong>Usuario Clínico:</strong> @{{ usuario?.usuario }}</p>
+                    <p><strong>Correo Electrónico:</strong> {{ usuario?.correo || 'No registrado' }}</p>
+                    <p><strong>Teléfono de Contacto:</strong> {{ usuario?.telefono || 'No registrado' }}</p>
+                    <p><strong>Clínica / Hospital:</strong> {{ usuario?.clinica || 'Centro Médico General' }}</p>
+                    <p><strong>Especialidad Médica:</strong> {{ usuario?.especialidad || 'Medicina General' }}</p>
+                    <p><strong>Dirección Consultorio:</strong> {{ usuario?.direccion || 'Área de consulta externa' }}</p>
+                    <span class="badge-role-modal">{{ usuario?.rol || 'MEDICO' }}</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="selector-box no-print" style="background: #111827; padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 30px; display: flex; gap: 20px; align-items: flex-end;">
@@ -108,7 +145,7 @@
                     <tr style="background: rgba(255,255,255,0.04); color: #9ca3af; text-align: left; border-bottom: 2px solid rgba(255,255,255,0.1);">
                         <th style="padding: 10px;">Fecha / Día</th>
                         <th style="padding: 10px;">Hora Programada</th>
-                        <th style="padding: 10px;">Hora Ejecución Real</th>
+                        <th style="padding: 10px;">Hora Execution Real</th>
                         <th style="padding: 10px;">Medicamento Auditado</th>
                         <th style="padding: 10px; text-align: center;">Métricas IoT (En Toma)</th>
                         <th style="padding: 10px; text-align: right;">Estado del Apego</th>

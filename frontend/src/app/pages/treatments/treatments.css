@@ -12,62 +12,209 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-/* TOPBAR */
-.topbar {
+/* BARRA SUPERIOR CONTENEDORA */
+.topbar-clinica {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
+    background-color: #111827;
+    padding: 20px 30px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+    border: 1px solid #1f2937;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.topbar h1 {
-    font-size: 32px;
+.topbar-clinica h1 {
+    font-size: 26px;
     font-weight: bold;
     color: white;
     margin: 0;
 }
 
-.topbar p {
+.topbar-clinica p {
     color: #9ca3af;
+    font-size: 13px;
     margin-top: 5px;
+    margin-bottom: 0;
 }
 
-/* PERFIL MÉDICO EN TOPBAR */
+/* 🌟 DOCTOR PROFILE COMPONENT (MISMAS CLASES RELATIVAS QUE PACIENTES) */
 .doctor-profile {
+    position: relative; /* Clave para el despliegue absoluto de la tarjeta */
     display: flex;
     align-items: center;
-    gap: 12px;
-    background: #111827;
+    gap: 14px;
     padding: 8px 16px;
-    border-radius: 16px;
-    border: 1px solid #1f2937;
+    background-color: #1f2937;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    border: 1px solid #374151;
 }
 
-.avatar {
-    width: 40px;
-    height: 40px;
+.doctor-profile:hover {
+    background-color: #243142;
+    border-color: #00ff9d;
+}
+
+.avatar-container {
+    position: relative;
+    width: 44px;
+    height: 44px;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #00ff9d;
+}
+
+.avatar-fallback {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #374151;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 16px;
+    border: 2px solid #00ff9d;
+}
+
+.status-indicator {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 11px;
+    height: 11px;
+    background-color: #00ff9d;
+    border: 2px solid #1f2937;
+    border-radius: 50%;
+}
+
+.doctor-info h3 {
+    color: white;
+    font-size: 14px;
+    margin: 0;
+    font-weight: 600;
+}
+
+.role-badge {
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+/* 🌟 TARJETA FLOTANTE ABSOLUTA DESPLEGADA DEBAJO DEL MEDICO */
+.doctor-card-modal {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background-color: #111827;
+    border: 1px solid #1f2937;
+    border-radius: 16px;
+    width: 320px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    cursor: default;
+    animation: fadeInDropdown 0.2s ease-out;
+}
+
+@keyframes fadeInDropdown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header-doctor {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #1f2937;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.modal-header-doctor h4 {
+    margin: 0;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.close-btn-doctor {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.close-btn-doctor:hover {
+    color: #ef4444;
+}
+
+.modal-body-doctor {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 13px;
+    color: #cbd5e1;
+    text-align: left;
+}
+
+.modal-avatar-center {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.large-avatar {
+    width: 55px;
+    height: 55px;
     background: #00ff9d;
     color: #0b0f19;
     border-radius: 50%;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    font-size: 22px;
     font-weight: bold;
-    font-size: 18px;
 }
 
-.doctor-profile h3 {
+.modal-body-doctor p {
     margin: 0;
-    color: white;
-    font-size: 14px;
+    line-height: 1.4;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    padding-bottom: 6px;
 }
 
-.doctor-profile span {
-    font-size: 12px;
+.modal-body-doctor strong {
     color: #9ca3af;
+    font-weight: 500;
 }
 
-/* TARJETAS CONTENEDORAS EXPANSIBLES (100% ANCHO) */
+.badge-role-modal {
+    background-color: rgba(0, 255, 157, 0.15);
+    color: #00ff9d;
+    text-align: center;
+    padding: 8px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 12px;
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+}
+
+/* TARJETAS CONTENEDORAS EXPANSIBLES */
 .form-card, .table-card {
     background-color: #111827;
     border-radius: 20px;
@@ -95,10 +242,10 @@
     font-weight: bold;
 }
 
-/* GRID CORREGIDO EN 4 COLUMNAS SIMÉTRICAS */
+/* GRID EN COLUMNAS SIMÉTRICAS */
 .grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* Reparado de 10fr a 1fr */
+    grid-template-columns: repeat(4, 1fr);
     gap: 20px;
 }
 
@@ -108,7 +255,6 @@
     gap: 8px;
 }
 
-/* Elemento del paciente o textareas ocupan toda la fila */
 .input-group.full {
     grid-column: span 4;
 }
@@ -214,25 +360,6 @@ td {
     color: white;
 }
 
-.med-tag {
-    background-color: rgba(0, 255, 157, 0.1);
-    color: #00ff9d;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: bold;
-    display: inline-block;
-}
-
-.status {
-    background: rgba(0, 255, 157, 0.15);
-    color: #00ff9d;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: bold;
-}
-
 /* RESPONSIVE OPTIMIZADO */
 @media(max-width: 1200px) {
     .grid {
@@ -250,9 +377,17 @@ td {
     .input-group.full {
         grid-column: auto;
     }
-    .topbar {
+    .topbar-clinica {
         flex-direction: column;
         align-items: flex-start;
         gap: 15px;
+    }
+    .doctor-profile {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .doctor-card-modal {
+        width: 100%;
+        box-sizing: border-box;
     }
 }

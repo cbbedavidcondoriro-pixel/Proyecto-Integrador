@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -7,7 +7,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   selector: 'app-reportes',
   standalone: true,
   imports: [CommonModule, FormsModule, HttpClientModule],
-  templateUrl: './reportes.html'
+  templateUrl: './reportes.html',
+  styleUrl: './reportes.css'
 })
 export class ReportesComponent implements OnInit {
   
@@ -17,6 +18,9 @@ export class ReportesComponent implements OnInit {
   
   usuario: any = null;
   listaPacientes: any[] = [];
+  
+  // 🌟 Estado unificado idéntico al Dashboard para controlar el dropdown
+  mostrarTarjetaDoctor: boolean = false;
   
   // Objeto contenedor maestro del reporte consolidado
   reporteMedica: any = null;
@@ -30,6 +34,18 @@ export class ReportesComponent implements OnInit {
       this.idMedicoLogueado = this.usuario.id || this.usuario.id_usuario || this.usuario.id_medico || 1; 
     }
     this.cargarPacientesDelMedico();
+  }
+
+  // 🌟 Métodos idénticos de acoplamiento de tarjeta doctor
+  toggleTarjetaDoctor() {
+    this.mostrarTarjetaDoctor = !this.mostrarTarjetaDoctor;
+    this.cdr.detectChanges();
+  }
+
+  // Cierra de forma automatizada la tarjeta si el especialista hace clic fuera
+  @HostListener('document:click', ['$event'])
+  cerrarTarjetaAlDarClicFuera(event: Event) {
+    this.mostrarTarjetaDoctor = false;
   }
 
   cargarPacientesDelMedico() {

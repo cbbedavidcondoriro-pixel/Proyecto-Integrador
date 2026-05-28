@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -12,9 +12,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./historial-clinico.css']
 })
 export class HistorialClinicoComponent implements OnInit {
-  API = 'http://127.0.0.1:5000'; // Sincronizado a la IP estándar de Flask
+  API = 'http://127.0.0.1:5000'; 
   idMedicoLogueado: number = 1;
   listaPacientes: any[] = [];
+
+  // 🌟 Variables unificadas para el control de datos del médico y estado de la tarjeta flotante
+  medicoLogueado: any = null;
+  mostrarTarjetaDoctor: boolean = false;
 
   registro: any = {
     paciente_id: 0,
@@ -27,7 +31,7 @@ export class HistorialClinicoComponent implements OnInit {
     saturacion_oxigeno: null,
     examen_fisico_detallado: '',
     diagnostico_definitivo: '',
-    indicaciones_inmediatas: ''
+    indications_inmediatas: ''
   };
 
   constructor(
@@ -37,12 +41,31 @@ export class HistorialClinicoComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.cargarSesionMedico();
+    this.cargarPacientes();
+  }
+
+  // Carga la información del médico en sesión y valida los IDs correspondientes
+  cargarSesionMedico() {
     const usuarioSesion = localStorage.getItem('usuario');
     if (usuarioSesion) {
-      const userObj = JSON.parse(usuarioSesion);
-      this.idMedicoLogueado = userObj.id || userObj.id_usuario || 1;
+      this.medicoLogueado = JSON.parse(usuarioSesion);
+      this.idMedicoLogueado = this.medicoLogueado.id || this.medicoLogueado.id_usuario || this.medicoLogueado.id_medico || 1;
+    } else {
+      this.router.navigate(['/login']);
     }
-    this.cargarPacientes();
+  }
+
+  // Alterna dinámicamente la visibilidad de la tarjeta flotante
+  toggleTarjetaDoctor() {
+    this.mostrarTarjetaDoctor = !this.mostrarTarjetaDoctor;
+    this.cdr.detectChanges();
+  }
+
+  // 🌟 Listener global: Cierra la tarjeta del doctor de forma intuitiva al hacer clic afuera
+  @HostListener('document:click', ['$event'])
+  cerrarTarjetaAlDarClicFuera(event: Event) {
+    this.mostrarTarjetaDoctor = false;
   }
 
   cargarPacientes() {
@@ -86,7 +109,7 @@ export class HistorialClinicoComponent implements OnInit {
       .subscribe({
         next: (res) => {
           alert(res.mensaje || '¡Evaluación e historial clínico registrados con éxito!');
-          this.router.navigate(['/treatments']); // Redirecciona directo a tratamientos farmacológicos
+          this.router.navigate(['/treatments']); 
         },
         error: (err) => {
           console.error('Error al guardar expediente en el servidor:', err);

@@ -17,22 +17,210 @@
     background-color: #0b0f19;
     color: #ffffff;
     width: 100%;
-    max-width: 1400px; /* Evita que en pantallas gigantes se deforme */
-    margin: 0 auto;    /* Centrado interno fluido */
+    max-width: 1400px; 
+    margin: 0 auto;    
     box-sizing: border-box;
 }
 
-/* Encabezado */
-.header-reportes h1 {
-    font-size: 32px;
-    font-weight: 700;
-    color: #ffffff;
+/* 🌟 BARRA SUPERIOR UNIFICADA CON FLEXBOX */
+.topbar-clinica {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #111827;
+    padding: 20px 30px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+    border: 1px solid #1f2937;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.topbar-left h1 {
+    color: white;
+    font-size: 26px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.topbar-left p {
+    color: #9ca3af;
+    font-size: 13px;
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+
+/* 🌟 COMPONENTE PERFIL DOCTOR CON POSICIÓN RELATIVA PARA LA COMPATIBILIDAD FLOTANTE */
+.doctor-profile {
+    position: relative; /* Crucial para anclar la tarjeta debajo */
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 16px;
+    background-color: #1f2937;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    border: 1px solid #374151;
+}
+
+.doctor-profile:hover {
+    background-color: #243142;
+    border-color: #10b981;
+}
+
+.avatar-container {
+    position: relative;
+    width: 44px;
+    height: 44px;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #10b981;
+}
+
+.avatar-fallback {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #374151;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 16px;
+    border: 2px solid #10b981;
+}
+
+.status-indicator {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 11px;
+    height: 11px;
+    background-color: #10b981;
+    border: 2px solid #1f2937;
+    border-radius: 50%;
+}
+
+.doctor-info h3 {
+    color: white;
+    font-size: 14px;
+    margin: 0;
+    font-weight: 600;
+}
+
+.role-badge {
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+/* 🌟 TARJETA ABSOLUTA IDÉNTICA AL DASHBOARD QUE SE DESPLIEGA ABAJO */
+.doctor-card-modal {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background-color: #111827;
+    border: 1px solid #1f2937;
+    border-radius: 16px;
+    width: 320px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    cursor: default;
+    animation: fadeInDropdown 0.2s ease-out;
+}
+
+@keyframes fadeInDropdown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header-doctor {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #1f2937;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.modal-header-doctor h4 {
+    margin: 0;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.close-btn-doctor {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.close-btn-doctor:hover {
+    color: #ef4444;
+}
+
+.modal-body-doctor {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 13px;
+    color: #cbd5e1;
+}
+
+.modal-avatar-center {
+    display: flex;
+    justify-content: center;
     margin-bottom: 10px;
 }
 
-.header-reportes p {
+.large-avatar {
+    width: 55px;
+    height: 55px;
+    background: #10b981;
+    color: #0b0f19;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.modal-body-doctor p {
+    margin: 0;
+    line-height: 1.4;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    padding-bottom: 6px;
+}
+
+.modal-body-doctor strong {
     color: #9ca3af;
-    font-size: 16px;
+    font-weight: 500;
+}
+
+.badge-role-modal {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    text-align: center;
+    padding: 8px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 12px;
+    margin-top: 8px;
+    letter-spacing: 0.5px;
 }
 
 /* ==========================================================================
@@ -72,226 +260,30 @@
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
 }
 
-/* Estado Vacío (Dashed Box) */
-.empty-state {
-    text-align: center;
-    padding: 50px;
-    background: #111827;
-    border-radius: 16px;
-    border: 1px dashed rgba(255, 255, 255, 0.1);
-    color: #9ca3af;
-    font-size: 16px;
-}
-
 /* ==========================================================================
-   TARJETAS DE TELEMETRÍA IOT (GRID)
+   DISEÑO EN CASO DE IMPRESIÓN (MEDIA PRINT SANITIZADO)
    ========================================================================== */
-.section-title {
-    font-size: 20px;
-    margin-bottom: 16px;
-    color: #10b981;
-    font-weight: 600;
-}
-
-.iot-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
-    margin-bottom: 40px;
-}
-
-/* Estilos de Tarjetas Individuales */
-.card-iot {
-    padding: 24px;
-    border-radius: 16px;
-    text-align: center;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card-iot:hover {
-    transform: translateY(-3px);
-}
-
-.card-iot span {
-    font-size: 32px;
-    display: block;
-    margin-bottom: 8px;
-}
-
-.card-iot h3 {
-    margin: 5px 0;
-    font-size: 14px;
-    color: #9ca3af;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.card-iot p {
-    font-size: 26px;
-    font-weight: 700;
-    margin-top: 5px;
-}
-
-/* Variaciones de Color IoT */
-.card-heart {
-    background: rgba(16, 185, 129, 0.08);
-    border: 1px solid rgba(16, 185, 129, 0.15);
-    color: #10b981;
-}
-.card-heart:hover {
-    box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.15);
-}
-
-.card-temp {
-    background: rgba(59, 130, 246, 0.08);
-    border: 1px solid rgba(59, 130, 246, 0.15);
-    color: #3b82f6;
-}
-.card-temp:hover {
-    box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.15);
-}
-
-.card-press {
-    background: rgba(245, 158, 11, 0.08);
-    border: 1px solid rgba(245, 158, 11, 0.15);
-    color: #f59e0b;
-}
-.card-press:hover {
-    box-shadow: 0 10px 20px -5px rgba(245, 158, 11, 0.15);
-}
-
-/* ==========================================================================
-   LÍNEA DE TIEMPO (TIMELINE CLINICO)
-   ========================================================================== */
-.timeline {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    border-left: 2px solid #1f2937;
-    padding-left: 24px;
-    margin-left: 12px;
-}
-
-.timeline-item {
-    position: relative;
-    background: #111827;
-    padding: 24px;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    transition: border-color 0.2s ease, transform 0.2s ease;
-}
-
-.timeline-item:hover {
-    border-color: rgba(16, 185, 129, 0.2);
-    transform: translateX(4px); /* Suave animación al pasar el mouse */
-}
-
-/* Nodo o Punto en la Línea */
-.timeline-badge {
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    background: #10b981;
-    border-radius: 50%;
-    left: -31px;
-    top: 32px;
-    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.25);
-}
-
-/* Encabezado del Item */
-.timeline-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    padding-bottom: 12px;
-}
-
-.status-badge {
-    color: #10b981;
-    font-weight: 700;
-    font-size: 13px;
-    background: rgba(16, 185, 129, 0.1);
-    padding: 5px 12px;
-    border-radius: 20px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.timeline-date {
-    color: #6b7280;
-    font-size: 13px;
-}
-
-/* Contenido Clínico */
-.timeline-body h4 {
-    color: #9ca3af;
-    font-size: 13px;
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-}
-
-.timeline-body p {
-    color: #e5e7eb;
-    font-size: 15px;
-    line-height: 1.6;
-    margin-bottom: 16px;
-}
-
-.timeline-observations {
-    background: rgba(255, 255, 255, 0.01);
-    padding: 14px;
-    border-radius: 8px;
-    border-left: 3px solid #6b7280;
-}
-
-.timeline-observations h4 {
-    color: #9ca3af;
-    font-size: 13px;
-    margin-bottom: 4px;
-    text-transform: uppercase;
-}
-
-.timeline-observations p {
-    color: #9ca3af;
-    font-size: 14px;
-    font-style: italic;
-    margin: 0;
-}
-
-/* ==========================================================================
-   RESPONSIVE DESIGN
-   ========================================================================== */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .reportes-container {
         padding: 20px;
     }
-
-    .timeline {
-        margin-left: 5px;
-        padding-left: 15px;
-    }
-
-    .timeline-badge {
-        left: -22px;
-    }
-
-    .timeline-header {
+    .topbar-clinica {
         flex-direction: column;
         align-items: flex-start;
-        gap: 8px;
+        gap: 15px;
     }
-
-    .timeline-date {
-        font-size: 12px;
+    .doctor-profile {
+        width: 100%;
+        justify-content: flex-start;
+        box-sizing: border-box;
+    }
+    .doctor-card-modal {
+        width: 100%;
+        box-sizing: border-box;
     }
 }
 
 @media print {
-    /* 1. Destruye la barra lateral que está fuera de este componente */
     :host ::ng-deep .sidebar, 
     :host ::ng-deep aside, 
     :host ::ng-deep .logout-box {
@@ -302,7 +294,6 @@
         position: absolute !important;
     }
 
-    /* 2. Resetea el contenedor maestro del sistema */
     :host ::ng-deep .app-layout-container {
         display: block !important;
         background: #ffffff !important;
@@ -310,7 +301,6 @@
         min-height: auto !important;
     }
 
-    /* 3. Elimina el margen izquierdo de 260px que te dejaba la hoja empujada */
     :host ::ng-deep main, 
     :host ::ng-deep .main-content-layout {
         margin-left: 0 !important;
@@ -322,7 +312,6 @@
         background: #ffffff !important;
     }
 
-    /* 4. Limpieza drástica del componente actual */
     body, html, .reportes-container {
         background: #ffffff !important;
         color: #000000 !important;
@@ -331,12 +320,10 @@
         width: 100% !important;
     }
 
-    /* Ocultar selectores */
     .no-print {
         display: none !important;
     }
 
-    /* Adaptación de la hoja a Blanco (Impresora) */
     .print-sheet {
         background: #ffffff !important;
         border: none !important;

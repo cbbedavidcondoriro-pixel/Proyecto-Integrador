@@ -1,0 +1,208 @@
+/* ==========================================================================
+   BARRA SUPERIOR INTEGRADORA Y DESPLEGABLES ACOPLADOS (historial-clinico.css)
+   ========================================================================== */
+
+/* BARRA SUPERIOR GENERAL CONTENEDORA */
+.topbar-clinica {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #111827;
+    padding: 20px 30px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+    border: 1px solid #1f2937;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* COMPONENTE INTERACTIVO DEL PERFIL DEL DOCTOR (RELATIVO) */
+.doctor-profile {
+    position: relative; /* Define el eje de coordenadas para que la tarjeta flote de forma exacta */
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 16px;
+    background-color: #1f2937;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    border: 1px solid #374151;
+}
+
+.doctor-profile:hover {
+    background-color: #243142;
+    border-color: #10b981;
+}
+
+.avatar-container {
+    position: relative;
+    width: 44px;
+    height: 44px;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #10b981;
+}
+
+.avatar-fallback {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #374151;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 16px;
+    border: 2px solid #10b981;
+}
+
+.status-indicator {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 11px;
+    height: 11px;
+    background-color: #10b981;
+    border: 2px solid #1f2937;
+    border-radius: 50%;
+}
+
+.doctor-info h3 {
+    color: white;
+    font-size: 14px;
+    margin: 0;
+    font-weight: 600;
+}
+
+.role-badge {
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+/* 🌟 TARJETA FLOTANTE PEQUEÑA DESPLEGADA DEBAJO DE MANERA ABSOLUTA */
+.doctor-card-modal {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background-color: #111827;
+    border: 1px solid #1f2937;
+    border-radius: 16px;
+    width: 320px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    z-index: 110;
+    cursor: default;
+    animation: dropdownAnimation 0.2s ease-out;
+}
+
+@keyframes dropdownAnimation {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header-doctor {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #1f2937;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.modal-header-doctor h4 {
+    margin: 0;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.close-btn-doctor {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.close-btn-doctor:hover {
+    color: #ef4444;
+}
+
+.modal-body-doctor {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 13px;
+    color: #cbd5e1;
+}
+
+.modal-avatar-center {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.large-avatar {
+    width: 55px;
+    height: 55px;
+    background: #10b981;
+    color: #0b0f19;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.modal-body-doctor p {
+    margin: 0;
+    line-height: 1.4;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    padding-bottom: 6px;
+}
+
+.modal-body-doctor strong {
+    color: #9ca3af;
+    font-weight: 500;
+}
+
+.badge-role-modal {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    text-align: center;
+    padding: 8px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 12px;
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+}
+
+/* RESPONSIVE FLUIDO */
+@media(max-width: 1024px) {
+    .topbar-clinica {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .doctor-profile {
+        width: 100%;
+        justify-content: flex-start;
+        box-sizing: border-box;
+    }
+    .doctor-card-modal {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}

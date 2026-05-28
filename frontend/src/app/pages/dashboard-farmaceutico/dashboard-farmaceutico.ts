@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -14,6 +14,9 @@ export class DashboardFarmaceutico implements OnInit {
   API = 'http://127.0.0.1:5000';
   usuario: any = null;
   imagenPerfilUrl: string | null = null;
+
+  // 🌟 Variable de control para desplegar la tarjeta del perfil
+  mostrarTarjetaFarmaceutico: boolean = false;
 
   // 📊 Métricas de Control Global de la Farmacia
   metrics = {
@@ -66,13 +69,23 @@ export class DashboardFarmaceutico implements OnInit {
     console.log('💊 Dashboard Farmacia cargado profesionalmente para:', this.usuario.nombre);
   }
 
+  // 🌟 Abre y cierra el desplegable del perfil farmacéutico
+  toggleTarjetaFarmaceutico() {
+    this.mostrarTarjetaFarmaceutico = !this.mostrarTarjetaFarmaceutico;
+    this.cdr.detectChanges();
+  }
+
+  // 🌟 Listener global para cerrar la tarjeta al dar clic fuera de ella
+  @HostListener('document:click', ['$event'])
+  cerrarTarjetaAlDarClicFuera(event: Event) {
+    this.mostrarTarjetaFarmaceutico = false;
+  }
+
   procesarFotoPerfil() {
     if (this.usuario && this.usuario.foto) {
-      // Si ya tiene una URL completa o una firma Base64 se mantiene intacta
       if (this.usuario.foto.startsWith('http') || this.usuario.foto.startsWith('data:')) {
         this.imagenPerfilUrl = this.usuario.foto;
       } else {
-        // Si es solo el nombre del archivo guardado en MySQL, construimos la ruta estática
         this.imagenPerfilUrl = `${this.API}/uploads/${this.usuario.foto}`;
       }
     } else {

@@ -1,13 +1,21 @@
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #0b0f19;
+  box-sizing: border-box;
+}
+
 .dashboard-pharmacy-wrapper {
   padding: 35px;
-  background: #0b0f19;
-  min-height: 100vh;
+  max-width: 1400px;
+  margin: 0 auto;
   font-family: 'Segoe UI', system-ui, sans-serif;
   color: #f3f4f6;
   box-sizing: border-box;
 }
 
-/* HEADER Y PERFIL */
+/* HEADER Y PERFIL CON POSICIONAMIENTO RELATIVO */
 .pharmacy-header {
   display: flex;
   justify-content: space-between;
@@ -18,6 +26,7 @@
   border: 1px solid rgba(255, 255, 255, 0.05);
   margin-bottom: 35px;
 }
+
 .badge-role {
   background: rgba(0, 188, 255, 0.1);
   color: #00bcff;
@@ -27,32 +36,51 @@
   border-radius: 30px;
   letter-spacing: 1px;
 }
+
 .pharmacy-header h1 {
   margin: 8px 0 4px 0;
   font-size: 28px;
   color: #fff;
 }
+
 .pharmacy-header p {
   margin: 0;
   color: #9ca3af;
   font-size: 14px;
 }
+
+/* CONTENEDOR CON SOPORTE DE DROPDOWN ABSOLUTO */
 .profile-card {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 15px;
+  padding: 10px 18px;
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
 }
+
+.profile-card:hover {
+  background-color: #243142;
+  border-color: #00bcff;
+}
+
 .avatar-wrapper {
   position: relative;
   width: 55px;
   height: 55px;
 }
+
 .avatar-img, .avatar-placeholder {
   width: 100%;
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
 }
+
 .avatar-placeholder {
   background: linear-gradient(135deg, #00bcff, #3b82f6);
   display: flex;
@@ -62,6 +90,7 @@
   font-weight: bold;
   color: #fff;
 }
+
 .status-indicator {
   position: absolute;
   bottom: 2px;
@@ -72,15 +101,132 @@
   border: 2px solid #111827;
   border-radius: 50%;
 }
+
 .profile-details h3 {
   margin: 0;
   font-size: 16px;
   color: #fff;
 }
+
 .profile-details p {
   margin: 2px 0 0 0;
   font-size: 12px;
+}
+
+.specialty-text {
+  color: #00bcff !important;
+}
+
+.clinic-text {
+  color: #9ca3af !important;
+}
+
+/* 🌟 TARJETA DE INFORMACIÓN INTEGRAL DISPARADA DESDE EL PERFIL */
+.doctor-card-modal {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  background-color: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 16px;
+  width: 330px;
+  padding: 22px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  cursor: default;
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header-doctor {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1f2937;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.modal-header-doctor h4 {
+  margin: 0;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.close-btn-doctor {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 22px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.close-btn-doctor:hover {
+  color: #ef4444;
+}
+
+.modal-body-doctor {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  font-size: 13px;
+  color: #cbd5e1;
+}
+
+.modal-avatar-center {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.large-avatar {
+  width: 55px;
+  height: 55px;
+  background: linear-gradient(135deg, #00bcff, #3b82f6);
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.modal-body-doctor p {
+  margin: 0;
+  line-height: 1.4;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  padding-bottom: 6px;
+}
+
+.modal-body-doctor strong {
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.modal-body-doctor span {
+  color: #ffffff;
+  text-align: right;
+}
+
+.badge-role-modal {
+  background-color: rgba(0, 188, 255, 0.15);
   color: #00bcff;
+  text-align: center;
+  padding: 8px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 12px;
+  margin-top: 8px;
+  letter-spacing: 0.5px;
 }
 
 /* KPIs GRID */
@@ -90,6 +236,7 @@
   gap: 25px;
   margin-bottom: 35px;
 }
+
 .kpi-card {
   background: #1f2937;
   padding: 25px;
@@ -99,6 +246,7 @@
   align-items: center;
   border: 1px solid rgba(255, 255, 255, 0.03);
 }
+
 .card-cyan { border-left: 5px solid #00bcff; }
 .card-amber { border-left: 5px solid #f59e0b; }
 .card-emerald { border-left: 5px solid #10b981; }
@@ -115,6 +263,7 @@
   padding: 30px;
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
+
 .panel-header h3 { margin: 0; font-size: 18px; color: #fff; }
 .panel-header p { margin: 5px 0 20px 0; font-size: 13px; color: #9ca3af; }
 
@@ -135,19 +284,23 @@
   background: rgba(0, 0, 0, 0.2);
   border-radius: 14px;
 }
+
 .chart-bar-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 12%;
 }
+
 .bar-value { font-size: 11px; color: #00bcff; font-weight: 600; margin-bottom: 5px; }
+
 .chart-bar {
   width: 100%;
   background: linear-gradient(to top, #3b82f6, #00bcff);
   border-radius: 6px 6px 0 0;
   transition: height 0.5s ease;
 }
+
 .bar-label { font-size: 12px; color: #9ca3af; margin-top: 8px; }
 
 /* STOCK LIST */
@@ -156,6 +309,7 @@
   flex-direction: column;
   gap: 15px;
 }
+
 .stock-item {
   display: flex;
   justify-content: space-between;
@@ -164,6 +318,7 @@
   background: rgba(0, 0, 0, 0.15);
   border-radius: 12px;
 }
+
 .stock-item h4 { margin: 0; font-size: 14px; color: #fff; }
 .stock-item p { margin: 3px 0 0 0; font-size: 12px; color: #9ca3af; }
 .stock-badge { text-align: right; }
@@ -183,6 +338,7 @@
   max-height: 250px;
   overflow-y: auto;
 }
+
 .log-row {
   display: flex;
   align-items: center;
@@ -191,6 +347,7 @@
   border-radius: 10px;
   gap: 20px;
 }
+
 .log-time { font-size: 12px; color: #9ca3af; font-family: monospace; }
 .log-nodo { font-size: 12px; font-weight: 700; color: #00bcff; white-space: nowrap; }
 .log-event { margin: 0; font-size: 13px; color: #e5e7eb; flex-grow: 1; }
@@ -199,3 +356,22 @@
 .success .log-dot { background: #10b981; box-shadow: 0 0 8px #10b981; }
 .danger .log-dot { background: #ef4444; box-shadow: 0 0 8px #ef4444; }
 .info .log-dot { background: #3b82f6; box-shadow: 0 0 8px #3b82f6; }
+
+@media (max-width: 1024px) {
+  .pharmacy-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .profile-card {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .doctor-card-modal {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .main-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}

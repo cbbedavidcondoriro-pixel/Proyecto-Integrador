@@ -7,7 +7,7 @@
       <p>Monitoreo de tratamientos activos y sincronización con redes de salud IoT</p>
     </div>
 
-    <div class="profile-card">
+    <div class="profile-card" (click)="toggleTarjetaFarmaceutico(); $event.stopPropagation()">
       <div class="avatar-wrapper">
         <img *ngIf="imagenPerfilUrl" [src]="imagenPerfilUrl" alt="Avatar Farmacéutico" class="avatar-img">
         
@@ -16,10 +16,30 @@
         </div>
         <span class="status-indicator"></span>
       </div>
+      
       <div class="profile-details">
         <h3>{{ usuario?.nombre }} {{ usuario?.apellido || '' }}</h3>
         <p class="specialty-text">🔹 {{ usuario?.especialidad || 'Farmacéutico Clínico e IoT' }}</p>
         <p class="clinic-text">🏛️ {{ usuario?.clinica || 'Estación Central de Monitoreo' }}</p>
+      </div>
+
+      <div class="doctor-card-modal" *ngIf="mostrarTarjetaFarmaceutico" (click)="$event.stopPropagation()">
+        <div class="modal-header-doctor">
+          <h4>Información del Especialista</h4>
+          <button class="close-btn-doctor" (click)="toggleTarjetaFarmaceutico()">&times;</button>
+        </div>
+        <div class="modal-body-doctor">
+          <div class="modal-avatar-center">
+            <div class="large-avatar">{{ usuario?.nombre?.charAt(0) || 'F' }}</div>
+          </div>
+          <p><strong>Nombre Completo:</strong> <span>{{ usuario?.nombre }} {{ usuario?.apellido }}</span></p>
+          <p><strong>Usuario Clínico:</strong> <span>@{{ usuario?.usuario || 'farmacia.iot' }}</span></p>
+          <p><strong>Correo Electrónico:</strong> <span>{{ usuario?.correo || 'No registrado' }}</span></p>
+          <p><strong>Teléfono:</strong> <span>{{ usuario?.telefono || 'No registrado' }}</span></p>
+          <p><strong>Centro Clínico:</strong> <span>{{ usuario?.clinica || 'Estación Central de Monitoreo' }}</span></p>
+          <p><strong>Especialidad:</strong> <span>{{ usuario?.especialidad || 'Farmacia e Instrumentación IoT' }}</span></p>
+          <span class="badge-role-modal">{{ usuario?.rol || 'FARMACEUTICO' }}</span>
+        </div>
       </div>
     </div>
   </header>

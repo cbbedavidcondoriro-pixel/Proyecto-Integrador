@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router'; 
@@ -21,6 +21,9 @@ export class Treatments implements OnInit {
   ultimoHistorial: any = null;
 
   listaMedicamentos: any[] = [];
+  
+  // 🌟 Control unificado idéntico al Dashboard para alternar visualización de la tarjeta flotante
+  mostrarTarjetaDoctor: boolean = false;
 
   tempMedicamento = {
     medicamento: '',
@@ -71,6 +74,18 @@ export class Treatments implements OnInit {
         },
         error: (err) => console.error('❌ Error al cargar los pacientes:', err)
       });
+  }
+
+  // 🌟 Funcionalidad de alternado de tarjeta idéntica a Patients/Dashboard
+  toggleTarjetaDoctor() {
+    this.mostrarTarjetaDoctor = !this.mostrarTarjetaDoctor;
+    this.cdr.detectChanges();
+  }
+
+  // Cierra la tarjeta del doctor automáticamente si el usuario hace clic fuera de ella
+  @HostListener('document:click', ['$event'])
+  cerrarTarjetaAlDarClicFuera(event: Event) {
+    this.mostrarTarjetaDoctor = false;
   }
 
   // ESTA FUNCIÓN SE DISPARA CUANDO EL MEDICO SELECCIONA UN PACIENTE

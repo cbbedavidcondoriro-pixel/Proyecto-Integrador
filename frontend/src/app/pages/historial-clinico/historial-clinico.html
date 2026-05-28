@@ -1,8 +1,47 @@
 <div class="historial-container" style="padding: 30px; color: #f3f4f6; font-family: 'Segoe UI', sans-serif;">
     
-    <div class="historial-header" style="margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px;">
-        <h1 style="font-size: 26px; color: #10b981; margin: 0 0 8px 0; display: flex; align-items: center; gap: 10px;">🩺 Formulario de Evaluación Médica General y Odontológica</h1>
-        <p style="color: #9ca3af; margin: 0;">Ficha clínica de evolución. Complete la exploración física antes de proceder a la prescripción farmacológica.</p>
+    <div class="topbar-clinica">
+        <div class="topbar-left">
+            <h1 style="font-size: 26px; color: #10b981; margin: 0 0 8px 0; display: flex; align-items: center; gap: 10px;">
+                🩺 Formulario de Evaluación Médica General y Odontológica
+            </h1>
+            <p style="color: #9ca3af; margin: 0;">Ficha clínica de evolución. Complete la exploración física antes de proceder a la prescripción farmacológica.</p>
+        </div>
+
+        <div class="doctor-profile" (click)="toggleTarjetaDoctor(); $event.stopPropagation()">
+            <div class="avatar-container">
+                <img *ngIf="medicoLogueado?.foto" [src]="medicoLogueado.foto" alt="Doctor" class="avatar-img">
+                <div *ngIf="!medicoLogueado?.foto" class="avatar-fallback">
+                    {{ medicoLogueado?.nombre?.charAt(0) || 'D' }}
+                </div>
+                <div class="status-indicator"></div>
+            </div>
+            
+            <div class="doctor-info">
+                <h3>Dr. {{ medicoLogueado?.nombre || 'Médico' }} {{ medicoLogueado?.apellido || '' }}</h3>
+                <span class="role-badge">{{ medicoLogueado?.especialidad || 'Especialista' }}</span>
+            </div>
+
+            <div class="doctor-card-modal" *ngIf="mostrarTarjetaDoctor" (click)="$event.stopPropagation()">
+                <div class="modal-header-doctor">
+                    <h4>Información del Especialista</h4>
+                    <button type="button" class="close-btn-doctor" (click)="toggleTarjetaDoctor()">×</button>
+                </div>
+                <div class="modal-body-doctor">
+                    <div class="modal-avatar-center">
+                        <div class="large-avatar">{{ medicoLogueado?.nombre?.charAt(0) }}</div>
+                    </div>
+                    <p><strong>Nombre Completo:</strong> {{ medicoLogueado?.nombre }} {{ medicoLogueado?.apellido }}</p>
+                    <p><strong>Usuario Clínico:</strong> @{{ medicoLogueado?.usuario }}</p>
+                    <p><strong>Correo Electrónico:</strong> {{ medicoLogueado?.correo || 'No registrado' }}</p>
+                    <p><strong>Teléfono de Contacto:</strong> {{ medicoLogueado?.telefono || 'No registrado' }}</p>
+                    <p><strong>Clínica / Hospital:</strong> {{ medicoLogueado?.clinica || 'Centro Médico General' }}</p>
+                    <p><strong>Especialidad Médica:</strong> {{ medicoLogueado?.especialidad || 'Medicina General' }}</p>
+                    <p><strong>Dirección Consultorio:</strong> {{ medicoLogueado?.direccion || 'Área de consulta externa' }}</p>
+                    <span class="badge-role-modal">{{ medicoLogueado?.rol || 'MEDICO' }}</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <form (ngSubmit)="guardarHistorial()">

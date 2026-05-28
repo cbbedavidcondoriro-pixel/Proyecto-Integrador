@@ -1,18 +1,43 @@
 <main class="main-content">
 
-    <div class="topbar">
-        <div>
+    <div class="topbar-clinica">
+        <div class="topbar-left">
             <h1>Configuración de Tratamiento Inteligente</h1>
             <p>Asignación directa de medicamentos sincronizados con la base de datos</p>
         </div>
 
-        <div class="doctor-profile">
-            <div class="avatar">
-                {{ usuario?.nombre?.charAt(0) || 'U' }}
+        <div class="doctor-profile" (click)="toggleTarjetaDoctor(); $event.stopPropagation()">
+            <div class="avatar-container">
+                <img *ngIf="usuario?.foto" [src]="usuario.foto" alt="Doctor" class="avatar-img">
+                <div *ngIf="!usuario?.foto" class="avatar-fallback">
+                    {{ usuario?.nombre?.charAt(0) || 'D' }}
+                </div>
+                <div class="status-indicator"></div>
             </div>
-            <div>
-                <h3>Dr. {{ usuario?.nombre || 'Médico' }}</h3>
-                <span>{{ usuario?.rol || 'Médico Responsable' }}</span>
+            
+            <div class="doctor-info">
+                <h3>Dr. {{ usuario?.nombre || 'Médico' }} {{ usuario?.apellido || '' }}</h3>
+                <span class="role-badge">{{ usuario?.especialidad || usuario?.rol || 'Especialista' }}</span>
+            </div>
+
+            <div class="doctor-card-modal" *ngIf="mostrarTarjetaDoctor" (click)="$event.stopPropagation()">
+                <div class="modal-header-doctor">
+                    <h4>Información del Especialista</h4>
+                    <button class="close-btn-doctor" (click)="toggleTarjetaDoctor()">×</button>
+                </div>
+                <div class="modal-body-doctor">
+                    <div class="modal-avatar-center">
+                        <div class="large-avatar">{{ usuario?.nombre?.charAt(0) }}</div>
+                    </div>
+                    <p><strong>Nombre Completo:</strong> {{ usuario?.nombre }} {{ usuario?.apellido }}</p>
+                    <p><strong>Usuario Clínico:</strong> @{{ usuario?.usuario }}</p>
+                    <p><strong>Correo Electrónico:</strong> {{ usuario?.correo || 'No registrado' }}</p>
+                    <p><strong>Teléfono de Contacto:</strong> {{ usuario?.telefono || 'No registrado' }}</p>
+                    <p><strong>Clínica / Hospital:</strong> {{ usuario?.clinica || 'Centro Médico General' }}</p>
+                    <p><strong>Especialidad Médica:</strong> {{ usuario?.especialidad || 'Medicina General' }}</p>
+                    <p><strong>Dirección Consultorio:</strong> {{ usuario?.direccion || 'Área de consulta externa' }}</p>
+                    <span class="badge-role-modal">{{ usuario?.rol || 'MEDICO' }}</span>
+                </div>
             </div>
         </div>
     </div>
@@ -35,7 +60,8 @@
             </div>
 
             <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.03);">
-                <p style="margin: 0 0 8px 0; font-size: 13px; color: #9ca3af;"><strong style="color: #3b82f6;">🔍 Examen Físico / Revisión:</strong><br>{{ ultimoHistorial.examen_fisico || 'Sin registro detallado' }}</p>
+                <p style="margin: 0 0 8px 0; font-size: 13px; color: #3b82f6;">🔍 Examen Físico / Revisión:</p>
+                <p style="margin: 0 0 8px 0; font-size: 13px; color: #9ca3af;">{{ ultimoHistorial.examen_fisico || 'Sin registro detallado' }}</p>
                 <p style="margin: 0; font-size: 13px; color: #9ca3af;"><strong style="color: #f3f4f6;">⚠️ Antecedentes / Alergias:</strong><br>{{ ultimoHistorial.antecedentes_medicos || 'Ninguno reportado' }}</p>
             </div>
 
