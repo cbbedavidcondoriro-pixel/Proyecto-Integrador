@@ -1,0 +1,114 @@
+<main class="iot-alerts-container">
+
+  <header class="header-alerts-panel">
+    <div class="welcome-section">
+      <span class="status-badge">TELEMETRÍA EN VIVO</span>
+      <h1>Panel de Alertas y Cumplimiento IoT</h1>
+      <p>Control automatizado de tomas de medicamentos e incumplimientos en tiempo real mediante sensores integrados.</p>
+    </div>
+
+    <div class="doctor-profile-box" (click)="toggleCardMedico(); $event.stopPropagation()">
+      <div class="doctor-avatar-area">
+        <img *ngIf="avatarRealUrl" [src]="avatarRealUrl" alt="Foto Médico" class="img-med-avatar">
+        <div *ngIf="!avatarRealUrl" class="text-med-avatar">
+          {{ medicoData?.nombre?.charAt(0) || 'M' }}
+        </div>
+        <span class="pulse-online"></span>
+      </div>
+      
+      <div class="doctor-info-text">
+        <h3>Dr. {{ medicoData?.nombre }} {{ medicoData?.apellido || '' }}</h3>
+        <p class="txt-specialty">🔬 {{ medicoData?.especialidad || 'Especialista Clínico' }}</p>
+        <p class="txt-hospital">🏛️ {{ medicoData?.clinica || 'Centro de Telemedicina SmartMedi' }}</p>
+      </div>
+
+      <div class="floating-doctor-card" *ngIf="mostrarCard" (click)="$event.stopPropagation()">
+        <div class="card-title-bar">
+          <h4>Ficha Profesional de Seguridad</h4>
+          <button class="btn-card-close" (click)="toggleCardMedico()">&times;</button>
+        </div>
+        <div class="card-detail-content">
+          <div class="avatar-center-wrapper">
+            <div class="circle-avatar-large">{{ medicoData?.nombre?.charAt(0) || 'M' }}</div>
+          </div>
+          <p><strong>Médico Asignado:</strong> <span>Dr. {{ medicoData?.nombre }} {{ medicoData?.apellido }}</span></p>
+          <p><strong>Identificador:</strong> <span>@{{ medicoData?.usuario }}</span></p>
+          <p><strong>Contacto:</strong> <span>{{ medicoData?.telefono || 'No configurado' }}</span></p>
+          <p><strong>Email Institucional:</strong> <span>{{ medicoData?.correo }}</span></p>
+          <span class="badge-role">{{ medicoData?.rol || 'MEDICO' }}</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="metrics-row">
+    <div class="metric-box box-blue">
+      <span class="metric-icon">🔔</span>
+      <div class="metric-txt">
+        <h3>{{ listaAlertas.length }}</h3>
+        <p>Alertas Activas</p>
+      </div>
+    </div>
+    <div class="metric-box box-red">
+      <span class="metric-icon">❌</span>
+      <div class="metric-txt">
+        <h3>{{ filtrarPorTipo('Omisión de Toma') }}</h3>
+        <p>Dosis Omitidas</p>
+      </div>
+    </div>
+    <div class="metric-box box-green">
+      <span class="metric-icon">✅</span>
+      <div class="metric-txt">
+        <h3>{{ filtrarPorTipo('Toma Confirmada') }}</h3>
+        <p>Tomas Correctas</p>
+      </div>
+    </div>
+  </section>
+
+  <div *ngIf="cargandoAlertas" class="loading-overlay">
+    <div class="loader-circle"></div>
+    <p>Sincronizando con los pastilleros electrónicos IoT de MySQL...</p>
+  </div>
+
+  <div *ngIf="!cargandoAlertas && listaAlertas.length === 0" class="empty-alerts-state">
+    <span>💚</span>
+    <h3>Sistema Estable</h3>
+    <p>Todos los pacientes controlados están cumpliendo sus esquemas médicos según el itinerario físico IoT.</p>
+  </div>
+
+  <section *ngIf="!cargandoAlertas && listaAlertas.length > 0" class="alerts-grid">
+    <div *ngFor="let item of listaAlertas" 
+         class="alert-card-item"
+         [ngClass]="{'border-incumplido': item.tipo_alerta === 'Omisión de Toma', 'border-cumplido': item.tipo_alerta === 'Toma Confirmada'}">
+      
+      <div class="card-item-header">
+        <span class="alert-type-badge" [ngClass]="{'badge-danger': item.tipo_alerta === 'Omisión de Toma', 'badge-success': item.tipo_alerta === 'Toma Confirmada'}">
+          {{ item.tipo_alerta }}
+        </span>
+        <span class="card-date">🕒 {{ item.fecha_registro | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+
+      <div class="card-item-body">
+        <h2>👤 Paciente: {{ item.paciente_nombre }}</h2>
+        <p class="ci-txt">Documento de Identidad: <strong>{{ item.paciente_ci }}</strong></p>
+        
+        <div class="info-medicamento-box">
+          <h4>💊 Receta: {{ item.medicamento }}</h4>
+          <p><strong>Configuración:</strong> Prescrito {{ item.dosis }} cada {{ item.frecuencia }}</p>
+        </div>
+
+        <p class="bitacora-hardware-text">
+          <span class="badge-iot-chip">📟 Log Sensor</span> 
+          {{ item.mensaje_bitacora || 'Variación reportada por el hardware del pastillero inteligente del paciente.' }}
+        </p>
+      </div>
+
+      <div class="card-item-footer">
+        <button class="btn-archive-alert" (click)="revisarAlerta(item.id)">
+          ✔ Marcar como Revisado
+        </button>
+      </div>
+    </div>
+  </section>
+
+</main>

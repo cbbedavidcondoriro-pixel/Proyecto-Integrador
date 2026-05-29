@@ -1,0 +1,289 @@
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #0b0f19;
+  box-sizing: border-box;
+}
+
+.iot-alerts-container {
+  padding: 40px;
+  max-width: 1300px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: #ffffff;
+  box-sizing: border-box;
+}
+
+/* CABECERA ESTILO SMARTMEDI */
+.header-alerts-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111827;
+  padding: 24px 32px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 30px;
+}
+
+.status-badge {
+  background: rgba(0, 255, 157, 0.1);
+  color: #00ff9d;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 50px;
+  letter-spacing: 0.5px;
+}
+
+.header-alerts-panel h1 {
+  margin: 10px 0 6px 0;
+  font-size: 30px;
+  color: #ffffff;
+}
+
+.header-alerts-panel p {
+  margin: 0;
+  color: #9ca3af;
+  font-size: 15px;
+}
+
+/* CUADRO INTERACTIVO DEL MÉDICO */
+.doctor-profile-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 20px;
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.doctor-profile-box:hover {
+  background-color: #243142;
+  border-color: #00ff9d;
+}
+
+.doctor-avatar-area {
+  position: relative;
+  width: 50px;
+  height: 50px;
+}
+
+.img-med-avatar, .text-med-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.text-med-avatar {
+  background: linear-gradient(135deg, #00ff9d, #059669);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: #0b0f19;
+}
+
+.pulse-online {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: #00ff9d;
+  border: 2px solid #1f2937;
+  border-radius: 50%;
+}
+
+.doctor-info-text h3 { margin: 0; font-size: 15px; color: #fff; }
+.doctor-info-text p { margin: 2px 0 0 0; font-size: 12px; }
+.txt-specialty { color: #00ff9d !important; }
+.txt-hospital { color: #9ca3af !important; }
+
+/* MODAL DEL MÉDICO DESPLEGABLE */
+.floating-doctor-card {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background-color: #111827;
+  border: 1px solid #374151;
+  border-radius: 14px;
+  width: 320px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  cursor: default;
+}
+
+.card-title-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1f2937;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.card-title-bar h4 { margin: 0; color: #ffffff; font-size: 13px; }
+.btn-card-close { background: none; border: none; color: #9ca3af; font-size: 20px; cursor: pointer; }
+.btn-card-close:hover { color: #ef4444; }
+
+.card-detail-content { display: flex; flex-direction: column; gap: 10px; font-size: 13px; color: #cbd5e1; }
+.avatar-center-wrapper { display: flex; justify-content: center; margin-bottom: 5px; }
+
+.circle-avatar-large {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #00ff9d, #059669);
+  color: #0b0f19;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.card-detail-content p { margin: 0; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.02); padding-bottom: 5px; }
+.card-detail-content strong { color: #9ca3af; }
+.card-detail-content span { color: #ffffff; text-align: right; }
+.badge-role { background-color: rgba(0, 255, 157, 0.12); color: #00ff9d; text-align: center; padding: 6px; border-radius: 6px; font-weight: bold; margin-top: 5px; }
+
+/* CONTADORES */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.metric-box {
+  background: #1f2937;
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border: 1px solid rgba(255,255,255,0.02);
+}
+
+.metric-icon { font-size: 28px; }
+.metric-txt h3 { margin: 0; font-size: 24px; color: #fff; }
+.metric-txt p { margin: 2px 0 0 0; font-size: 13px; color: #9ca3af; }
+
+.box-blue { border-left: 4px solid #3b82f6; }
+.box-red { border-left: 4px solid #ef4444; }
+.box-green { border-left: 4px solid #10b981; }
+
+/* GRILLA DE TARJETAS */
+.alerts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.alert-card-item {
+  background: #1f2937;
+  border-radius: 14px;
+  padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.border-incumplido { border-left: 5px solid #ef4444; }
+.border-cumplido { border-left: 5px solid #10b981; }
+
+.card-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.alert-type-badge {
+  font-size: 11px;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.badge-danger { background: rgba(239, 64, 64, 0.15); color: #f87171; }
+.badge-success { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+.card-date { font-size: 12px; color: #9ca3af; }
+
+.patient-name { margin: 0; font-size: 18px; color: #fff; text-align: left; }
+.ci-txt { margin: 4px 0 12px 0; font-size: 13px; color: #9ca3af; text-align: left; }
+
+.info-medicamento-box {
+  background: #111827;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.info-medicamento-box h4 { margin: 0 0 4px 0; font-size: 14px; color: #00ff9d; }
+.info-medicamento-box p { margin: 0; font-size: 12px; color: #cbd5e1; }
+
+.bitacora-hardware-text {
+  margin: 0 0 15px 0;
+  font-size: 13px;
+  color: #9ca3af;
+  line-height: 1.4;
+  background: rgba(0,0,0,0.2);
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-align: left;
+}
+
+.badge-iot-chip {
+  background: #374151;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: bold;
+  padding: 2px 5px;
+  border-radius: 4px;
+  margin-right: 4px;
+}
+
+.btn-archive-alert {
+  width: 100%;
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.15s;
+}
+
+.btn-archive-alert:hover { background: #1d4ed8; }
+
+/* SPINNER DE CARGA */
+.loading-overlay { text-align: center; padding: 50px; color: #9ca3af; }
+.loader-circle {
+  margin: 0 auto 12px auto; width: 35px; height: 35px;
+  border: 3px solid rgba(255,255,255,0.05); border-top-color: #00ff9d;
+  border-radius: 50%; animation: rotar 1s infinite linear;
+}
+@keyframes rotar { to { transform: rotate(360deg); } }
+
+.empty-alerts-state { text-align: center; padding: 50px; color: #9ca3af; }
+.empty-alerts-state span { font-size: 35px; display: block; margin-bottom: 8px; }
+
+@media (max-width: 968px) {
+  .header-alerts-panel { flex-direction: column; align-items: flex-start; gap: 15px; }
+  .doctor-profile-box, .floating-doctor-card { width: 100%; }
+  .metrics-row, .alerts-grid { grid-template-columns: 1fr; }
+}

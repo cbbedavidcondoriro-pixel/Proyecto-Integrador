@@ -16,6 +16,8 @@ import { ConfiguracionFarmaceutico } from './pages/configuracion-farmaceutico/co
 
 import { DashboardPaciente } from './pages/dashboard-paciente/dashboard-paciente';
 
+import { AlertasIot } from './pages/alertas-iot/alertas-iot';
+
 // Módulo de Historial Clínico y Reportes
 import { HistorialClinicoComponent } from './pages/historial-clinico/historial-clinico';
 import { ReportesComponent } from './pages/reportes/reportes';
@@ -111,6 +113,7 @@ export const routes: Routes = [
     path: 'dashboard-paciente',
     component: DashboardPaciente
     },
+{ path: 'alertas-iot', component: AlertasIot },
 
     // 🛑 COMODÍN GLOBAL (Siempre debe ser la última ruta del arreglo)
     {
