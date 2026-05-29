@@ -1,12 +1,48 @@
 <main class="search-module-wrapper">
 
-  <div class="module-header">
-    <div class="header-text">
+  <header class="pharmacy-header">
+    <div class="welcome-text">
       <span class="badge-blue">CONSULTA GLOBAL</span>
       <h1>Buscador Centralizado de Pacientes</h1>
       <p>Localiza cualquier paciente en el sistema mediante su C.I. para gestionar la entrega de recetas médicas.</p>
     </div>
-  </div>
+
+    <div class="profile-card" (click)="toggleTarjetaFarmaceutico(); $event.stopPropagation()">
+      <div class="avatar-wrapper">
+        <img *ngIf="imagenPerfilUrl" [src]="imagenPerfilUrl" alt="Avatar Farmacéutico" class="avatar-img">
+        
+        <div *ngIf="!imagenPerfilUrl" class="avatar-placeholder">
+          {{ usuarioLogueado?.nombre?.charAt(0) || 'F' }}
+        </div>
+        <span class="status-indicator"></span>
+      </div>
+      
+      <div class="profile-details">
+        <h3>{{ usuarioLogueado?.nombre }} {{ usuarioLogueado?.apellido || '' }}</h3>
+        <p class="specialty-text">🔹 {{ usuarioLogueado?.especialidad || 'Farmacéutico Clínico e IoT' }}</p>
+        <p class="clinic-text">🏛️ {{ usuarioLogueado?.clinica || 'Estación Central de Monitoreo' }}</p>
+      </div>
+
+      <div class="doctor-card-modal" *ngIf="mostrarTarjetaFarmaceutico" (click)="$event.stopPropagation()">
+        <div class="modal-header-doctor">
+          <h4>Información del Especialista</h4>
+          <button class="close-btn-doctor" (click)="toggleTarjetaFarmaceutico()">&times;</button>
+        </div>
+        <div class="modal-body-doctor">
+          <div class="modal-avatar-center">
+            <div class="large-avatar">{{ usuarioLogueado?.nombre?.charAt(0) || 'F' }}</div>
+          </div>
+          <p><strong>Nombre Completo:</strong> <span>{{ usuarioLogueado?.nombre }} {{ usuarioLogueado?.apellido }}</span></p>
+          <p><strong>Usuario Clínico:</strong> <span>@{{ usuarioLogueado?.usuario || 'farmacia.iot' }}</span></p>
+          <p><strong>Correo Electrónico:</strong> <span>{{ usuarioLogueado?.correo || 'No registrado' }}</span></p>
+          <p><strong>Teléfono:</strong> <span>{{ usuarioLogueado?.telefono || 'No registrado' }}</span></p>
+          <p><strong>Centro Clínico:</strong> <span>{{ usuarioLogueado?.clinica || 'Estación Central de Monitoreo' }}</span></p>
+          <p><strong>Especialidad:</strong> <span>{{ usuarioLogueado?.especialidad || 'Farmacia e Instrumentación IoT' }}</span></p>
+          <span class="badge-role-modal">{{ usuarioLogueado?.rol || 'FARMACEUTICO' }}</span>
+        </div>
+      </div>
+    </div>
+  </header>
 
   <div class="search-card">
     <div class="search-input-group">

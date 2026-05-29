@@ -1,10 +1,30 @@
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #0b0f19;
+  box-sizing: border-box;
+}
+
 .treatment-module-wrapper {
   padding: 35px;
-  background: #0b0f19;
-  min-height: 100vh;
+  max-width: 1400px;
+  margin: 0 auto;
   font-family: 'Segoe UI', system-ui, sans-serif;
   color: #f3f4f6;
   box-sizing: border-box;
+}
+
+/* HEADER UNIFICADO Y PERFIL FLOTANTE */
+.pharmacy-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111827;
+  padding: 25px 35px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 35px;
 }
 
 .badge-amber {
@@ -17,14 +37,192 @@
   letter-spacing: 0.5px;
 }
 
-.module-header h1 { margin: 10px 0 5px 0; font-size: 28px; color: #fff; }
-.module-header p { margin: 0 0 30px 0; color: #9ca3af; font-size: 14px; max-width: 800px; line-height: 1.5; }
+.pharmacy-header h1 {
+  margin: 8px 0 4px 0;
+  font-size: 28px;
+  color: #fff;
+}
+
+.pharmacy-header p {
+  margin: 0;
+  color: #9ca3af;
+  font-size: 14px;
+  max-width: 750px;
+  line-height: 1.5;
+}
+
+/* CONTENEDOR INTERACTIVO DEL PERFIL DEL PANEL */
+.profile-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px 18px;
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.profile-card:hover {
+  background-color: #243142;
+  border-color: #fbbf24;
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: 55px;
+  height: 55px;
+}
+
+.avatar-img, .avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  background: linear-gradient(135deg, #fbbf24, #d97706);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: #0b0f19;
+}
+
+.status-indicator {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: #00ff9d;
+  border: 2px solid #111827;
+  border-radius: 50%;
+}
+
+.profile-details h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #fff;
+}
+
+.profile-details p {
+  margin: 2px 0 0 0;
+  font-size: 12px;
+}
+
+.specialty-text { color: #fbbf24 !important; }
+.clinic-text { color: #9ca3af !important; }
+
+/* 🌟 DESIGN TARJETA MODAL ABSOLUTA DESPLEGABLE */
+.doctor-card-modal {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  background-color: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 16px;
+  width: 330px;
+  padding: 22px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  cursor: default;
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header-doctor {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1f2937;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.modal-header-doctor h4 {
+  margin: 0;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.close-btn-doctor {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 22px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.close-btn-doctor:hover { color: #ef4444; }
+
+.modal-body-doctor {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  font-size: 13px;
+  color: #cbd5e1;
+}
+
+.modal-avatar-center {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.large-avatar {
+  width: 55px;
+  height: 55px;
+  background: linear-gradient(135deg, #fbbf24, #d97706);
+  color: #0b0f19;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.modal-body-doctor p {
+  margin: 0;
+  line-height: 1.4;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  padding-bottom: 6px;
+}
+
+.modal-body-doctor strong { color: #9ca3af; font-weight: 500; }
+.modal-body-doctor span { color: #ffffff; text-align: right; }
+
+.badge-role-modal {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  text-align: center;
+  padding: 8px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 12px;
+  margin-top: 8px;
+  letter-spacing: 0.5px;
+}
 
 /* BUSCADOR */
 .search-card { background: #1f2937; padding: 20px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 25px; }
 .search-input-group { display: flex; align-items: center; gap: 15px; background: #111827; padding: 6px 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); }
 .custom-input { flex-grow: 1; background: transparent; border: none; outline: none; color: #fff; font-size: 16px; padding: 10px 0; }
-.btn-search { background: #fbbf24; color: #0b0f19; border: none; padding: 10px 22px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+.btn-search { background: #fbbf24; color: #0b0f19; border: none; padding: 10px 22px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+.btn-search:hover { background: #f59e0b; }
 
 /* CINTA DEL PACIENTE */
 .patient-ribbon {
@@ -72,7 +270,8 @@
 /* ACCIONES FINALES */
 .main-actions-bar { display: flex; justify-content: flex-end; gap: 15px; margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); }
 .btn-cancel { background: transparent; border: none; color: #9ca3af; font-weight: 600; cursor: pointer; }
-.btn-submit-all { background: #fbbf24; color: #0b0f19; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+.btn-submit-all { background: #fbbf24; color: #0b0f19; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+.btn-submit-all:hover:not(:disabled) { background: #f59e0b; }
 .btn-submit-all:disabled { background: #4b5563; color: #9ca3af; cursor: not-allowed; }
 
 /* MENSAJE DE ERROR */
@@ -80,7 +279,14 @@
 .error-icon { font-size: 40px; }
 .error-state-card h3 { color: #ef4444; margin: 15px 0 5px 0; }
 .error-state-card p { color: #9ca3af; font-size: 14px; margin: 0 0 20px 0; }
-.btn-goto-register { background: #ef4444; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
+.btn-goto-register { background: #ef4444; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; transition: 0.2s; }
+.btn-goto-register:hover { background: #dc2626; }
 
 .animate-fade { animation: fadeIn 0.25s ease-out; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 1024px) {
+  .pharmacy-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+  .profile-card, .doctor-card-modal { width: 100%; box-sizing: border-box; }
+  .form-grid { grid-template-columns: 1fr; }
+}

@@ -1,6 +1,6 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -15,13 +15,17 @@ export class BuscarPaciente implements OnInit {
 
   API = 'http://127.0.0.1:5000';
   usuarioLogueado: any = null;
+  imagenPerfilUrl: string | null = null;
+
+  // 🌟 Variable interactiva para controlar la apertura de la tarjeta de perfil
+  mostrarTarjetaFarmaceutico: boolean = false;
 
   buscarCI: string = '';
   pacienteEncontrado: any = null;
   busquedaRealizada: boolean = false;
   cargando: boolean = false;
   
-  // 💊 Aquí se guardarán los medicamentos reales traídos de la base de datos
+  // 💊 Medicamentos reales traídos de la base de datos
   medicamentosPaciente: any[] = [];
 
   constructor(
@@ -37,6 +41,34 @@ export class BuscarPaciente implements OnInit {
       return;
     }
     this.usuarioLogueado = JSON.parse(user);
+    
+    // 📸 Resolver ruta de la foto de perfil en tiempo real
+    this.procesarFotoPerfil();
+  }
+
+  // 🌟 Abre y cierra el modal del perfil flotante absoluto
+  toggleTarjetaFarmaceutico() {
+    this.mostrarTarjetaFarmaceutico = !this.mostrarTarjetaFarmaceutico;
+    this.cdr.detectChanges();
+  }
+
+  // 🌟 Listener global: si hace clic en cualquier otra sección, se cierra la tarjeta
+  @HostListener('document:click', ['$event'])
+  cerrarTarjetaAlDarClicFuera(event: Event) {
+    this.mostrarTarjetaFarmaceutico = false;
+  }
+
+  procesarFotoPerfil() {
+    if (this.usuarioLogueado && this.usuarioLogueado.foto) {
+      if (this.usuarioLogueado.foto.startsWith('http') || this.usuarioLogueado.foto.startsWith('data:')) {
+        this.imagenPerfilUrl = this.usuarioLogueado.foto;
+      } else {
+        this.imagenPerfilUrl = `${this.API}/uploads/${this.usuarioLogueado.foto}`;
+      }
+    } else {
+      this.imagenPerfilUrl = null;
+    }
+    this.cdr.detectChanges();
   }
 
   ejecutarBusqueda() {
@@ -53,12 +85,8 @@ export class BuscarPaciente implements OnInit {
     this.http.get(`${this.API}/pacientes/buscar/${this.buscarCI}`)
       .subscribe({
         next: (res: any) => {
-          // Guardamos los datos demográficos del paciente
           this.pacienteEncontrado = res;
-          
-          // Mapeamos los tratamientos reales que vienen desde Flask
           this.medicamentosPaciente = res.tratamientos || [];
-          
           this.cargando = false;
           this.cdr.detectChanges();
         },
@@ -71,10 +99,8 @@ export class BuscarPaciente implements OnInit {
       });
   }
 
-  // Función lista para cuando el farmacéutico presione el botón de entregar
   despacharMedicamento(idTratamiento: number) {
     alert('Despachando medicamento ID: ' + idTratamiento + '. Sincronizando con el pastillero IoT...');
-    // Aquí haremos la petición POST para cambiar el estado a "Entregado" próximamente
   }
 
   limpiarFicha() {

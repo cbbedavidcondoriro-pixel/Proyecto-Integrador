@@ -1,10 +1,30 @@
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #0b0f19;
+  box-sizing: border-box;
+}
+
 .register-module-wrapper {
   padding: 35px;
-  background: #0b0f19;
-  min-height: 100vh;
+  max-width: 1400px;
+  margin: 0 auto;
   font-family: 'Segoe UI', system-ui, sans-serif;
   color: #f3f4f6;
   box-sizing: border-box;
+}
+
+/* 🌟 HEADER COMPARTIDO COMPATIBLE CON DROPDOWN */
+.pharmacy-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111827;
+  padding: 25px 35px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 35px;
 }
 
 .badge-cyan {
@@ -17,18 +37,190 @@
   letter-spacing: 0.5px;
 }
 
-.module-header h1 {
-  margin: 10px 0 5px 0;
+.module-header h1, .welcome-text h1 {
+  margin: 8px 0 4px 0;
   font-size: 28px;
   color: #fff;
 }
 
-.module-header p {
-  margin: 0 0 30px 0;
+.module-header p, .welcome-text p {
+  margin: 0;
   color: #9ca3af;
   font-size: 14px;
-  max-width: 700px;
   line-height: 1.5;
+}
+
+/* COMPONENTE INTERACTIVO DE PERFIL DEL USUARIO */
+.profile-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px 18px;
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.profile-card:hover {
+  background-color: #243142;
+  border-color: #22d3ee;
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: 55px;
+  height: 55px;
+}
+
+.avatar-img, .avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  background: linear-gradient(135deg, #22d3ee, #3b82f6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.status-indicator {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: #00ff9d;
+  border: 2px solid #111827;
+  border-radius: 50%;
+}
+
+.profile-details h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #fff;
+}
+
+.profile-details p {
+  margin: 2px 0 0 0;
+  font-size: 12px;
+}
+
+.specialty-text { color: #22d3ee !important; }
+.clinic-text { color: #9ca3af !important; }
+
+/* 🌟 VENTANA FLOTANTE ABSOLUTA DEL ESPECIALISTA (MODAL INTERNO) */
+.doctor-card-modal {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  background-color: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 16px;
+  width: 330px;
+  padding: 22px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  cursor: default;
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header-doctor {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1f2937;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.modal-header-doctor h4 {
+  margin: 0;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.close-btn-doctor {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 22px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.close-btn-doctor:hover { color: #ef4444; }
+
+.modal-body-doctor {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  font-size: 13px;
+  color: #cbd5e1;
+}
+
+.modal-avatar-center {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.large-avatar {
+  width: 55px;
+  height: 55px;
+  background: linear-gradient(135deg, #22d3ee, #3b82f6);
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.modal-body-doctor p {
+  margin: 0;
+  line-height: 1.4;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  padding-bottom: 6px;
+}
+
+.modal-body-doctor strong {
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.modal-body-doctor span {
+  color: #ffffff;
+  text-align: right;
+}
+
+.badge-role-modal {
+  background-color: rgba(34, 211, 238, 0.15);
+  color: #22d3ee;
+  text-align: center;
+  padding: 8px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 12px;
+  margin-top: 8px;
+  letter-spacing: 0.5px;
 }
 
 /* TARJETA FORMULARIO */
@@ -91,9 +283,7 @@
   font-weight: 500;
 }
 
-.required {
-  color: #ef4444;
-}
+.required { color: #ef4444; }
 
 .input-box input, .input-box textarea, .custom-select {
   background: #111827;
@@ -111,9 +301,7 @@
   box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.15);
 }
 
-.custom-select {
-  cursor: pointer;
-}
+.custom-select { cursor: pointer; }
 
 /* ACCIONES */
 .form-actions {
@@ -161,11 +349,27 @@
   cursor: not-allowed;
 }
 
-.animate-fade {
-  animation: fadeIn 0.3s ease-out;
-}
+.animate-fade { animation: fadeIn 0.3s ease-out; }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .pharmacy-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .profile-card, .doctor-card-modal {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .input-box.full-width {
+    grid-column: span 1;
+  }
 }

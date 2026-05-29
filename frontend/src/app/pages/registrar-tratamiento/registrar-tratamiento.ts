@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-registrar-tratamiento',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, FormsModule],
+  imports: [CommonModule, HttpClientModule, FormsModule, RouterLink],
   templateUrl: './registrar-tratamiento.html',
   styleUrl: './registrar-treatment.css'
 })
@@ -15,8 +15,12 @@ export class RegistrarTratamiento implements OnInit {
 
   API = 'http://127.0.0.1:5000';
   usuarioLogueado: any = null;
+  imagenPerfilUrl: string | null = null;
   cargandoBusqueda: boolean = false;
   cargandoGuardado: boolean = false;
+
+  // 🌟 Variable de control interactivo para abrir/cerrar la tarjeta desplegable flotante
+  mostrarTarjetaFarmaceutico: boolean = false;
 
   // Búsqueda de paciente
   buscarCI: string = '';
@@ -39,8 +43,37 @@ export class RegistrarTratamiento implements OnInit {
       return;
     }
     this.usuarioLogueado = JSON.parse(user);
+    
+    // 📸 Resolver foto de perfil real
+    this.procesarFotoPerfil();
+
     // Inicializar con un espacio de medicamento listo para llenar
     this.agregarMedicamentoFila();
+  }
+
+  // 🌟 Alterna visibilidad de la tarjeta modal del perfil flotante
+  toggleTarjetaFarmaceutico() {
+    this.mostrarTarjetaFarmaceutico = !this.mostrarTarjetaFarmaceutico;
+    this.cdr.detectChanges();
+  }
+
+  // 🌟 Cierra el modal flotante de forma automática si se hace clic fuera del perfil
+  @HostListener('document:click', ['$event'])
+  cerrarTarjetaAlDarClicFuera(event: Event) {
+    this.mostrarTarjetaFarmaceutico = false;
+  }
+
+  procesarFotoPerfil() {
+    if (this.usuarioLogueado && this.usuarioLogueado.foto) {
+      if (this.usuarioLogueado.foto.startsWith('http') || this.usuarioLogueado.foto.startsWith('data:')) {
+        this.imagenPerfilUrl = this.usuarioLogueado.foto;
+      } else {
+        this.imagenPerfilUrl = `${this.API}/uploads/${this.usuarioLogueado.foto}`;
+      }
+    } else {
+      this.imagenPerfilUrl = null;
+    }
+    this.cdr.detectChanges();
   }
 
   // 🔍 BUSCADOR DE PACIENTE POR CI
@@ -70,7 +103,7 @@ export class RegistrarTratamiento implements OnInit {
       });
   }
 
-  // ➕ AÑADIR NUEVA FILA DE MEDICAMENTO AL "CARRITO"
+  // ➕ AÑADIR NUEVA FILA DE MEDICAMENTO
   agregarMedicamentoFila() {
     this.listaMedicamentos.push({
       medicamento: '',
@@ -116,7 +149,7 @@ export class RegistrarTratamiento implements OnInit {
 
     const payload = {
       paciente_id: this.pacienteSeleccionado.id,
-      medico_id: this.usuarioLogueado.id, // ID del farmacéutico encargado que inició sesión
+      medico_id: this.usuarioLogueado.id, // ID del farmacéutico/médico que inició sesión
       receta: this.listaMedicamentos
     };
 
