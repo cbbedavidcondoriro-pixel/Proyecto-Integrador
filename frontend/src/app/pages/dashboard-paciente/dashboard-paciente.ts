@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -13,9 +13,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 export class DashboardPaciente implements OnInit {
   
   API: string = 'http://localhost:5000';
-  pacienteData: any = null; // Datos de la sesión local
+  pacienteData: any = null; 
   
-  // Variables reales de la Base de Datos
   perfilBD: any = null;
   tratamientos: any[] = [];
   historialClinico: any = null;
@@ -24,7 +23,9 @@ export class DashboardPaciente implements OnInit {
   errorMensaje: string = '';
   fechaActual: string = '';
 
-  // 🌟 Inyectamos ChangeDetectorRef (cdr) para obligar a Angular a redibujar la vista
+  // 🌟 Variable interactiva para abrir/cerrar los detalles del doctor
+  mostrarTarjetaMedico: boolean = false;
+
   constructor(
     private router: Router, 
     private http: HttpClient,
@@ -43,6 +44,18 @@ export class DashboardPaciente implements OnInit {
     this.cargarDashboardCompleto();
   }
 
+  // 🌟 Alternar el modal del doctor
+  toggleTarjetaMedico() {
+    this.mostrarTarjetaMedico = !this.mostrarTarjetaMedico;
+    this.cdr.detectChanges();
+  }
+
+  // 🌟 Listener global: Cierra la tarjeta flotante del médico si el paciente pulsa fuera de ella
+  @HostListener('document:click', ['$event'])
+  cerrarTarjetaAlHacerClicFuera(event: Event) {
+    this.mostrarTarjetaMedico = false;
+  }
+
   obtenerFechaActual() {
     const opciones: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     this.fechaActual = new Date().toLocaleDateString('es-ES', opciones);
@@ -55,7 +68,7 @@ export class DashboardPaciente implements OnInit {
     this.http.get(`${this.API}/api/paciente/${this.pacienteData.id}/dashboard-completo`)
       .subscribe({
         next: (res: any) => {
-          console.log("📥 Respuesta recibida de Flask:", res); // Esto te permitirá ver en la consola F12 si llegaron los datos
+          console.log("📥 Datos del paciente cargados desde Flask:", res);
           
           if (res.success) {
             this.perfilBD = res.perfil;
@@ -66,13 +79,13 @@ export class DashboardPaciente implements OnInit {
           }
           
           this.cargando = false;
-          this.cdr.detectChanges(); // 🌟 ¡Fuerza a Angular a ocultar el Spinner y mostrar los datos!
+          this.cdr.detectChanges(); 
         },
         error: (err) => {
           console.error('Error al conectar con el ecosistema de base de datos:', err);
           this.errorMensaje = 'Error de enlace seguro. Sincronización fallida con MySQL.';
           this.cargando = false;
-          this.cdr.detectChanges(); // 🌟 También forzamos el redibujado en caso de error
+          this.cdr.detectChanges(); 
         }
       });
   }

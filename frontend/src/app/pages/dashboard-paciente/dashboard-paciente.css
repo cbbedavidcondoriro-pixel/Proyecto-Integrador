@@ -35,6 +35,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .user-info {
@@ -69,19 +76,87 @@
   transition: all 0.2s;
 }
 
-.btn-logout-icon:active {
-  transform: scale(0.95);
+.btn-logout-icon:active { transform: scale(0.95); }
+.current-date { margin: 12px 0 0 0; font-size: 12.5px; color: #94a3b8; text-align: left; text-transform: capitalize; }
+
+/* 🌟 SECCIÓN NUEVA: TARJETA DEL DOCTOR CON DISEÑO ABSOLUTO DESPLEGABLE */
+.doctor-assigned-card {
+  position: relative;
+  background: #111e3b;
+  border: 1px solid rgba(56, 189, 248, 0.15);
+  border-radius: 16px;
+  padding: 15px 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.current-date {
-  margin: 12px 0 0 0;
-  font-size: 12.5px;
-  color: #94a3b8;
+.doctor-card-trigger {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+}
+
+.doc-avatar {
+  font-size: 26px;
+  background: rgba(56, 189, 248, 0.1);
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.doc-meta-info {
+  flex-grow: 1;
   text-align: left;
-  text-transform: capitalize;
 }
 
-/* TARJETA MONITOR HARDWARE IOT */
+.doc-meta-info h3 { margin: 2px 0; font-size: 16px; color: #fff; }
+.doc-sub { margin: 0; font-size: 12px; color: #94a3b8; }
+.chevron-icon { color: #38bdf8; font-size: 12px; font-weight: bold; }
+
+/* MODAL FLOTANTE DESPLEGABLE DEL DOCTOR */
+.doctor-dropdown-modal {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  z-index: 100;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-doc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.modal-doc-header h4 { margin: 0; font-size: 14px; color: #fff; }
+.close-btn-doc { background: none; border: none; color: #ef4444; font-size: 20px; cursor: pointer; }
+
+.modal-doc-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  text-align: left;
+}
+
+.modal-doc-body p { margin: 0; display: flex; justify-content: space-between; color: #cbd5e1; }
+.modal-doc-body strong { color: #94a3b8; }
+.alert-box-doc { background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.2); padding: 10px; border-radius: 8px; margin-top: 5px; color: #f87171; font-size: 11px; line-height: 1.4; }
+
+/* ANAMNESIS E HISTORIAL DE EVOLUCIÓN */
 .iot-status-card {
   background: #111e3b;
   border-radius: 16px;
@@ -97,36 +172,10 @@
   margin-bottom: 15px;
 }
 
-.iot-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.pulse-indicator {
-  width: 8px;
-  height: 8px;
-  background-color: #10b981;
-  border-radius: 50%;
-  box-shadow: 0 0 8px #10b981;
-  animation: telemetry 1.8s infinite;
-}
-
-.iot-title h3 {
-  margin: 0;
-  font-size: 15px;
-  color: #ffffff;
-  font-weight: 600;
-}
-
-.connection-badge {
-  background: rgba(16, 185, 129, 0.1);
-  color: #10b981;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 20px;
-}
+.iot-title { display: flex; align-items: center; gap: 10px; }
+.pulse-indicator { width: 8px; height: 8px; border-radius: 50%; animation: telemetry 1.8s infinite; }
+.iot-title h3 { margin: 0; font-size: 15px; color: #ffffff; font-weight: 600; }
+.connection-badge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
 
 .iot-meta-grid {
   display: grid;
@@ -137,204 +186,63 @@
   border-radius: 10px;
 }
 
-.meta-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
+.meta-item { display: flex; flex-direction: column; gap: 4px; text-align: left; }
+.meta-label { font-size: 11px; color: #64748b; }
+.meta-value { font-size: 13px; font-weight: 600; color: #cbd5e1; }
 
-.meta-label {
-  font-size: 11px;
-  color: #64748b;
-}
+/* PLAN DE TRATAMIENTO */
+.medication-section { display: flex; flex-direction: column; gap: 15px; }
+.section-title-bar { display: flex; justify-content: space-between; align-items: center; text-align: left; }
+.section-title-bar h3 { margin: 0; font-size: 16px; color: #ffffff; font-weight: 600; }
+.count-badge { background: rgba(56, 189, 248, 0.1); color: #38bdf8; font-size: 12px; padding: 3px 10px; border-radius: 12px; font-weight: 600; }
 
-.meta-value {
-  font-size: 13px;
-  font-weight: 600;
-  color: #cbd5e1;
-}
+.medication-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+.med-card { background: #111e3b; border-radius: 16px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.02); display: flex; flex-direction: column; gap: 12px; text-align: left; }
+.med-card-header { display: flex; justify-content: space-between; align-items: center; }
+.med-badge-slot { background: rgba(56, 189, 248, 0.1); color: #38bdf8; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.1); }
+.status-pill-active { color: #38bdf8; font-size: 12px; font-weight: 600; }
+.med-name { margin: 0; font-size: 18px; color: #ffffff; font-weight: 700; }
 
-/* LISTA DE MEDICAMENTOS Y TARJETAS */
-.medication-section {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
+.med-details { display: flex; flex-direction: column; gap: 10px; background: #0f172a; padding: 14px; border-radius: 12px; }
 
-.section-title-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  text-align: left;
-}
-
-.section-title-bar h3 {
-  margin: 0;
-  font-size: 16px;
-  color: #ffffff;
-  font-weight: 600;
-}
-
-.count-badge {
-  background: rgba(56, 189, 248, 0.1);
-  color: #38bdf8;
-  font-size: 12px;
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-weight: 600;
-}
-
-.medication-grid {
-  display: grid;
-  grid-template-columns: 1fr; /* Por defecto vertical ocupa todo el ancho */
-  gap: 16px;
-}
-
-.med-card {
-  background: #111e3b;
-  border-radius: 16px;
-  padding: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.02);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  text-align: left;
-}
-
-.med-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.med-badge-slot {
-  background: rgba(56, 189, 248, 0.1);
-  color: #38bdf8;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 4px 12px;
-  border-radius: 8px;
+/* 🌟 CAJA DE ORIGEN DE PRESCRIPCIÓN INTERNA */
+.prescription-origin-box {
+  background: rgba(56, 189, 248, 0.04);
   border: 1px solid rgba(56, 189, 248, 0.1);
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 5px;
 }
+.prescription-origin-box p { margin: 3px 0; font-size: 12px; color: #cbd5e1; }
+.prescription-origin-box strong { color: #94a3b8; font-weight: 500; }
 
-.status-pill-active {
-  color: #38bdf8;
-  font-size: 12px;
-  font-weight: 600;
-}
+.detail-row { display: flex; align-items: center; gap: 12px; }
+.detail-icon { font-size: 16px; }
+.detail-text { display: flex; flex-direction: column; }
+.detail-label { font-size: 11px; color: #64748b; }
+.detail-val { font-size: 13px; color: #e2e8f0; }
+.text-highlight { color: #38bdf8; font-weight: 700; }
 
-.med-name {
-  margin: 0;
-  font-size: 18px;
-  color: #ffffff;
-  font-weight: 700;
-}
+.obs-container-patient { margin-top: 5px; border-top: 1px dashed rgba(255,255,255,0.05); padding-top: 8px; }
+.obs-text-patient { margin: 3px 0 0 0; font-size: 12.5px; color: #cbd5e1; font-style: italic; line-height: 1.4; }
 
-.med-details {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  background: #0f172a;
-  padding: 14px;
-  border-radius: 12px;
-}
+/* EXTRA / CARGA Y VACÍO */
+.error-connection-banner { background: rgba(239,68,68,0.1); border: 1px solid #ef4444; padding: 12px; border-radius: 12px; text-align: center; color: #ef4444; font-size: 13px; }
+.loading-cards, .empty-state-card { background: #111e3b; padding: 40px 20px; border-radius: 16px; text-align: center; }
+.simple-spinner { width: 30px; height: 30px; border: 3px solid rgba(56, 189, 248, 0.1); border-left-color: #38bdf8; border-radius: 50%; margin: 0 auto 15px auto; animation: rotate 1s linear infinite; }
+.empty-icon { font-size: 36px; margin-bottom: 12px; }
+.empty-state-card h4 { margin: 0 0 6px 0; color: #fff; }
+.empty-state-card p { margin: 0; color: #64748b; font-size: 13px; line-height: 1.5; }
 
-.detail-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+.dashboard-footer { margin-top: 15px; text-align: center; }
+.dashboard-footer p { margin: 0 0 4px 0; font-size: 11.5px; color: #475569; }
+.dashboard-footer .institution { color: #64748b; font-weight: 600; }
 
-.detail-icon {
-  font-size: 16px;
-}
+.animate-fade { animation: fadeIn 0.3s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes telemetry { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.6; } }
+@keyframes rotate { 100% { transform: rotate(360deg); } }
 
-.detail-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.detail-label {
-  font-size: 11px;
-  color: #64748b;
-}
-
-.detail-val {
-  font-size: 13.5px;
-  color: #e2e8f0;
-}
-
-.text-highlight {
-  color: #38bdf8;
-  font-weight: 700;
-}
-
-/* MANEJO DE ESTADOS DE CARGA Y VACÍO */
-.loading-cards, .empty-state-card {
-  background: #111e3b;
-  padding: 40px 20px;
-  border-radius: 16px;
-  text-align: center;
-}
-
-.simple-spinner {
-  width: 30px;
-  height: 30px;
-  border: 3px solid rgba(56, 189, 248, 0.1);
-  border-left-color: #38bdf8;
-  border-radius: 50%;
-  margin: 0 auto 15px auto;
-  animation: rotate 1s linear infinite;
-}
-
-.empty-icon {
-  font-size: 36px;
-  margin-bottom: 12px;
-}
-
-.empty-state-card h4 {
-  margin: 0 0 6px 0;
-  color: #fff;
-}
-
-.empty-state-card p {
-  margin: 0;
-  color: #64748b;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-/* PIE DE PÁGINA */
-.dashboard-footer {
-  margin-top: 15px;
-  text-align: center;
-}
-
-.dashboard-footer p {
-  margin: 0 0 4px 0;
-  font-size: 11.5px;
-  color: #475569;
-}
-
-.dashboard-footer .institution {
-  color: #64748b;
-  font-weight: 600;
-}
-
-/* 🔄 SOPORTE RESPONSIVE: MÓVIL ECHADO (HORIZONTAL) O PANTALLAS ANCHAS */
-@media (min-width: 700px) {
-  .medication-grid {
-    grid-template-columns: repeat(2, 1fr); /* Divide en dos columnas elegantes de lado a lado */
-    gap: 18px;
-  }
-}
-
-/* ANIMACIONES */
-@keyframes telemetry {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.3); opacity: 0.6; }
-}
-
-@keyframes rotate {
-  100% { transform: rotate(360deg); }
+@media (min-width: 768px) {
+  .medication-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
 }
